@@ -16,6 +16,7 @@ const sampleProducts = [
         id: 1,
         name: "Living Room Sofa",
         price: "$299.99",
+        category: "furniture",
         image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&h=300&fit=crop&crop=center",
         url: "https://www.amazon.com/dp/B08XYZ123/ref=sr_1_1?keywords=living+room+sofa"
     }
@@ -95,6 +96,23 @@ class UIManager {
                 this.handleSearch(searchValue);
             });
         }
+        
+        // Filter event listeners
+        const categoryFilter = document.getElementById('categoryFilter');
+        const storeFilter = document.getElementById('storeFilter');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', () => this.applyFilters());
+        }
+        
+        if (storeFilter) {
+            storeFilter.addEventListener('change', () => this.applyFilters());
+        }
+        
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', () => this.clearAllFilters());
+        }
     }
 
     // Load products (single example product)
@@ -109,16 +127,69 @@ class UIManager {
             window.cookieManager.trackSearch(query);
         }
 
-        if (!query.trim()) {
-            this.loadProducts(); // Reset to show reference product
-        } else {
-            // Filter products based on search
-            const filtered = sampleProducts.filter(product => 
-                product.name.toLowerCase().includes(query.toLowerCase())
+        // Use applyFilters instead of direct filtering
+        this.applyFilters();
+    }
+
+    // Apply filters based on category and store selection
+    applyFilters() {
+        const categoryFilter = document.getElementById('categoryFilter');
+        const storeFilter = document.getElementById('storeFilter');
+        const searchInput = document.getElementById('searchInput');
+        
+        let filtered = [...sampleProducts];
+        
+        // Apply search filter
+        const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        if (searchQuery) {
+            filtered = filtered.filter(product => 
+                product.name.toLowerCase().includes(searchQuery)
             );
-            allProducts = filtered;
         }
+        
+        // Apply category filter
+        const selectedCategory = categoryFilter ? categoryFilter.value : '';
+        if (selectedCategory) {
+            filtered = filtered.filter(product => product.category === selectedCategory);
+        }
+        
+        // Apply store filter
+        const selectedStore = storeFilter ? storeFilter.value : '';
+        if (selectedStore) {
+            filtered = filtered.filter(product => {
+                const store = this.detectStore(product.url).toLowerCase();
+                return store === selectedStore || 
+                       (selectedStore === 'homedepot' && store === 'home depot') ||
+                       (selectedStore === 'bestbuy' && store === 'best buy');
+            });
+        }
+        
+        allProducts = filtered;
         this.renderProducts();
+        
+        // Track filter usage
+        if (window.cookieManager && (selectedCategory || selectedStore)) {
+            window.cookieManager.trackEvent('filter_applied', 'engagement', 
+                `Category: ${selectedCategory || 'none'}, Store: ${selectedStore || 'none'}`);
+        }
+    }
+
+    // Clear all filters
+    clearAllFilters() {
+        const categoryFilter = document.getElementById('categoryFilter');
+        const storeFilter = document.getElementById('storeFilter');
+        const searchInput = document.getElementById('searchInput');
+        
+        if (categoryFilter) categoryFilter.value = '';
+        if (storeFilter) storeFilter.value = '';
+        if (searchInput) searchInput.value = '';
+        
+        this.loadProducts();
+        
+        // Track clear filters
+        if (window.cookieManager) {
+            window.cookieManager.trackEvent('filters_cleared', 'engagement');
+        }
     }
 
     // Render products on the page

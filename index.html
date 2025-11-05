@@ -45,7 +45,7 @@
         <div class="container">
             <h2 class="main-title">Discover Today's Best Deals</h2>
             
-            <!-- Search Section -->
+            <!-- Search and Filter Section -->
             <div class="search-section">
                 <div class="search-container">
                     <input type="text" class="search-input" placeholder="Search for deals..." id="searchInput">
@@ -55,6 +55,46 @@
                             <path d="m21 21-4.35-4.35"></path>
                         </svg>
                     </button>
+                </div>
+                
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <!-- Category Filter -->
+                    <div class="filter-group">
+                        <label for="categoryFilter" class="filter-label">Category</label>
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="home-garden">Home & Garden</option>
+                            <option value="fashion">Fashion & Clothing</option>
+                            <option value="sports">Sports & Outdoors</option>
+                            <option value="health-beauty">Health & Beauty</option>
+                            <option value="automotive">Automotive</option>
+                            <option value="books">Books & Media</option>
+                            <option value="toys">Toys & Games</option>
+                            <option value="appliances">Appliances</option>
+                            <option value="furniture">Furniture</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Store Filter -->
+                    <div class="filter-group">
+                        <label for="storeFilter" class="filter-label">Store</label>
+                        <select id="storeFilter" class="filter-select">
+                            <option value="">All Stores</option>
+                            <option value="amazon">Amazon</option>
+                            <option value="walmart">Walmart</option>
+                            <option value="target">Target</option>
+                            <option value="homedepot">Home Depot</option>
+                            <option value="bestbuy">Best Buy</option>
+                            <option value="ebay">eBay</option>
+                            <option value="lowes">Lowe's</option>
+                            <option value="costco">Costco</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Clear Filters Button -->
+                    <button class="clear-filters-btn" id="clearFilters">Clear Filters</button>
                 </div>
             </div>
 
