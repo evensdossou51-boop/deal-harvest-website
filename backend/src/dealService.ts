@@ -1,4 +1,4 @@
-import { Deal, DealCategory } from './types';
+import { Deal, DealCategory, SearchParams } from './types';
 
 export const sampleDeals: Deal[] = [
   {
@@ -194,19 +194,19 @@ export class DealService {
     return this.deals.find(deal => deal.id === id);
   }
 
-  searchDeals(params: any): Deal[] {
+  searchDeals(params: SearchParams): Deal[] {
     let filtered = this.deals;
 
     if (params.category) {
       filtered = filtered.filter(deal => deal.category === params.category);
     }
 
-    if (params.minDiscount) {
-      filtered = filtered.filter(deal => deal.discountPercentage >= parseFloat(params.minDiscount));
+    if (params.minDiscount !== undefined) {
+      filtered = filtered.filter(deal => deal.discountPercentage >= params.minDiscount!);
     }
 
-    if (params.maxPrice) {
-      filtered = filtered.filter(deal => deal.discountedPrice <= parseFloat(params.maxPrice));
+    if (params.maxPrice !== undefined) {
+      filtered = filtered.filter(deal => deal.discountedPrice <= params.maxPrice!);
     }
 
     if (params.query) {
@@ -218,7 +218,7 @@ export class DealService {
       );
     }
 
-    if (params.featured === 'true') {
+    if (params.featured === true) {
       filtered = filtered.filter(deal => deal.featured);
     }
 
