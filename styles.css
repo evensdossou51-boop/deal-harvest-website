@@ -42,12 +42,19 @@ body {
 .logo-section {
     display: flex;
     align-items: center;
-    gap: 12px;
     padding: 10px 0;
-    transition: transform 0.3s ease;
 }
 
-.logo-section:hover {
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.logo-link:hover {
     transform: translateY(-2px);
 }
 
