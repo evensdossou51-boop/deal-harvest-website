@@ -21,7 +21,7 @@ export default function App() {
       <header className="main-header">
         <div className="header-container">
           <div className="logo-section">
-            <div className="logo-icon">🌾</div>
+            <img src="./logo.svg" alt="Deal Harvest Logo" className="logo-image" />
             <span className="logo-text">DEAL HARVEST</span>
           </div>
           
@@ -32,12 +32,16 @@ export default function App() {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
-          <p className="hero-subtitle">We uncover new deals weekly</p>
+          <p className="hero-subtitle">Your Daily Shopping Discorfavings</p>
           <h1 className="hero-title">
-            UNBETABLE SAVINGS,<br />
+            UNBEATABLE SAVINGS,<br />
             ALL IN ONE PLACE
           </h1>
-          <button className="view-deal-btn">VIEW DEAL</button>
+          <p className="hero-description">
+            Discover amazing deals from Amazon, Walmart, Target, and Home Depot.<br />
+            Save more on everything you need, every day!
+          </p>
+          <button className="view-deal-btn">VIEW ALL DEALS</button>
         </div>
       </section>
 
@@ -152,7 +156,10 @@ export default function App() {
       {/* Footer */}
       <footer className="main-footer">
         <div className="footer-content">
-          <div className="footer-text">© 2025 DEAL HARVEST. ALL YOUR RESERVED.</div>
+          <div className="footer-left">
+            <img src="./logo.svg" alt="Deal Harvest Logo" className="footer-logo" />
+            <div className="footer-text">© 2025 DEAL HARVEST. YOUR DAILY SHOPPING DISCORFAVINGS.</div>
+          </div>
           <div className="social-icons">
             <span>📘</span>
             <span>🐦</span>

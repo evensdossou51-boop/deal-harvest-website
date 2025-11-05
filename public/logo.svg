@@ -1,0 +1,73 @@
+<!-- Deal Harvest Logo SVG -->
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Circle -->
+  <circle cx="200" cy="200" r="190" fill="none" stroke="#e0e0e0" stroke-width="4"/>
+  
+  <!-- Brand Text - Top Arc -->
+  <path id="top-arc" d="M 80 200 A 120 120 0 0 1 320 200" fill="none"/>
+  <text font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#2c5f7c">
+    <textPath href="#top-arc" startOffset="50%" text-anchor="middle">DEAL HARVEST</textPath>
+  </text>
+  
+  <!-- Brand Text - Bottom Arc -->
+  <path id="bottom-arc" d="M 320 200 A 120 120 0 0 1 80 200" fill="none"/>
+  <text font-family="Arial, sans-serif" font-size="14" font-weight="normal" fill="#2c5f7c">
+    <textPath href="#bottom-arc" startOffset="50%" text-anchor="middle">YOUR DAILY SHOPPING DISCORFAVINGS</textPath>
+  </text>
+  
+  <!-- Central Horn of Plenty -->
+  <g transform="translate(200,200)">
+    <!-- Horn Base -->
+    <path d="M -60 -20 Q -80 -30 -90 -10 Q -85 10 -60 20 Q -40 30 0 20 L 0 -20 Z" 
+          fill="#2c5f7c"/>
+    
+    <!-- Horn Gradient Interior -->
+    <path d="M -50 -15 Q -70 -20 -75 -5 Q -70 5 -50 15 Q -35 20 -5 15 L -5 -15 Z" 
+          fill="#4a7c95"/>
+    
+    <!-- Green Accent Swoosh -->
+    <path d="M -30 -25 Q 10 -30 40 -10 Q 30 0 -10 -5 Q -25 -15 -30 -25 Z" 
+          fill="#7cb342"/>
+    
+    <!-- Dollar Signs -->
+    <text x="10" y="-10" font-family="Arial" font-size="20" font-weight="bold" fill="#f57c00">$</text>
+    <text x="25" y="0" font-family="Arial" font-size="16" font-weight="bold" fill="#f57c00">$</text>
+    <text x="15" y="15" font-family="Arial" font-size="18" font-weight="bold" fill="#f57c00">$</text>
+    
+    <!-- Shopping Cart -->
+    <g transform="translate(35, -15)">
+      <!-- Cart Body -->
+      <rect x="0" y="0" width="20" height="12" rx="2" fill="#f57c00" stroke="#e65100" stroke-width="1"/>
+      <!-- Cart Handle -->
+      <path d="M -8 2 L 0 2 L 2 10 L 18 10" fill="none" stroke="#e65100" stroke-width="2"/>
+      <!-- Cart Wheels -->
+      <circle cx="5" cy="16" r="2" fill="#e65100"/>
+      <circle cx="15" cy="16" r="2" fill="#e65100"/>
+      <!-- Cart Items -->
+      <rect x="3" y="2" width="3" height="6" fill="#fff"/>
+      <rect x="8" y="3" width="3" height="5" fill="#fff"/>
+      <rect x="13" y="2" width="3" height="6" fill="#fff"/>
+    </g>
+    
+    <!-- Link/Chain Icon -->
+    <g transform="translate(50, -5)">
+      <ellipse cx="0" cy="0" rx="4" ry="6" fill="none" stroke="#f57c00" stroke-width="2"/>
+      <ellipse cx="6" cy="6" rx="4" ry="6" fill="none" stroke="#f57c00" stroke-width="2" transform="rotate(45)"/>
+    </g>
+    
+    <!-- Search/Magnifying Glass -->
+    <g transform="translate(45, 10)">
+      <circle cx="0" cy="0" r="5" fill="none" stroke="#f57c00" stroke-width="2"/>
+      <line x1="4" y1="4" x2="8" y2="8" stroke="#f57c00" stroke-width="2"/>
+    </g>
+    
+    <!-- Coins/Dots -->
+    <circle cx="20" cy="25" r="3" fill="#ffc107"/>
+    <circle cx="30" cy="20" r="2" fill="#ff9800"/>
+    <circle cx="25" cy="30" r="2.5" fill="#ff8f00"/>
+  </g>
+  
+  <!-- Navigation Dots -->
+  <circle cx="50" cy="200" r="3" fill="#2c5f7c"/>
+  <circle cx="350" cy="200" r="3" fill="#2c5f7c"/>
+</svg>
