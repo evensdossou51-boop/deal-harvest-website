@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import DealCard from './components/DealCard';
 import Filters from './components/Filters';
@@ -12,11 +12,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<SearchParams>({});
 
-  useEffect(() => {
-    loadDeals();
-  }, [filters]);
-
-  const loadDeals = async () => {
+  const loadDeals = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -28,7 +24,11 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    loadDeals();
+  }, [loadDeals]);
 
   const totalSavings = deals.reduce(
     (sum, deal) => sum + (deal.originalPrice - deal.discountedPrice),
