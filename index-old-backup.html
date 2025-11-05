@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deal Harvest - Best Product Deals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">💰</span>
+                    <span class="logo-text">Deal Harvest</span>
+                </div>
+                
+                <nav class="nav">
+                    <a href="#products" class="nav-link">Deals</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#footer" class="nav-link">About</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Find Amazing Deals From
+                    <span class="highlight">Top Retailers</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Discover the best products with live pricing from trusted retailers. 
+                    Real deals, real savings, curated for you.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number" id="productCount">0</span>
+                        <span class="stat-label">Hot Deals</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">Real-Time</span>
+                        <span class="stat-label">Price Updates</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Authentic Data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🔥 Latest Deals</h2>
+                <p class="section-subtitle">Curated products with the best prices from trusted retailers</p>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="category-filter">
+                <button class="filter-btn active" data-category="all">All Categories</button>
+                <button class="filter-btn" data-category="electronics">Electronics</button>
+                <button class="filter-btn" data-category="home-garden">Home & Garden</button>
+                <button class="filter-btn" data-category="fashion">Fashion</button>
+                <button class="filter-btn" data-category="health-beauty">Health & Beauty</button>
+                <button class="filter-btn" data-category="sports">Sports</button>
+                <button class="filter-btn" data-category="other">Other</button>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="productsGrid" class="products-grid">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose Deal Harvest?</h2>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Get the latest deals instantly with our optimized product discovery system.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Verified Deals</h3>
+                    <p>Every deal is verified and comes from trusted, reputable retailers.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Multiple Stores</h3>
+                    <p>Compare prices across Amazon, Walmart, Target, Best Buy, and more.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Smart Savings</h3>
+                    <p>Automatically shows you the biggest discounts and percentage savings.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span class="logo-icon">💰</span>
+                        <span class="logo-text">Deal Harvest</span>
+                    </div>
+                    <p>Your trusted source for the best product deals from top retailers worldwide.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                        <li><a href="affiliate-disclosure.html">Affiliate Disclosure</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li>Price Comparison</li>
+                        <li>Multi-Store Search</li>
+                        <li>Deal Notifications</li>
+                        <li>Product Reviews</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Deal Harvest. Finding you the best deals every day.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script -->
+        <script src="script.js"></script>
+</body>
+</html>

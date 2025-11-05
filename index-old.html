@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealHarvest - Discover Today's Best Deals</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">DealHarvest</h1>
+            <nav class="nav">
+                <a href="#" class="nav-link">Store</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <h2 class="main-title">Discover Today's Best Deals</h2>
+            
+            <!-- Search and Category Section -->
+            <div class="search-category-section">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search for deals..." id="searchInput">
+                    <button class="search-btn" onclick="searchDeals()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="category-container">
+                    <select class="category-select" id="categorySelect" onchange="filterByCategory()">
+                        <option value="">All Categories</option>
+                        <option value="electronics">Electronics & Computers</option>
+                        <option value="home-garden">Home & Garden</option>
+                        <option value="tools-hardware">Tools & Hardware</option>
+                        <option value="appliances">Appliances</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="fashion">Clothing & Fashion</option>
+                        <option value="beauty">Beauty & Personal Care</option>
+                        <option value="sports-outdoors">Sports & Outdoors</option>
+                        <option value="automotive">Automotive</option>
+                        <option value="books">Books & Media</option>
+                        <option value="toys-games">Toys & Games</option>
+                        <option value="health-wellness">Health & Wellness</option>
+                        <option value="kitchen-dining">Kitchen & Dining</option>
+                        <option value="pet-supplies">Pet Supplies</option>
+                        <option value="office-supplies">Office Supplies</option>
+                        <option value="baby-kids">Baby & Kids</option>
+                        <option value="jewelry">Jewelry & Watches</option>
+                        <option value="grocery">Grocery & Gourmet</option>
+                    </select>
+                </div>
+
+                <!-- Store Filter -->
+                <div class="store-container">
+                    <select class="store-select" id="storeSelect" onchange="filterByStore()">
+                        <option value="">All Stores</option>
+                        <option value="amazon">Amazon</option>
+                        <option value="walmart">Walmart</option>
+                        <option value="homedepot">Home Depot</option>
+                        <option value="target">Target</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Admin: Add Product Form -->
+            <div class="admin-section" id="adminSection">
+                <!-- Direct Admin Access - No Password Required -->
+                <div class="admin-controls" id="adminControls" style="display: flex;">
+                    <button class="admin-toggle-btn" onclick="toggleAdminPanel()">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        Add Product
+                    </button>
+                </div>
+                
+                <div class="admin-panel" id="adminPanel" style="display: none;">
+                    <h3>Add New Product</h3>
+                    <form class="add-product-form" id="addProductForm">
+                        <div class="form-group">
+                            <label for="productUrl">Product URL:</label>
+                            <input 
+                                type="url" 
+                                id="productUrl" 
+                                placeholder="Paste Amazon, Walmart, Target, or Home Depot URL..."
+                                required
+                            >
+                            <div class="form-help">
+                                <strong>Supported stores:</strong> Amazon, Walmart, Target, Home Depot<br>
+                                <small>💡 The tool will extract available product information and may fall back to URL-based data if direct scraping is blocked.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="submit-btn" id="extractBtn" onclick="handleExtractProduct()">
+                                <span class="btn-text">Extract Product Info</span>
+                                <span class="btn-loading" style="display: none;">Processing...</span>
+                            </button>
+                            <button type="button" class="cancel-btn" onclick="toggleAdminPanel()">Cancel</button>
+                        </div>
+                    </form>
+                    
+                    <!-- Preview Section -->
+                    <div class="product-preview" id="productPreview" style="display: none;">
+                        <h4>Product Preview:</h4>
+                        <div class="preview-content" id="previewContent">
+                            <!-- Auto-extracted product info will show here -->
+                        </div>
+                        <div class="preview-actions">
+                            <button class="confirm-btn" onclick="addProductToSite()">Add to Website</button>
+                            <button class="edit-btn" onclick="editProductInfo()">Edit Info</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">Previous</button>
+                <div class="pagination-numbers" id="paginationNumbers">
+                    <!-- Page numbers will be generated by JavaScript -->
+                </div>
+                <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">Next</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Affiliate Disclosure Section -->
+            <div class="affiliate-disclosure-section">
+                <div class="affiliate-text">
+                    <p><strong>As an Amazon Associate and participant in other affiliate programs, I earn from qualifying purchases.</strong></p>
+                </div>
+            </div>
+            
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>DealHarvest</h3>
+                    <p>Your trusted source for the best deals and discounts on quality products.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-conditions.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DealHarvest. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

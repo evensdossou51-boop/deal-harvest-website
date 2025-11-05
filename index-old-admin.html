@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deal Harvest - Real-Time Product Scraper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-new.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">💰</span>
+                    <span class="logo-text">Deal Harvest</span>
+                </div>
+                
+                <nav class="nav">
+                    <a href="#products" class="nav-link">Deals</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <button id="adminToggleBtn" class="admin-toggle-btn">
+                        <span class="admin-icon">⚙️</span>
+                        Admin Panel
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel" style="display: none;">
+        <div class="container">
+            <div class="admin-content">
+                <h2>🔧 Admin Panel - Add New Product</h2>
+                <p class="admin-subtitle">Paste any product URL from Amazon, Walmart, Target, etc.</p>
+                
+                <div class="admin-form">
+                    <div class="form-group">
+                        <label for="productUrl" class="form-label">Product URL</label>
+                        <input 
+                            type="url" 
+                            id="productUrl" 
+                            class="form-input" 
+                            placeholder="https://www.amazon.com/product-link or any e-commerce URL..."
+                            required
+                        >
+                    </div>
+                    
+                    <div class="admin-actions">
+                        <button id="extractBtn" class="btn btn-primary btn-large">
+                            <span class="btn-text">🔍 Extract Product Info</span>
+                            <span class="btn-loading" style="display: none;">⏳ Extracting...</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product Preview -->
+                <div id="productPreview" class="product-preview" style="display: none;">
+                    <h3>📦 Product Preview</h3>
+                    <div id="previewContent"></div>
+                    
+                    <div class="preview-actions">
+                        <button id="addProductBtn" class="btn btn-success btn-large" style="display: none;">
+                            ✅ Add to Website
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Find Amazing Deals From
+                    <span class="highlight">Real-Time Data</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Discover the best products with live pricing from top retailers. 
+                    Real deals, real savings, updated instantly.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number" id="productCount">0</span>
+                        <span class="stat-label">Live Deals</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">Real-Time</span>
+                        <span class="stat-label">Price Updates</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Authentic Data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🔥 Latest Deals</h2>
+                <p class="section-subtitle">Curated products with real-time pricing from trusted retailers</p>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="category-filter">
+                <button class="filter-btn active" data-category="all">All Categories</button>
+                <button class="filter-btn" data-category="electronics">Electronics</button>
+                <button class="filter-btn" data-category="home-garden">Home & Garden</button>
+                <button class="filter-btn" data-category="fashion">Fashion</button>
+                <button class="filter-btn" data-category="health-beauty">Health & Beauty</button>
+                <button class="filter-btn" data-category="sports">Sports</button>
+                <button class="filter-btn" data-category="other">Other</button>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="productsGrid" class="products-grid">
+                <div class="no-products">
+                    <div class="no-products-icon">🛍️</div>
+                    <h3>No Products Yet</h3>
+                    <p>Use the Admin Panel to extract and add products from your favorite stores.</p>
+                    <button onclick="toggleAdminPanel()" class="btn btn-primary">
+                        ⚙️ Open Admin Panel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose Deal Harvest?</h2>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-Time Extraction</h3>
+                    <p>Get live product data directly from retailer websites with our advanced scraping technology.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Authentic Data</h3>
+                    <p>No fake prices or outdated information. Every deal shows actual current pricing.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Multiple Stores</h3>
+                    <p>Works with Amazon, Walmart, Target, Home Depot, and hundreds of other retailers.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Smart Discounts</h3>
+                    <p>Automatically calculates savings and shows percentage off original prices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span class="logo-icon">💰</span>
+                        <span class="logo-text">Deal Harvest</span>
+                    </div>
+                    <p>Real-time product deals from trusted retailers worldwide.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                        <li><a href="affiliate-disclosure.html">Affiliate Disclosure</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Technology</h4>
+                    <ul class="footer-links">
+                        <li>Real-Time Web Scraping</li>
+                        <li>Multi-Store Compatibility</li>
+                        <li>CORS Proxy Integration</li>
+                        <li>Dynamic Price Updates</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Deal Harvest. Built with real-time scraping technology.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Extracting product data...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script-new.js"></script>
+    
+    <script>
+        // Additional UI enhancements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Category filter functionality
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const productCards = document.querySelectorAll('.product-card');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // Update active button
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter products (this will be implemented when products are loaded)
+                    console.log('Filter by category:', category);
+                });
+            });
+            
+            // Admin panel toggle
+            const adminToggleBtn = document.getElementById('adminToggleBtn');
+            if (adminToggleBtn) {
+                adminToggleBtn.addEventListener('click', function() {
+                    const panel = document.getElementById('adminPanel');
+                    const isVisible = panel.style.display !== 'none';
+                    panel.style.display = isVisible ? 'none' : 'block';
+                    
+                    // Scroll to admin panel if opening
+                    if (!isVisible) {
+                        panel.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+            
+            // Update product count
+            function updateProductCount() {
+                const count = document.querySelectorAll('.product-card').length;
+                const countElement = document.getElementById('productCount');
+                if (countElement) {
+                    countElement.textContent = count;
+                }
+            }
+            
+            // Call update on page load
+            updateProductCount();
+            
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
