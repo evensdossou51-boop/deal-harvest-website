@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { staticDeals, categories, stores, filterDeals } from "./staticData.js";
-import "./style-purple.css";
+import "./style-github-pages.css";
 
 export default function App() {
   const [deals, setDeals] = useState([]);
@@ -216,7 +216,7 @@ export default function App() {
       <footer className="footer">
         <div className="footer-content">
           <p>&copy; 2025 Deal Harvest. Find amazing deals from top retailers.</p>
-          <a href="./terms.html" target="_blank" rel="noopener noreferrer">
+          <a href="/deal-harvest-website/terms.html" target="_blank" rel="noopener noreferrer">
             Terms & Conditions
           </a>
         </div>
