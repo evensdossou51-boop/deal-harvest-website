@@ -1,26 +1,11 @@
 // ====================================
-// DEALHARVEST - EXACT UI MATCH
-// 4x4 Grid Products - November 2025
+// DEALHARVEST - GOOGLE SHEETS INTEGRATION
+// Live Product Management System - November 2025
 // ====================================
 
 // Global Variables
 let allProducts = [];
-
-// ====================================
-// PRODUCT DATA (MATCHING IMAGE)
-// ====================================
-
-const sampleProducts = [
-    // Single example product
-    {
-        id: 1,
-        name: "Living Room Sofa",
-        price: "$299.99",
-        category: "furniture",
-        image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&h=300&fit=crop&crop=center",
-        url: "https://www.amazon.com/dp/B08XYZ123/ref=sr_1_1?keywords=living+room+sofa"
-    }
-];
+let isLoading = false;
 
 // ====================================
 // UI MANAGEMENT
@@ -28,14 +13,14 @@ const sampleProducts = [
 
 class UIManager {
     constructor() {
-        this.loadProducts();
+        // Load products will be called in init()
     }
 
     // Initialize the application
-    init() {
+    async init() {
         this.setupEventListeners();
-        this.renderProducts();
-        console.log('✅ DealHarvest initialized with 4x4 grid');
+        await this.loadProducts();
+        console.log('✅ DealHarvest initialized with Google Sheets integration');
     }
 
     // Detect store from URL
@@ -115,9 +100,59 @@ class UIManager {
         }
     }
 
-    // Load products (single example product)
-    loadProducts() {
-        allProducts = [...sampleProducts]; // Load the single example product
+    // Load products from Google Sheets
+    async loadProducts() {
+        this.showLoading();
+        
+        try {
+            const products = await window.googleSheetsAPI.fetchProducts();
+            allProducts = [...products];
+            this.hideLoading();
+            this.renderProducts();
+            
+            // Track successful load
+            if (window.cookieManager) {
+                window.cookieManager.trackEvent('products_loaded', 'system', `${products.length} products`);
+            }
+        } catch (error) {
+            console.error('Failed to load products:', error);
+            this.hideLoading();
+            this.showError();
+        }
+    }
+
+    // Show loading state
+    showLoading() {
+        isLoading = true;
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+
+        grid.innerHTML = `
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <h3>Loading fresh deals...</h3>
+                <p>Fetching the latest products from our inventory</p>
+            </div>
+        `;
+    }
+
+    // Hide loading state
+    hideLoading() {
+        isLoading = false;
+    }
+
+    // Show error state
+    showError() {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+
+        grid.innerHTML = `
+            <div class="error-state">
+                <h3>⚠️ Connection Issue</h3>
+                <p>Unable to load fresh products. Please check your connection and try again.</p>
+                <button onclick="location.reload()" class="retry-btn">Try Again</button>
+            </div>
+        `;
     }
 
     // Handle search functionality
@@ -137,7 +172,7 @@ class UIManager {
         const storeFilter = document.getElementById('storeFilter');
         const searchInput = document.getElementById('searchInput');
         
-        let filtered = [...sampleProducts];
+        let filtered = [...allProducts];
         
         // Apply search filter
         const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
@@ -244,9 +279,9 @@ function trackProductClick(productName, productUrl, storeName) {
 }
 
 // Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const app = new UIManager();
-    app.init();
+    await app.init();
 });
 
-console.log('🚀 DealHarvest - Analytics & Cookie Management Enabled');
+console.log('🚀 DealHarvest - Google Sheets Integration Active');

@@ -541,6 +541,64 @@ body {
 }
 
 /* ====================================
+   LOADING & ERROR STATES
+   ==================================== */
+
+.loading-state,
+.error-state {
+    text-align: center;
+    padding: 80px 20px;
+    grid-column: 1 / -1;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid #7C3AED;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-state h3,
+.error-state h3 {
+    color: #374151;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.loading-state p,
+.error-state p {
+    color: #6b7280;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.retry-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+}
+
+/* ====================================
    COOKIE BANNER
    ==================================== */
 
