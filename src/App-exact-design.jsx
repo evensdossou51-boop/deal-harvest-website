@@ -10,8 +10,8 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Use static data and limit to 6 products for the 2x3 grid
-    const filteredDeals = filterDeals(staticDeals, category, store, "").slice(0, 6);
+    // Use static data and show all 38 products (or filtered results)
+    const filteredDeals = filterDeals(staticDeals, category, store, "");
     setDeals(filteredDeals);
   }, [category, store, priceRange]);
 
@@ -104,7 +104,7 @@ export default function App() {
         {/* Products Grid */}
         <main className="products-main">
           <div className="products-grid-container">
-            {deals.map((deal, index) => (
+            {deals.map((deal) => (
               <div key={deal.id} className="product-card">
                 <div className="card-header">
                   <div className="store-icon">
@@ -122,24 +122,26 @@ export default function App() {
                 </div>
                 
                 <div className="product-details">
-                  <h3 className="product-title">
-                    {index === 0 ? "Urog Helen Miou" :
-                     index === 1 ? "Save & Hora Masrug" :
-                     index === 2 ? "Oola Go Panow" :
-                     index === 3 ? "Seceg Du Weol" :
-                     index === 4 ? "Hilo Lou Salisa Home Ceres" :
-                     "Jah 5 Skan Tut Bar Yant Geost"}
-                  </h3>
-                  <p className="product-subtitle">
-                    {index === 0 ? "Lnuj Eus Emp" :
-                     index === 1 ? "Iso Mlin" :
-                     index === 2 ? "Tende Eus Cat" :
-                     index === 3 ? "Sik Wijk" :
-                     index === 4 ? "Saleu Musargu" :
-                     "Wel Geir"}
-                  </p>
+                  <div className="seller-info">
+                    <span className="seller-label">Sold by:</span>
+                    <span className="seller-name">{deal.store}</span>
+                  </div>
                   
-                  <button className="view-deal-button">VIEW DEAL</button>
+                  <h3 className="product-title">{deal.name}</h3>
+                  
+                  <div className="product-pricing">
+                    <span className="current-price">{deal.price}</span>
+                    <span className="old-price">{deal.oldPrice}</span>
+                  </div>
+                  
+                  <a 
+                    href={deal.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="view-deal-button"
+                  >
+                    VIEW DEAL ON {deal.store.toUpperCase()}
+                  </a>
                 </div>
               </div>
             ))}
