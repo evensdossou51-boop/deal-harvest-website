@@ -3,147 +3,147 @@
 export const staticDeals = [
   {
     id: 1,
-    title: "Amazon Product", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 1",
+    description: "Amazing product with great features",
+    price: "$99.99",
+    oldPrice: "$149.99",
+    image: "https://via.placeholder.com/300x300/5d3a9b/white?text=Product+1",
     link: "https://amzn.to/4nGXCMx",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Electronics",
+    discountPercent: "33",
+    rating: "4.5",
+    reviews: "1,234",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "electronics"]
   },
   {
     id: 2,
-    title: "Amazon Product 2", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 2",
+    description: "High-quality product at an amazing price",
+    price: "$79.99",
+    oldPrice: "$119.99",
+    image: "https://via.placeholder.com/300x300/7b4bb8/white?text=Product+2",
     link: "https://amzn.to/4oyZ5pl",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Home & Garden",
+    discountPercent: "33",
+    rating: "4.7",
+    reviews: "856",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "home"]
   },
   {
     id: 3,
-    title: "Amazon Product 3", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 3",
+    description: "Top-rated product with excellent reviews",
+    price: "$129.99",
+    oldPrice: "$179.99",
+    image: "https://via.placeholder.com/300x300/8b5cc8/white?text=Product+3",
     link: "https://amzn.to/3LKREg4",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Beauty",
+    discountPercent: "28",
+    rating: "4.8",
+    reviews: "2,145",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "beauty"]
   },
   {
     id: 4,
-    title: "Amazon Product 4", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 4",
+    description: "Must-have item with incredible value",
+    price: "$59.99",
+    oldPrice: "$89.99",
+    image: "https://via.placeholder.com/300x300/9b6dd8/white?text=Product+4",
     link: "https://amzn.to/4oqQC7G",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Sports",
+    discountPercent: "33",
+    rating: "4.6",
+    reviews: "743",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "sports"]
   },
   {
     id: 5,
-    title: "Amazon Product 5", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 5",
+    description: "Best-selling product with amazing features",
+    price: "$149.99",
+    oldPrice: "$199.99",
+    image: "https://via.placeholder.com/300x300/ab7ee8/white?text=Product+5",
     link: "https://amzn.to/4qGAJeM",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Clothing",
+    discountPercent: "25",
+    rating: "4.9",
+    reviews: "3,267",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "clothing"]
   },
   {
     id: 6,
-    title: "Amazon Product 6", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 6",
+    description: "Innovative product with cutting-edge technology",
+    price: "$89.99",
+    oldPrice: "$129.99",
+    image: "https://via.placeholder.com/300x300/bb8ff8/white?text=Product+6",
     link: "https://amzn.to/3WBmOcf",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Electronics",
+    discountPercent: "31",
+    rating: "4.4",
+    reviews: "1,892",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "electronics"]
   },
   {
     id: 7,
-    title: "Amazon Product 7", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 7",
+    description: "Perfect solution for everyday needs",
+    price: "$39.99",
+    oldPrice: "$59.99",
+    image: "https://via.placeholder.com/300x300/cba0ff/white?text=Product+7",
     link: "https://amzn.to/47VXKTv",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Home & Garden",
+    discountPercent: "33",
+    rating: "4.3",
+    reviews: "567",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "home"]
   },
   {
     id: 8,
-    title: "Amazon Product 8", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 8",
+    description: "High-performance product with great durability",
+    price: "$199.99",
+    oldPrice: "$299.99",
+    image: "https://via.placeholder.com/300x300/dbb1ff/white?text=Product+8",
     link: "https://amzn.to/3JJzwCQ",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Automotive",
+    discountPercent: "33",
+    rating: "4.7",
+    reviews: "1,456",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "automotive"]
   },
   {
     id: 9,
-    title: "Amazon Product 9", // Update with actual product name
-    description: "Amazon product from the provided link", // Update with actual description
-    price: "Check Amazon", // Update with actual price
-    originalPrice: "", // Update if there's an original price
-    image: "", // Update with actual product image URL
+    name: "Premium Amazon Product 9",
+    description: "Essential item with unbeatable price",
+    price: "$69.99",
+    oldPrice: "$99.99",
+    image: "https://via.placeholder.com/300x300/ebc2ff/white?text=Product+9",
     link: "https://amzn.to/4ou29mE",
     store: "Amazon",
-    category: "Other", // Update with appropriate category
-    discount: "", // Update if there's a discount percentage
-    rating: "", // Update with product rating
-    reviews: "", // Update with number of reviews
+    category: "Books",
+    discountPercent: "30",
+    rating: "4.5",
+    reviews: "892",
     isSponsored: true,
-    tags: ["amazon"]
+    tags: ["amazon", "books"]
   }
 ];
 
