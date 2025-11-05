@@ -11,7 +11,7 @@ export default function App() {
 
   // Check if we're in development mode
   const isDevelopment = window.location.hostname === 'localhost';
-  const logoPath = isDevelopment ? './logo.svg' : '/deal-harvest-website/logo.svg';
+  const logoPath = isDevelopment ? './logo.png' : '/deal-harvest-website/logo.png';
 
   useEffect(() => {
     // Use static data and show all 38 products (or filtered results)
