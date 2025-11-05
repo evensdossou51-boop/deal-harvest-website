@@ -7,7 +7,8 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "ts-node server.ts",
     "client": "vite",
-    "build": "vite build && tsc",
+    "build": "vite build",
+    "build-full": "vite build && tsc",
     "start": "node dist/server.js",
     "preview": "vite preview"
   },

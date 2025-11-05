@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  base: '/deal-harvest-website/',
   server: {
     port: 3000,
     proxy: {
@@ -10,6 +11,6 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'dist-client'
+    outDir: 'dist'
   }
 })
