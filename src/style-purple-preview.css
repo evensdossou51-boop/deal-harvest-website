@@ -1,0 +1,180 @@
+/* --- Variables and Base Styles --- */
+:root {
+    --dark-purple: #46306c;
+    --light-purple: #a593c2;
+    --card-background: #ffffff;
+    --white: #ffffff;
+    --black: #222222;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--dark-purple); /* Or a very light purple/white background */
+    color: var(--black);
+}
+
+/* --- Header Styling --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: var(--dark-purple);
+    color: var(--white);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.login-button {
+    padding: 8px 20px;
+    background-color: var(--light-purple);
+    border: none;
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* --- Hero Section & Typography --- */
+.hero-section {
+    padding: 80px 50px;
+    text-align: left;
+    background-color: var(--white); /* Main background */
+    min-height: 80vh; /* Ensure it takes up enough vertical space */
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--dark-purple);
+    max-width: 500px;
+}
+
+.view-all-button {
+    padding: 12px 30px;
+    background-color: var(--dark-purple);
+    border: none;
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 50px;
+}
+
+/* --- Deal Grid Positioning (The Complex Part) --- */
+
+.deal-grid-container {
+    /* Use grid to center the circle, or just position: relative */
+    position: relative;
+    width: 600px; /* Define the size of your circle area */
+    height: 600px; 
+    margin: 0 auto; /* Center the container horizontally */
+    margin-top: -150px; /* Pull it up into the hero section */
+}
+
+/* Center Button Styling */
+.deal-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    background-color: var(--dark-purple);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+/* Deal Card Base Styling */
+.deal-card {
+    position: absolute;
+    width: 150px; 
+    height: 180px; 
+    padding: 15px;
+    background-color: var(--white);
+    border: 1px solid var(--light-purple);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.deal-card:hover {
+    transform: scale(1.05);
+}
+
+.deal-card h3 {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.deal-card p {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.view-deal-button {
+    padding: 6px 15px;
+    background-color: var(--light-purple);
+    border: none;
+    color: var(--white);
+    font-size: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Discount Tag */
+.discount {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--dark-purple);
+    color: var(--white);
+    font-size: 9px;
+    padding: 4px 8px;
+    border-radius: 0 15px 0 15px;
+}
+
+/* --- Radial Positioning using CSS Transform Rotate/Translate --- */
+/* This is an advanced technique. Each card is rotated and then translated (moved) out 
+   to a specific degree to form the circle around the center. */
+   
+/* Calculate the angle for each card: 360 degrees / 8 cards = 45 degrees per card */
+/* Adjust the 'translateY' value to control the distance from the center. */
+
+.deal-1 { transform: rotate(0deg) translateY(-250px) rotate(0deg); }
+.deal-2 { transform: rotate(45deg) translateY(-250px) rotate(-45deg); }
+.deal-3 { transform: rotate(90deg) translateY(-250px) rotate(-90deg); }
+.deal-4 { transform: rotate(135deg) translateY(-250px) rotate(-135deg); }
+.deal-5 { transform: rotate(180deg) translateY(-250px) rotate(-180deg); }
+.deal-6 { transform: rotate(225deg) translateY(-250px) rotate(-225deg); }
+.deal-7 { transform: rotate(270deg) translateY(-250px) rotate(-270deg); }
+.deal-8 { transform: rotate(315deg) translateY(-250px) rotate(-315deg); }
+
+
+/* The second rotate on the deal card (e.g., rotate(-45deg)) 
+   is critical to ensure the text and content inside the card are not also rotated 
+   and remain upright. */
+
+/* --- Footer --- */
+.footer {
+    padding: 20px 50px;
+    background-color: var(--dark-purple);
+    color: var(--white);
+    text-align: center;
+    font-size: 12px;
+}
