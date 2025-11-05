@@ -9,6 +9,10 @@ export default function App() {
   const [priceRange, setPriceRange] = useState("all");
   const [loading, setLoading] = useState(false);
 
+  // Check if we're in development mode
+  const isDevelopment = window.location.hostname === 'localhost';
+  const logoPath = isDevelopment ? './logo.svg' : '/deal-harvest-website/logo.svg';
+
   useEffect(() => {
     // Use static data and show all 38 products (or filtered results)
     const filteredDeals = filterDeals(staticDeals, category, store, "");
@@ -21,7 +25,7 @@ export default function App() {
       <header className="main-header">
         <div className="header-container">
           <div className="logo-section">
-            <img src="./logo.svg" alt="Deal Harvest Logo" className="logo-image" />
+            <img src={logoPath} alt="Deal Harvest Logo" className="logo-image" />
             <span className="logo-text">DEAL HARVEST</span>
           </div>
           
@@ -157,7 +161,7 @@ export default function App() {
       <footer className="main-footer">
         <div className="footer-content">
           <div className="footer-left">
-            <img src="./logo.svg" alt="Deal Harvest Logo" className="footer-logo" />
+            <img src={logoPath} alt="Deal Harvest Logo" className="footer-logo" />
             <div className="footer-text">© 2025 DEAL HARVEST. YOUR DAILY SHOPPING DISCORFAVINGS.</div>
           </div>
           <div className="social-icons">

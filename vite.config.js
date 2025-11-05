@@ -1,16 +1,27 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
-  plugins: [react()],
-  base: '/deal-harvest-website/',
-  server: {
-    port: 3000,
-    proxy: {
-      '/api': 'http://localhost:5001'
+export default defineConfig(({ command }) => {
+  const config = {
+    plugins: [react()],
+    server: {
+      port: 3000,
+      proxy: {
+        '/api': 'http://localhost:5001'
+      }
+    },
+    build: {
+      outDir: 'dist'
     }
-  },
-  build: {
-    outDir: 'dist'
   }
+
+  if (command === 'serve') {
+    // Development server
+    config.base = '/'
+  } else {
+    // Production build for GitHub Pages
+    config.base = '/deal-harvest-website/'
+  }
+
+  return config
 })
