@@ -5,7 +5,8 @@ export default defineConfig(({ command }) => {
   const config = {
     plugins: [react()],
     server: {
-      port: 3000,
+      port: 5173,
+      host: true,
       proxy: {
         '/api': 'http://localhost:5001'
       }
