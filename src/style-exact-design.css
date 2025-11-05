@@ -396,6 +396,40 @@ body {
     font-size: 0.8rem;
     opacity: 0.9;
     max-width: 300px;
+    margin-bottom: 0.5rem;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.footer-link {
+    color: white;
+    text-decoration: none;
+    font-size: 0.7rem;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.footer-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.footer-separator {
+    color: white;
+    opacity: 0.5;
+    font-size: 0.7rem;
+}
+
+.footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
 }
 
 .social-icons {
@@ -411,6 +445,15 @@ body {
 
 .social-icons span:hover {
     transform: translateY(-2px);
+}
+
+.affiliate-notice {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    max-width: 300px;
+    text-align: right;
+    line-height: 1.4;
+    font-weight: 500;
 }
 
 /* Responsive Design */
@@ -464,6 +507,21 @@ body {
         flex-direction: column;
         gap: 1rem;
         text-align: center;
+    }
+    
+    .footer-left {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-right {
+        align-items: center;
+    }
+    
+    .affiliate-notice {
+        text-align: center;
+        font-size: 0.8rem;
+        max-width: 100%;
     }
 }
 

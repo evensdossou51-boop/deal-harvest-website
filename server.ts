@@ -7,6 +7,7 @@ import * as fs from "fs";
 import * as path from "path";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+// Amazon API Integration (will be dynamically imported)
 
 // Load environment variables
 dotenv.config();
@@ -46,6 +47,55 @@ function saveSubscribers() {
     fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify(emailSubscribers, null, 2));
   } catch (error) {
     console.error('Error saving subscribers:', error);
+  }
+}
+
+// Amazon Product Automation
+let productScheduler: any = null;
+
+// Initialize Amazon Product Scheduler
+async function initializeAmazonScheduler() {
+  try {
+    // Check if Amazon credentials are configured
+    const amazonConfig = {
+      accessKey: process.env.AMAZON_ACCESS_KEY_ID,
+      secretKey: process.env.AMAZON_SECRET_ACCESS_KEY,
+      associateTag: process.env.AMAZON_ASSOCIATE_TAG,
+      region: process.env.AMAZON_REGION || 'us-east-1',
+      host: process.env.AMAZON_HOST || 'webservices.amazon.com'
+    };
+
+    // Validate required credentials
+    if (!amazonConfig.accessKey || !amazonConfig.secretKey || !amazonConfig.associateTag) {
+      console.log('⚠️ Amazon API credentials not configured. Skipping automation.');
+      console.log('💡 To enable Amazon automation, add credentials to .env file:');
+      console.log('   - AMAZON_ACCESS_KEY_ID');
+      console.log('   - AMAZON_SECRET_ACCESS_KEY'); 
+      console.log('   - AMAZON_ASSOCIATE_TAG');
+      return;
+    }
+
+    // Dynamically import the ProductScheduler
+    const ProductSchedulerModule = await import('./src/services/productScheduler.js');
+    const ProductScheduler = (ProductSchedulerModule as any).default;
+    
+    productScheduler = new ProductScheduler();
+    
+    if (productScheduler.initialize(amazonConfig)) {
+      console.log('✅ Amazon Product Scheduler initialized');
+      
+      // Start automated fetching if enabled
+      if (process.env.ENABLE_AUTO_FETCH !== 'false') {
+        productScheduler.startScheduler();
+        console.log('🤖 Automated Amazon product fetching started');
+      }
+    } else {
+      console.error('❌ Failed to initialize Amazon Product Scheduler');
+    }
+    
+  } catch (error: any) {
+    console.error('❌ Amazon scheduler initialization error:', error?.message || error);
+    console.log('💡 Make sure to install required dependencies and check credentials');
   }
 }
 
@@ -646,7 +696,80 @@ cron.schedule("0 8 * * *", async () => {
   await sendDailyDealsEmail();
 });
 
+// Amazon Product Management API Endpoints
+router.get('/api/amazon/status', (req: Request, res: Response) => {
+  if (!productScheduler) {
+    return res.json({ 
+      isConnected: false, 
+      message: 'Amazon API not initialized. Configure credentials in .env file.' 
+    });
+  }
+  
+  res.json(productScheduler.getStatus());
+});
+
+router.post('/api/amazon/fetch-now', async (req: Request, res: Response) => {
+  if (!productScheduler) {
+    return res.status(400).json({ 
+      error: 'Amazon API not initialized' 
+    });
+  }
+  
+  try {
+    console.log('🚀 Manual product fetch triggered via API');
+    await productScheduler.fetchProducts();
+    res.json({ 
+      success: true, 
+      message: 'Product fetch completed successfully' 
+    });
+  } catch (error: any) {
+    console.error('API fetch error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch products', 
+      details: error?.message 
+    });
+  }
+});
+
+router.post('/api/amazon/start-scheduler', (req: Request, res: Response) => {
+  if (!productScheduler) {
+    return res.status(400).json({ 
+      error: 'Amazon API not initialized' 
+    });
+  }
+  
+  productScheduler.startScheduler();
+  res.json({ 
+    success: true, 
+    message: 'Scheduler started successfully' 
+  });
+});
+
+router.post('/api/amazon/stop-scheduler', (req: Request, res: Response) => {
+  if (!productScheduler) {
+    return res.status(400).json({ 
+      error: 'Amazon API not initialized' 
+    });
+  }
+  
+  productScheduler.stopScheduler();
+  res.json({ 
+    success: true, 
+    message: 'Scheduler stopped successfully' 
+  });
+});
+
 app.use(router);
 
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Start server and initialize Amazon automation
+app.listen(PORT, async () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log('🔄 Initializing Amazon Product Automation...');
+  
+  // Initialize Amazon scheduler after server starts
+  await initializeAmazonScheduler();
+  
+  console.log('✅ Server startup completed');
+});

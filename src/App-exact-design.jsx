@@ -28,8 +28,6 @@ export default function App() {
             <img src={logoPath} alt="Deal Harvest Logo" className="logo-image" />
             <span className="logo-text">DEAL HARVEST</span>
           </div>
-          
-          <button className="login-btn">LOGIN</button>
         </div>
       </header>
 
@@ -163,12 +161,18 @@ export default function App() {
           <div className="footer-left">
             <img src={logoPath} alt="Deal Harvest Logo" className="footer-logo" />
             <div className="footer-text">© 2025 DEAL HARVEST. YOUR DAILY SHOPPING DISCORFAVINGS.</div>
+            <div className="footer-links">
+              <a href="./terms.html" className="footer-link">Terms & Conditions</a>
+              <span className="footer-separator">|</span>
+              <a href="./terms.html#privacy" className="footer-link">Privacy Policy</a>
+              <span className="footer-separator">|</span>
+              <a href="./terms.html#affiliate" className="footer-link">Affiliate Disclosure</a>
+            </div>
           </div>
-          <div className="social-icons">
-            <span>📘</span>
-            <span>🐦</span>
-            <span>📷</span>
-            <span>🔗</span>
+          <div className="footer-right">
+            <div className="affiliate-notice">
+              <small>As an Amazon Associate and participant in other affiliate programs, I earn from qualifying purchases.</small>
+            </div>
           </div>
         </div>
       </footer>
