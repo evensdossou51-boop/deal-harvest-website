@@ -1,12 +1,17 @@
 // ====================================
-// ADMIN PRODUCT MANAGER
-// Simple localStorage-based product management
+// ADMIN PRODUCT MANAGER WITH GITHUB SYNC
+// Enhanced product management with auto-deployment
 // ====================================
 
 class ProductManager {
     constructor() {
         this.products = [];
+        this.githubToken = '';
+        this.githubOwner = 'evensdossou51-boop';
+        this.githubRepo = 'deal-harvest-website';
+        this.githubBranch = 'new-design';
         this.loadFromLocalStorage();
+        this.loadGitHubToken();
         this.init();
     }
 
@@ -17,13 +22,52 @@ class ProductManager {
             this.addProduct();
         });
 
-        // Download button
+        // Save GitHub token
+        document.getElementById('saveTokenBtn').addEventListener('click', () => {
+            this.saveGitHubToken();
+        });
+
+        // Sync to GitHub
+        document.getElementById('syncBtn').addEventListener('click', () => {
+            this.syncToGitHub();
+        });
+
+        // Download button (backup)
         document.getElementById('downloadBtn').addEventListener('click', () => {
             this.downloadJSON();
         });
 
         // Initial render
         this.render();
+    }
+
+    loadGitHubToken() {
+        try {
+            const token = localStorage.getItem('githubToken');
+            if (token) {
+                this.githubToken = token;
+                document.getElementById('githubToken').value = token;
+            }
+        } catch (e) {
+            console.error('Failed to load GitHub token:', e);
+        }
+    }
+
+    saveGitHubToken() {
+        const token = document.getElementById('githubToken').value.trim();
+        if (!token) {
+            alert('Please enter a GitHub token');
+            return;
+        }
+        
+        if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+            alert('Invalid GitHub token format. Should start with ghp_ or github_pat_');
+            return;
+        }
+
+        this.githubToken = token;
+        localStorage.setItem('githubToken', token);
+        this.showSuccess('GitHub token saved! You can now sync products automatically.');
     }
 
     loadFromLocalStorage() {
@@ -50,23 +94,38 @@ class ProductManager {
     addProduct() {
         const name = document.getElementById('productName').value.trim();
         const url = document.getElementById('productUrl').value.trim();
-        const image = document.getElementById('productImage').value.trim();
-        const price = document.getElementById('productPrice').value.trim() || '$--';
+        const description = document.getElementById('productDescription').value.trim();
+        const image1 = document.getElementById('productImage1').value.trim();
+        const image2 = document.getElementById('productImage2').value.trim();
+        const image3 = document.getElementById('productImage3').value.trim();
+        const highlightsText = document.getElementById('productHighlights').value.trim();
         const store = document.getElementById('productStore').value;
         const category = document.getElementById('productCategory').value;
 
-        if (!name || !url || !image) {
-            alert('Please fill in all required fields (Name, URL, Image)');
+        if (!name || !url || !description || !image1) {
+            alert('Please fill in all required fields (Name, URL, Description, Image 1)');
             return;
         }
+
+        // Parse highlights into array
+        const highlights = highlightsText
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0);
+
+        // Collect images
+        const images = [image1];
+        if (image2) images.push(image2);
+        if (image3) images.push(image3);
 
         // Create product object
         const product = {
             id: Date.now(),
             name,
             url,
-            image,
-            price,
+            description,
+            images,
+            highlights,
             store,
             category
         };
@@ -84,7 +143,7 @@ class ProductManager {
         document.getElementById('productForm').reset();
 
         // Show success feedback
-        this.showSuccess('Product added successfully!');
+        this.showSuccess('Product added successfully! Click "Sync to GitHub" to publish.');
     }
 
     removeProduct(id) {
@@ -126,7 +185,7 @@ class ProductManager {
             .reverse()
             .map(product => `
                 <div class="product-item">
-                    <img src="${this.escapeHtml(product.image)}" 
+                    <img src="${this.escapeHtml(product.images[0])}" 
                          alt="${this.escapeHtml(product.name)}" 
                          class="product-image"
                          onerror="this.src='https://via.placeholder.com/60x60/ede9fe/333?text=No+Image'">
@@ -134,7 +193,7 @@ class ProductManager {
                         <div class="product-name">${this.escapeHtml(product.name)}</div>
                         <div class="product-meta">
                             <span class="badge badge-store">${this.escapeHtml(product.store)}</span>
-                            <span class="badge badge-price">${this.escapeHtml(product.price)}</span>
+                            <span class="badge badge-price">${product.images.length} images</span>
                         </div>
                     </div>
                     <button class="btn btn-danger" onclick="productManager.removeProduct(${product.id})">
@@ -142,6 +201,89 @@ class ProductManager {
                     </button>
                 </div>
             `).join('');
+    }
+
+    async syncToGitHub() {
+        if (!this.githubToken) {
+            alert('Please save your GitHub token first!');
+            return;
+        }
+
+        if (this.products.length === 0) {
+            alert('No products to sync. Add some products first!');
+            return;
+        }
+
+        try {
+            const syncBtn = document.getElementById('syncBtn');
+            syncBtn.disabled = true;
+            syncBtn.textContent = '⏳ Syncing...';
+
+            // Get current file SHA (needed for updates)
+            const currentFile = await this.getGitHubFile();
+            
+            // Prepare products JSON
+            const productsJSON = JSON.stringify(this.products, null, 2);
+            const content = btoa(unescape(encodeURIComponent(productsJSON)));
+
+            // Commit to GitHub
+            const response = await fetch(
+                `https://api.github.com/repos/${this.githubOwner}/${this.githubRepo}/contents/products.json`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${this.githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: `Update products - ${this.products.length} items`,
+                        content: content,
+                        branch: this.githubBranch,
+                        sha: currentFile?.sha
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'GitHub API error');
+            }
+
+            syncBtn.disabled = false;
+            syncBtn.textContent = '🚀 Sync to GitHub';
+            
+            this.showSuccess('✅ Products synced to GitHub! Your site will update automatically.');
+            
+        } catch (error) {
+            console.error('GitHub sync error:', error);
+            alert(`Failed to sync: ${error.message}\n\nCheck:\n1. Token has "repo" permission\n2. Token is valid\n3. Repository exists`);
+            
+            const syncBtn = document.getElementById('syncBtn');
+            syncBtn.disabled = false;
+            syncBtn.textContent = '🚀 Sync to GitHub';
+        }
+    }
+
+    async getGitHubFile() {
+        try {
+            const response = await fetch(
+                `https://api.github.com/repos/${this.githubOwner}/${this.githubRepo}/contents/products.json?ref=${this.githubBranch}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                    }
+                }
+            );
+
+            if (response.ok) {
+                return await response.json();
+            }
+            return null;
+        } catch (e) {
+            return null;
+        }
     }
 
     downloadJSON() {

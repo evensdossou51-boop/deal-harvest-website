@@ -84,17 +84,20 @@
         }
 
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 10px 12px;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
             font-size: 14px;
             transition: border-color 0.2s;
+            font-family: inherit;
         }
 
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #667eea;
         }
@@ -277,11 +280,25 @@
         <div class="instructions">
             <h3>📋 How to use:</h3>
             <ol>
-                <li>Fill out the form and click "Add Product" to add items</li>
-                <li>Review your products in the list on the right</li>
-                <li>Click "Download products.json" to save the file</li>
-                <li>Upload products.json to your website hosting to publish changes</li>
+                <li>Set up GitHub token below (one-time setup)</li>
+                <li>Fill out the form and click "Add Product"</li>
+                <li>Products are automatically saved to your GitHub repo</li>
+                <li>Your website updates automatically with new products!</li>
             </ol>
+        </div>
+
+        <!-- GitHub Token Setup -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>🔑 GitHub Setup (One-Time)</h2>
+            <div class="form-group">
+                <label>GitHub Personal Access Token</label>
+                <input type="password" id="githubToken" placeholder="ghp_...">
+                <small style="color: #666; font-size: 12px;">
+                    Create token at: <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a> 
+                    (Need "repo" scope)
+                </small>
+            </div>
+            <button class="btn btn-primary" id="saveTokenBtn">Save Token</button>
         </div>
 
         <div class="main-grid">
@@ -300,13 +317,28 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Image URL *</label>
-                        <input type="url" id="productImage" placeholder="https://..." required>
+                        <label>Description *</label>
+                        <textarea id="productDescription" rows="3" placeholder="Brief product description..." required></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Price</label>
-                        <input type="text" id="productPrice" placeholder="$49.99">
+                        <label>Image 1 URL *</label>
+                        <input type="url" id="productImage1" placeholder="https://..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image 2 URL (optional)</label>
+                        <input type="url" id="productImage2" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image 3 URL (optional)</label>
+                        <input type="url" id="productImage3" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Deal Highlights (one per line)</label>
+                        <textarea id="productHighlights" rows="4" placeholder="✓ Free Shipping&#10;✓ Prime Eligible&#10;✓ Best Seller&#10;✓ Limited Time Deal"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -360,7 +392,8 @@
                     </div>
                 </div>
 
-                <button class="btn btn-download" id="downloadBtn">💾 Download products.json</button>
+                <button class="btn btn-download" id="syncBtn">🚀 Sync to GitHub</button>
+                <button class="btn btn-download" id="downloadBtn" style="background: #6b7280; margin-top: 5px;">💾 Download JSON (Backup)</button>
             </div>
         </div>
     </div>

@@ -393,26 +393,77 @@ class UIManager {
             const storeName = product.store || this.detectStore(product.url);
             const storeColor = this.getStoreColor(storeName);
             const name = product.name || 'Item';
-            const first = name.split(' ')[0];
-            const image = product.image && product.image.trim() ? product.image : this.placeholderImage(first);
-            const fallback = this.placeholderImage(first);
-            const price = product.price && product.price.trim() ? product.price : '$--';
+            const description = product.description || '';
+            const highlights = product.highlights || [];
+            
+            // Handle images - use first image or fallback
+            const images = product.images || [product.image];
+            const primaryImage = images[0] || this.placeholderImage(name.split(' ')[0]);
+            const fallback = this.placeholderImage(name.split(' ')[0]);
+            
+            // Create highlights HTML
+            const highlightsHTML = highlights.length > 0 ? `
+                <div class="product-highlights">
+                    ${highlights.slice(0, 3).map(h => `<div class="highlight-item">${h}</div>`).join('')}
+                </div>
+            ` : '';
+            
+            // Create image gallery indicators if multiple images
+            const galleryHTML = images.length > 1 ? `
+                <div class="image-gallery-dots">
+                    ${images.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`).join('')}
+                </div>
+            ` : '';
+            
             return `
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="${image}"
+                <div class="product-card" data-images='${JSON.stringify(images)}'>
+                    <div class="product-image-wrapper">
+                        <img class="product-main-image" src="${primaryImage}"
                              alt="${name}"
                              onerror="this.onerror=null;this.src='${fallback}';">
+                        ${galleryHTML}
                     </div>
                     <div class="product-name">${name}</div>
-                    <div class="product-price">${price}</div>
+                    ${description ? `<div class="product-description">${description}</div>` : ''}
+                    ${highlightsHTML}
                     <div class="product-store" style="background-color: ${storeColor}">
                         ${storeName}
                     </div>
-                    <button class="product-btn" onclick="trackProductClick('${name}', '${product.url}', '${storeName}'); window.open('${product.url || '#'}', '_blank')">View Deal</button>
+                    <button class="product-btn" onclick="trackProductClick('${name}', '${product.url}', '${storeName}'); window.open('${product.url || '#'}', '_blank')">
+                        🛒 Check Deal on ${storeName}
+                    </button>
                 </div>
             `;
         }).join('');
+        
+        // Add image gallery functionality
+        this.setupImageGalleries();
+    }
+    
+    // Setup image gallery click handlers
+    setupImageGalleries() {
+        document.querySelectorAll('.product-card').forEach(card => {
+            const imagesData = card.getAttribute('data-images');
+            if (!imagesData) return;
+            
+            try {
+                const images = JSON.parse(imagesData);
+                if (images.length <= 1) return;
+                
+                const mainImg = card.querySelector('.product-main-image');
+                const dots = card.querySelectorAll('.dot');
+                
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        mainImg.src = images[index];
+                        dots.forEach(d => d.classList.remove('active'));
+                        dot.classList.add('active');
+                    });
+                });
+            } catch (e) {
+                console.error('Failed to parse images:', e);
+            }
+        });
     }
 
     // Clear filters UI to neutral state
