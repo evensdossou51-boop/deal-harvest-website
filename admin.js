@@ -38,14 +38,25 @@ class ProductManager {
         });
 
         // Preview button
-        document.getElementById('previewBtn').addEventListener('click', () => {
-            this.showPreview();
-        });
+        const previewBtn = document.getElementById('previewBtn');
+        if (previewBtn) {
+            previewBtn.addEventListener('click', () => {
+                console.log('Preview button clicked');
+                this.showPreview();
+            });
+        } else {
+            console.error('Preview button not found!');
+        }
 
         // Close preview
-        document.getElementById('closePreview').addEventListener('click', () => {
-            document.getElementById('previewModal').style.display = 'none';
-        });
+        const closeBtn = document.getElementById('closePreview');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                document.getElementById('previewModal').style.display = 'none';
+            });
+        } else {
+            console.error('Close preview button not found!');
+        }
 
         // Initial render
         this.render();
@@ -168,6 +179,8 @@ class ProductManager {
     }
 
     showPreview() {
+        console.log('showPreview called, products:', this.products.length);
+        
         if (this.products.length === 0) {
             alert('No products to preview. Add some products first!');
             return;
@@ -175,6 +188,13 @@ class ProductManager {
 
         const modal = document.getElementById('previewModal');
         const content = document.getElementById('previewContent');
+        
+        console.log('Modal:', modal, 'Content:', content);
+
+        if (!modal || !content) {
+            alert('Preview modal not found. Please refresh the page.');
+            return;
+        }
 
         content.innerHTML = this.products.map((product, index) => `
             <div class="preview-product">
