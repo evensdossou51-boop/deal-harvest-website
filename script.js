@@ -630,69 +630,106 @@ class UIManager {
         if (searchInput) searchInput.value = '';
     }
 
-    // HERO VIDEO: simple playlist that alternates between two files with minimal gap
+    // HERO VIDEO: slideshow-style crossfade between 3 videos
     setupHeroPlaylist() {
         const video = document.getElementById('heroVideo');
         if (!video) return;
 
-        // Files present in the workspace
-        const playlist = ['websiteloop1.mp4', 'websiteloop2.mp4'];
+        // Create a second video element for crossfade
+        const video2 = document.createElement('video');
+        video2.className = 'hero-video hero-video-transition';
+        video2.muted = true;
+        video2.playsInline = true;
+        video2.style.position = 'absolute';
+        video2.style.top = '0';
+        video2.style.left = '0';
+        video2.style.width = '100%';
+        video2.style.height = '100%';
+        video2.style.objectFit = 'cover';
+        video2.style.opacity = '0';
+        video2.style.transition = 'opacity 1s ease-in-out';
+        video2.style.pointerEvents = 'none';
+        
+        // Make video container relative for absolute positioning
+        const container = video.parentElement;
+        if (container) {
+            container.style.position = 'relative';
+            container.appendChild(video2);
+        }
+
+        // Playlist with 3 videos in the videos folder
+        const playlist = [
+            'videos/websiteloop1.mp4',
+            'videos/websiteloop2.mp4',
+            'videos/websiteloop3.mp4'
+        ];
         let index = 0;
+        let activeVideo = video;
+        let nextVideo = video2;
 
-        // Secondary hidden preloader to warm up the next source
-        const preloader = document.createElement('video');
-        preloader.preload = 'auto';
-        preloader.muted = true;
-        preloader.playsInline = true;
-
-        const queueNext = () => {
-            const next = playlist[(index + 1) % playlist.length];
-            if (preloader.src.endsWith(next)) return;
-            preloader.src = next;
-            try { preloader.load(); } catch (_) {}
-        };
-
-        // Ensure current video is one of the playlist
-        const initial = playlist[0];
-        if (!video.src || !video.src.endsWith(initial)) {
-            video.src = initial;
+        // Ensure initial video is correct
+        if (!video.src || !video.src.includes(playlist[0])) {
+            video.src = playlist[0];
         }
         video.setAttribute('playsinline', '');
         video.setAttribute('muted', '');
-        video.muted = true; // needed for autoplay on mobile
+        video.muted = true;
 
-        // Try to play; if blocked, wait for a user gesture once
-        const tryPlay = () => {
+        // Try to play; if blocked, wait for user gesture
+        const tryPlay = (vid) => {
             try {
-                const p = video.play();
+                const p = vid.play();
                 if (p && typeof p.catch === 'function') {
-                    p.catch(() => {/* ignore */});
+                    p.catch(() => {/* ignore autoplay block */});
                 }
             } catch (_) {}
         };
-        tryPlay();
-        const onFirstInteract = () => { tryPlay(); cleanupInteract(); };
+        
+        tryPlay(video);
+        
+        const onFirstInteract = () => {
+            tryPlay(video);
+            cleanupInteract();
+        };
         const cleanupInteract = () => {
             window.removeEventListener('touchstart', onFirstInteract);
             window.removeEventListener('click', onFirstInteract);
         };
         window.addEventListener('touchstart', onFirstInteract, { once: true, passive: true });
         window.addEventListener('click', onFirstInteract, { once: true });
-        queueNext();
 
-        video.addEventListener('ended', () => {
+        // Crossfade transition when current video ends
+        const switchVideo = () => {
             index = (index + 1) % playlist.length;
-            const next = playlist[index];
-            // Swap source and play immediately
-            video.src = next;
-            try {
-                video.load();
-                const p = video.play();
-                if (p && typeof p.catch === 'function') p.catch(() => {});
-            } catch (_) {}
-            // Preload the following video
-            queueNext();
-        });
+            const nextSrc = playlist[index];
+            
+            // Preload next video
+            nextVideo.src = nextSrc;
+            nextVideo.load();
+            
+            // Start playing next video (hidden underneath)
+            tryPlay(nextVideo);
+            
+            // Wait a moment for it to start, then crossfade
+            setTimeout(() => {
+                // Fade out current, fade in next
+                activeVideo.style.opacity = '0';
+                nextVideo.style.opacity = '1';
+                
+                // After transition completes, swap references
+                setTimeout(() => {
+                    activeVideo.pause();
+                    activeVideo.currentTime = 0;
+                    // Swap which is active
+                    const temp = activeVideo;
+                    activeVideo = nextVideo;
+                    nextVideo = temp;
+                }, 1000); // match transition duration
+            }, 100);
+        };
+
+        video.addEventListener('ended', switchVideo);
+        video2.addEventListener('ended', switchVideo);
     }
 
 
