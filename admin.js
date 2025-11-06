@@ -196,15 +196,23 @@ class ProductManager {
             return;
         }
 
-        content.innerHTML = this.products.map((product, index) => `
+        content.innerHTML = this.products.map((product, index) => {
+            // Handle old products that might have single 'image' field instead of 'images' array
+            const images = product.images || (product.image ? [product.image] : []);
+            
+            if (images.length === 0) {
+                images.push('https://via.placeholder.com/400x400/ede9fe/333?text=No+Image');
+            }
+            
+            return `
             <div class="preview-product">
                 <div class="preview-slideshow" id="slideshow-${product.id}">
-                    ${product.images.map((img, i) => `
+                    ${images.map((img, i) => `
                         <img src="${this.escapeHtml(img)}" class="${i === 0 ? 'active' : ''}" alt="${this.escapeHtml(product.name)}">
                     `).join('')}
-                    ${product.images.length > 1 ? `
+                    ${images.length > 1 ? `
                         <div class="preview-nav">
-                            ${product.images.map((_, i) => `
+                            ${images.map((_, i) => `
                                 <button class="${i === 0 ? 'active' : ''}" onclick="productManager.switchPreviewImage(${product.id}, ${i})"></button>
                             `).join('')}
                         </div>
@@ -214,8 +222,8 @@ class ProductManager {
                     <h3>${this.escapeHtml(product.name)}</h3>
                     <p><strong>Store:</strong> ${this.escapeHtml(product.store)}</p>
                     <p><strong>Category:</strong> ${this.escapeHtml(product.category)}</p>
-                    <p>${this.escapeHtml(product.description)}</p>
-                    ${product.highlights.length > 0 ? `
+                    <p>${this.escapeHtml(product.description || 'No description')}</p>
+                    ${(product.highlights && product.highlights.length > 0) ? `
                         <div class="preview-highlights">
                             <strong>Highlights:</strong>
                             ${product.highlights.map(h => `<div>✓ ${this.escapeHtml(h)}</div>`).join('')}
@@ -226,13 +234,15 @@ class ProductManager {
                     </p>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
 
         modal.style.display = 'block';
 
         // Auto-start slideshows
         this.products.forEach(product => {
-            if (product.images.length > 1) {
+            const images = product.images || (product.image ? [product.image] : []);
+            if (images.length > 1) {
                 this.startAutoSlideshow(product.id);
             }
         });
@@ -292,9 +302,14 @@ class ProductManager {
         container.innerHTML = this.products
             .slice()
             .reverse()
-            .map(product => `
+            .map(product => {
+                // Handle old products that might have single 'image' field instead of 'images' array
+                const images = product.images || (product.image ? [product.image] : []);
+                const firstImage = images[0] || 'https://via.placeholder.com/60x60/ede9fe/333?text=No+Image';
+                
+                return `
                 <div class="product-item">
-                    <img src="${this.escapeHtml(product.images[0])}" 
+                    <img src="${this.escapeHtml(firstImage)}" 
                          alt="${this.escapeHtml(product.name)}" 
                          class="product-image"
                          onerror="this.src='https://via.placeholder.com/60x60/ede9fe/333?text=No+Image'">
@@ -302,14 +317,15 @@ class ProductManager {
                         <div class="product-name">${this.escapeHtml(product.name)}</div>
                         <div class="product-meta">
                             <span class="badge badge-store">${this.escapeHtml(product.store)}</span>
-                            <span class="badge badge-price">${product.images.length} image${product.images.length !== 1 ? 's' : ''}</span>
+                            <span class="badge badge-price">${images.length} image${images.length !== 1 ? 's' : ''}</span>
                         </div>
                     </div>
                     <button class="btn btn-danger" onclick="productManager.removeProduct(${product.id})">
                         🗑️ Delete
                     </button>
                 </div>
-            `).join('');
+                `;
+            }).join('');
     }
 
     async syncToGitHub() {
