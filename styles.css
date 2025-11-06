@@ -1,3 +1,10 @@
+/* LAYOUT SYSTEM: fixed container widths + responsive tweaks */
+:root { font-size: 16px; }
+.container { width: 1200px; max-width: 100%; margin: 0 auto; padding: 0 20px; }
+@media (max-width: 1279.98px) { .container { width: 1024px; } }
+@media (max-width: 1023.98px) { .container { width: 768px; } }
+@media (max-width: 767.98px) { .container { width: 100%; padding: 0 16px; } }
+
 /* ROUND PRODUCT PANELS SECTION */
 .site-root body, body {
     overflow-x: hidden; /* prevent 100vw overflow creating horizontal scrollbars */
@@ -8,47 +15,45 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin: -120px 0 0 0; /* pull panels upward without transform for more stable layout */
+    margin: -120px 0 0 0; /* controlled lift above hero */
     padding: 0 0 32px 0;
     transition: margin 0.3s ease;
 }
 .round-panels-container {
     width: 100%;
     max-width: 1200px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 32px;
-    padding: 0 24px;
     margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
 }
 .round-panel {
     background: #fff;
     border-radius: 50%;
     box-shadow: 0 4px 32px rgba(0,0,0,0.08);
-    width: 260px;
-    height: 260px;
-    min-width: 180px;
-    min-height: 180px;
-    max-width: 340px;
-    max-height: 340px;
+    width: 280px;
+    height: 280px;
+    position: relative; /* for absolute title */
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0 0;
     overflow: hidden;
     transition: box-shadow 0.2s;
+    margin: 0 auto;
 }
 .round-panel:hover {
     box-shadow: 0 8px 40px rgba(124,58,237,0.13);
 }
 .round-panel-title {
-    font-size: 1.1rem;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    font-size: 16px; /* px-consistent title */
     font-weight: 700;
     color: #222;
-    margin-bottom: 10px;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.3px;
     text-align: center;
 }
 .round-panel-content {
@@ -59,40 +64,18 @@
     gap: 8px;
     align-items: center;
     justify-content: center;
+    padding-top: 34px; /* make room for absolute title */
 }
 @media (max-width: 1200px) {
-    .round-panels-container {
-        gap: 18px;
-        padding: 0 8px;
-    }
-    .round-panel {
-        min-width: 120px;
-        min-height: 120px;
-        max-width: 200px;
-        max-height: 200px;
-        width: 160px;
-        height: 160px;
-    }
-    .round-panels-section {
-        margin-top: -80px; /* reduce overlap at smaller widths */
-    }
+    .round-panels-container { grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 0 16px; }
+    .round-panel { width: 220px; height: 220px; }
+    .round-panels-section { margin-top: -80px; }
 }
 @media (max-width: 900px) {
-    .round-panels-container {
-        flex-direction: column;
-        gap: 24px;
-        align-items: center;
-    }
-    .round-panel {
-        width: min(92vw, 320px);
-        height: auto; /* let content drive height on mobile */
-        aspect-ratio: 1 / 1; /* keep circle */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 8px auto 12px auto;
-        padding: 0;
-    }
+    .round-panels-container { grid-template-columns: 1fr; gap: 16px; }
+    .round-panel { width: 180px; height: 180px; }
+    .round-panel-title { font-size: 14px; top: 8px; }
+    .round-panel-content { padding-top: 28px; }
     .round-panels-section { margin-top: 8px !important; }
 }
 /* HERO VIDEO SECTION */
@@ -118,7 +101,7 @@
     width: 100%;
     max-width: 1200px;
     min-width: 0;
-    height: 340px;
+    height: 340px; /* fixed px size for consistency */
     object-fit: cover;
     border-radius: 0;
     box-shadow: 0 4px 32px rgba(124,58,237,0.10);
@@ -561,7 +544,7 @@ body {
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* px-consistent cards with responsive fit */
     gap: 20px;
     margin-bottom: 40px;
 }
@@ -705,7 +688,7 @@ body {
 
 @media (max-width: 1024px) {
     .products-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 18px;
     }
     
@@ -767,10 +750,7 @@ body {
         max-width: 160px;
     }
     
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-    }
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
     
     .nav {
         gap: 1rem;
@@ -778,10 +758,7 @@ body {
 }
 
 @media (max-width: 480px) {
-    .products-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
+    .products-grid { grid-template-columns: 1fr; gap: 15px; }
     
     .main-title {
         font-size: 1.8rem;
