@@ -113,12 +113,22 @@ class UIManager {
             panel.innerHTML = chosen.map(prod => {
                 const name = prod.name || 'Item';
                 const first = name.split(' ')[0];
-                const img = prod.image && prod.image.trim() ? prod.image : this.placeholderImage(first);
+                
+                // Handle both new format (images array) and legacy format (single image)
+                let img;
+                if (prod.images && Array.isArray(prod.images) && prod.images.length > 0) {
+                    img = prod.images[0]; // Use first image from array
+                } else if (prod.image && prod.image.trim()) {
+                    img = prod.image; // Legacy format
+                } else {
+                    img = this.placeholderImage(first);
+                }
+                
                 const fallback = this.placeholderImage(first);
                 return `
                 <div class="round-panel-product">
                     <img src="${img}" alt="${name}" class="round-panel-product-img" onerror="this.onerror=null;this.src='${fallback}';">
-                    <span class="round-panel-product-name">${this.truncateName(name, 18)}</span>
+                    <span class="round-panel-product-name">${this.truncateName(name, 15)}</span>
                 </div>`;
             }).join('');
         }
