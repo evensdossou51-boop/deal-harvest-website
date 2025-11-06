@@ -1,6 +1,6 @@
 // ====================================
-// DEALHARVEST - GOOGLE SHEETS INTEGRATION
-// Live Product Management System - November 2025
+// DEALHARVEST - Product Display System
+// Live Product Management - November 2025
 // ====================================
 
 // Global Variables
@@ -57,17 +57,13 @@ class UIManager {
         // Load products will be called in init()
     }
 
-    // Initialize the application
     async init() {
         this.setupEventListeners();
         await this.loadProducts();
-        console.log('✅ DealHarvest initialized with Google Sheets integration');
+        console.log('✅ DealHarvest initialized');
 
         // Start round panels product rotation
         this.startRoundPanelsRotation();
-
-        // Admin tools
-        this.initAdminTools();
 
         // Ensure filters are cleared so products show immediately
         this.clearFilterUI();
@@ -226,200 +222,6 @@ class UIManager {
         }
     }
 
-    // ADMIN: Initialize add-product tools (visible with ?admin=1)
-    initAdminTools() {
-        const params = new URLSearchParams(window.location.search);
-        const isAdmin = params.get('admin') === '1';
-        const fab = document.getElementById('adminAddBtn');
-        const backdrop = document.getElementById('adminModalBackdrop');
-        const closeBtn = document.getElementById('adminCloseModal');
-    const saveBtn = document.getElementById('adminSaveProduct');
-    const bulkBtn = document.getElementById('adminBulkImport');
-    const bulkArea = document.getElementById('adminBulkLinks');
-    const clearAllBtn = document.getElementById('adminClearAll');
-    const fetchBtn = document.getElementById('adminFetchDetails');
-    const autoFetch = document.getElementById('adminAutoFetch');
-    const refreshSheetsBtn = document.getElementById('adminRefreshSheets');
-        if (!fab || !backdrop || !closeBtn || !saveBtn) return;
-
-        if (isAdmin) {
-            fab.style.display = 'block';
-        }
-        const openModal = () => {
-            backdrop.style.display = 'flex';
-        };
-        const closeModal = () => {
-            backdrop.style.display = 'none';
-        };
-        fab.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
-        backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
-
-        saveBtn.addEventListener('click', () => {
-            const nameEl = document.getElementById('adminName');
-            const imageEl = document.getElementById('adminImage');
-            const urlEl = document.getElementById('adminUrl');
-            const priceEl = document.getElementById('adminPrice');
-            const categoryEl = document.getElementById('adminCategory');
-            const name = (nameEl?.value || '').trim();
-            const url = (urlEl?.value || '').trim();
-            const image = (imageEl?.value || '').trim();
-            const price = (priceEl?.value || '').trim();
-            const category = (categoryEl?.value || '').trim() || 'electronics';
-            if (!name || !url) {
-                alert('Please provide at least a Name and URL');
-                return;
-            }
-            const store = this.detectStore(url);
-            const product = {
-                name,
-                url,
-                image: image || `https://via.placeholder.com/120x120/ede9fe/333?text=${encodeURIComponent(name.split(' ')[0])}`,
-                price: price || '$--',
-                category,
-                store
-            };
-            // Persist to localStorage
-            const existing = JSON.parse(localStorage.getItem('customProducts') || '[]');
-            existing.push(product);
-            localStorage.setItem('customProducts', JSON.stringify(existing));
-            // Merge and re-render
-            allProducts = this.mergeProducts(allProducts, [product]);
-            this.renderProducts();
-            this.updateRoundPanels();
-            closeModal();
-            // Clear fields
-            if (nameEl) nameEl.value = '';
-            if (imageEl) imageEl.value = '';
-            if (urlEl) urlEl.value = '';
-            if (priceEl) priceEl.value = '';
-            if (categoryEl) categoryEl.value = '';
-        });
-
-        // Fetch details for a single URL and populate fields
-        if (fetchBtn) {
-            fetchBtn.addEventListener('click', async () => {
-                const urlEl = document.getElementById('adminUrl');
-                const nameEl = document.getElementById('adminName');
-                const imageEl = document.getElementById('adminImage');
-                const priceEl = document.getElementById('adminPrice');
-                const url = (urlEl?.value || '').trim();
-                if (!url) { alert('Enter a product URL first.'); return; }
-                try {
-                    fetchBtn.disabled = true; fetchBtn.textContent = 'Fetching…';
-                    const data = await this.fetchProductDetails(url);
-                    if (data) {
-                        if (data.name && nameEl) nameEl.value = data.name;
-                        if (data.image && imageEl) imageEl.value = data.image;
-                        if (data.price && priceEl) priceEl.value = data.price;
-                    } else {
-                        alert('No details found.');
-                    }
-                } catch (e) {
-                    console.error(e);
-                    alert('Failed to fetch details.');
-                } finally {
-                    fetchBtn.disabled = false; fetchBtn.textContent = 'Fetch Details';
-                }
-            });
-        }
-
-        // Bulk import from pasted links
-        if (bulkBtn) {
-            bulkBtn.addEventListener('click', async () => {
-                if (!bulkArea) return;
-                const lines = bulkArea.value
-                    .split(/\r?\n/)
-                    .map(s => s.trim())
-                    .filter(s => s && /^https?:\/\//i.test(s));
-                if (lines.length === 0) {
-                    alert('Please paste one or more valid links (starting with http or https).');
-                    return;
-                }
-                const doAuto = !!(autoFetch && autoFetch.checked);
-                const newProducts = [];
-                for (let i = 0; i < lines.length; i++) {
-                    const url = lines[i];
-                    let prod = null;
-                    if (doAuto) {
-                        try {
-                            const data = await this.fetchProductDetails(url);
-                            if (data) {
-                                prod = {
-                                    name: data.name || 'Item',
-                                    image: data.image || this.placeholderImage('Item'),
-                                    url,
-                                    price: data.price || '$--',
-                                    category: 'electronics',
-                                    store: data.store || this.detectStore(url)
-                                };
-                            }
-                        } catch (e) { console.warn('Auto-fetch failed for', url, e); }
-                    }
-                    if (!prod) {
-                        const store = this.detectStore(url);
-                        const nameBase = store && store !== 'Online Store' ? store : 'Product';
-                        prod = {
-                            name: `${nameBase} Item ${i + 1}`,
-                            url,
-                            image: this.placeholderImage(nameBase.split(' ')[0]),
-                            price: '$--',
-                            category: 'electronics',
-                            store
-                        };
-                    }
-                    newProducts.push(prod);
-                }
-                // Persist
-                const existing = JSON.parse(localStorage.getItem('customProducts') || '[]');
-                const mergedCustom = [...existing, ...newProducts];
-                localStorage.setItem('customProducts', JSON.stringify(mergedCustom));
-                // Merge to current and render
-                allProducts = this.mergeProducts(allProducts, newProducts);
-                this.fullProductList = this.mergeProducts(this.fullProductList || [], newProducts);
-                this.renderProducts();
-                this.updateRoundPanels();
-                bulkArea.value = '';
-                closeModal();
-            });
-        }
-        if (clearAllBtn) {
-            clearAllBtn.addEventListener('click', () => {
-                if (!confirm('This will remove all custom products you added on this device. Continue?')) return;
-                localStorage.removeItem('customProducts');
-                allProducts = [];
-                this.fullProductList = [];
-                this.renderProducts([]);
-                this.updateRoundPanels();
-                alert('All custom products cleared.');
-            });
-        }
-
-        if (refreshSheetsBtn) {
-            refreshSheetsBtn.addEventListener('click', async () => {
-                try {
-                    if (window.googleSheetsAPI && window.googleSheetsAPI.forceRefresh) {
-                        this.showLoading();
-                        const fresh = await window.googleSheetsAPI.forceRefresh();
-                        // Merge with current & local custom
-                        const custom = JSON.parse(localStorage.getItem('customProducts') || '[]');
-                        const merged = this.mergeProducts(custom, fresh);
-                        allProducts = merged;
-                        this.fullProductList = merged.slice();
-                        this.renderProducts();
-                        this.updateRoundPanels();
-                        alert(`Loaded ${fresh.length} products from Google Sheets.`);
-                    } else {
-                        alert('Google Sheets API is not available on this page.');
-                    }
-                } catch (e) {
-                    console.error(e);
-                    alert('Failed to refresh from Google Sheets.');
-                }
-            });
-        }
-    }
-
     // Load products (currently disabled to remove all items)
     async loadProducts() {
         this.showLoading();
@@ -445,28 +247,6 @@ class UIManager {
             out.push(p);
         });
         return out;
-    }
-
-    // Call our serverless function to fetch real details
-    async fetchProductDetails(url) {
-        // If using Netlify, function is at /.netlify/functions/fetch-product
-        // netlify.toml also allows /api/fetch-product
-        const endpoints = [
-            `/.netlify/functions/fetch-product?url=${encodeURIComponent(url)}`,
-            `/api/fetch-product?url=${encodeURIComponent(url)}`
-        ];
-        let lastErr = null;
-        for (const ep of endpoints) {
-            try {
-                const res = await fetch(ep, { method: 'GET' });
-                if (res.ok) {
-                    const json = await res.json();
-                    if (json && json.success && json.data) return json.data;
-                }
-            } catch (e) { lastErr = e; }
-        }
-        if (lastErr) throw lastErr;
-        return null;
     }
 
     // Show loading state

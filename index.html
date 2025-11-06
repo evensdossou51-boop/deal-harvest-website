@@ -154,68 +154,7 @@
         </div>
     </div>
 
-    <script src="google-sheets-api.js"></script>
     <script src="script.js"></script>
     <script src="cookies.js"></script>
-    
-    <!-- Admin Add Product Modal (hidden by default) -->
-    <div id="adminModalBackdrop" class="admin-modal-backdrop" style="display:none;">
-        <div class="admin-modal">
-            <div class="admin-modal-header">
-                <h3>Add Product</h3>
-                <button id="adminCloseModal" class="admin-close-btn" aria-label="Close">×</button>
-            </div>
-            <div class="admin-modal-body">
-                <label>
-                    Product Name
-                    <input id="adminName" type="text" placeholder="e.g., Echo Dot (5th Gen)">
-                </label>
-                <label>
-                    Product Image URL
-                    <input id="adminImage" type="url" placeholder="https://...">
-                </label>
-                <label>
-                    Product Link (URL)
-                    <input id="adminUrl" type="url" placeholder="https://amzn.to/... or https://www.amazon.com/...">
-                </label>
-                <div class="admin-modal-actions" style="justify-content:flex-start;gap:10px;">
-                    <button id="adminFetchDetails" class="admin-save-btn" type="button">Fetch Details</button>
-                    <label style="display:flex;align-items:center;gap:6px;font-size:0.9rem;">
-                        <input id="adminAutoFetch" type="checkbox" checked>
-                        Auto‑fetch details when adding
-                    </label>
-                </div>
-                <label>
-                    Price (optional)
-                    <input id="adminPrice" type="text" placeholder="$49.99">
-                </label>
-                <label>
-                    Category (optional)
-                    <input id="adminCategory" type="text" placeholder="electronics">
-                </label>
-                <div class="admin-modal-actions">
-                    <button id="adminSaveProduct" class="admin-save-btn">Save Product</button>
-                </div>
-                <hr style="margin:14px 0;border:none;border-top:1px solid #eee;">
-                <label>
-                    Bulk Paste Links (one per line)
-                    <textarea id="adminBulkLinks" rows="5" placeholder="https://amzn.to/...\nhttps://www.amazon.com/...\nhttps://www.walmart.com/...\n..."></textarea>
-                </label>
-                <div class="admin-modal-actions">
-                    <button id="adminBulkImport" class="admin-save-btn">Bulk Add from Links</button>
-                </div>
-                <div class="admin-modal-actions">
-                    <button id="adminClearAll" class="admin-save-btn" style="background:#dc2626">Clear All Products</button>
-                </div>
-                <div class="admin-modal-actions">
-                    <button id="adminRefreshSheets" class="admin-save-btn" style="background:#059669">Refresh from Google Sheets</button>
-                </div>
-                <p class="admin-hint">Tip: Add ?admin=1 to the page URL to show the Add button.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Floating Admin Button (shown only in admin mode) -->
-    <button id="adminAddBtn" class="admin-fab" title="Add Product" style="display:none;">＋</button>
 </body>
 </html>
