@@ -175,8 +175,9 @@ html, body {
 .header {
     width: 100%;
     background: linear-gradient(135deg, #7C3AED, #A855F7);
-    padding: 20px 0;
+    padding: 20px 0; /* fixed padding - never changes */
     box-shadow: 0 2px 20px rgba(124, 58, 237, 0.3);
+    min-height: 85px; /* maintain consistent header height */
 }
 .header-flex {
     width: 100%;
@@ -186,7 +187,7 @@ html, body {
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    flex-wrap: wrap; /* allow wrapping on small screens */
+    flex-wrap: nowrap; /* prevent wrapping - keep layout consistent */
 }
 .header-left {
     flex: 0 1 260px;
@@ -210,21 +211,15 @@ html, body {
     align-items: center;
 }
 
-/* Mobile header responsiveness */
+/* Keep header layout consistent on all screen sizes - content may overflow and scroll horizontally if needed */
 @media (max-width: 968px) {
+    .header {
+        min-height: 85px; /* maintain height on mobile */
+    }
     .header-flex {
-        flex-direction: column;
-        gap: 16px;
-    }
-    .header-left,
-    .header-center,
-    .header-right {
-        width: 100%;
-        justify-content: center;
-    }
-    .header-filters-container {
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-wrap: nowrap; /* never wrap */
+        overflow-x: auto; /* allow horizontal scroll if content doesn't fit */
+        padding: 0 20px;
     }
 }
 
@@ -351,10 +346,9 @@ body {
    ==================================== */
 
 .header {
-    width: 100%; /* full width */
-    min-width: 1240px; /* match site minimum */
+    width: 100%;
     background: linear-gradient(135deg, #7C3AED, #A855F7);
-    padding: 20px 0;
+    padding: 20px 0; /* fixed padding */
     box-shadow: 0 2px 20px rgba(124, 58, 237, 0.3);
 }
 
@@ -362,13 +356,13 @@ body {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 20px; /* fixed padding */
 }
 
 .logo-section {
     display: flex;
     align-items: center;
-    padding: 10px 0;
+    padding: 10px 0; /* fixed padding */
 }
 
 .logo-link {
@@ -385,7 +379,7 @@ body {
 }
 
 .logo {
-    height: 45px;
+    height: 45px; /* fixed height */
     max-height: 45px;
     width: auto;
     margin: 0;
@@ -395,7 +389,7 @@ body {
 
 .site-name {
     color: white;
-    font-size: 2rem;
+    font-size: 2rem; /* fixed font size */
     font-weight: 800;
     margin: 0;
     letter-spacing: -0.8px;
@@ -749,9 +743,10 @@ body {
     width: 100%;
     background: #1d1d1f;
     color: white;
-    padding: 30px 0;
+    padding: 30px 0; /* fixed padding - never changes */
     text-align: center;
     margin-top: 60px;
+    min-height: 120px; /* maintain consistent footer height */
 }
 
 .footer-content {
@@ -759,26 +754,26 @@ body {
 }
 
 .footer-content p {
-    font-size: 0.9rem;
+    font-size: 0.9rem; /* fixed font size */
     opacity: 0.8;
 }
 
 .footer-content .affiliate-disclosure {
-    font-size: 0.8rem;
+    font-size: 0.8rem; /* fixed font size */
     opacity: 0.6;
     margin-top: 10px;
     font-style: italic;
 }
 
 .footer-links {
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* fixed margin */
 }
 
 .footer-links a {
     color: white;
     text-decoration: none;
-    margin: 0 15px;
-    font-size: 0.9rem;
+    margin: 0 15px; /* fixed margin */
+    font-size: 0.9rem; /* fixed font size */
     opacity: 0.8;
     transition: opacity 0.3s ease;
 }
@@ -792,16 +787,9 @@ body {
    RESPONSIVE DESIGN - NOW ENABLED
    ==================================== */
 
-/* Additional responsive tweaks for filters and typography */
+/* Additional responsive tweaks for filters and typography - HEADER/FOOTER SIZES LOCKED */
 @media (max-width: 768px) {
-    .site-name {
-        font-size: 1.6rem;
-    }
-    
-    .logo {
-        height: 38px;
-        max-height: 38px;
-    }
+    /* Logo and site name stay the same size */
     
     .main-title {
         font-size: 2rem;
@@ -818,9 +806,7 @@ body {
         font-size: 1.7rem;
     }
     
-    .site-name {
-        font-size: 1.4rem;
-    }
+    /* Site name and logo stay fixed size on all devices */
 }
 
 /* ====================================
