@@ -1,4 +1,6 @@
-# 🚀 GOOGLE SHEETS INTEGRATION SETUP GUIDE
+# 🚀 ENHANCED AUTO-SCRAPING SYSTEM SETUP
+
+**FULLY AUTOMATED** product management - just paste URLs and everything auto-populates!
 
 ## Step 1: Create Your Google Sheet
 
@@ -14,16 +16,18 @@ Add these headers in Row 1:
 |---|---|---|---|---|---|---|---|---|
 | Product URL | Name | Price | Original Price | Discount | Image | Store | Category | Status |
 
-### Column Descriptions:
-- **A (Product URL)**: Your affiliate links (required)
-- **B (Name)**: Product name (auto-fillable)
-- **C (Price)**: Current price like $99.99
-- **D (Original Price)**: Original price for discount calculation
-- **E (Discount)**: Auto-calculated (like "25% OFF")
-- **F (Image)**: Product image URL (auto-fillable)
-- **G (Store)**: Auto-detected from URL
-- **H (Category)**: electronics, furniture, etc.
-- **I (Status)**: Active or Inactive
+### ✨ AUTO-SCRAPING COLUMNS:
+- **A (Product URL)**: Your affiliate links (**paste here - everything else auto-fills!**)
+- **B (Name)**: 🤖 **AUTO-SCRAPED** from product page
+- **C (Price)**: 🤖 **AUTO-SCRAPED** current price 
+- **D (Original Price)**: 🤖 **AUTO-SCRAPED** list price
+- **E (Discount)**: 🤖 **AUTO-CALCULATED** discount percentage
+- **F (Image)**: 🤖 **AUTO-SCRAPED** product image
+- **G (Store)**: 🤖 **AUTO-DETECTED** from URL (Amazon/Walmart/Target/Home Depot)
+- **H (Category)**: Manual entry (electronics, furniture, etc.)
+- **I (Status)**: 🤖 **AUTO-SET** to "Active"
+
+**🎯 WORKFLOW: Paste URL → Watch magic happen!**
 
 ## Step 3: Set Up Google Apps Script
 
@@ -72,28 +76,48 @@ Add these headers in Row 1:
 | walmart.com/xyz | Coffee Maker | $45.99 | $69.99 | 34% OFF | [auto] | Walmart | appliances | Active |
 ```
 
-## 🔄 How to Add Products:
+## 🔄 ENHANCED AUTO-SCRAPING WORKFLOW:
 
-### Method 1: Manual Entry
-1. **Paste URL** in column A
-2. **Fill in** Name, Price, Category manually
-3. **Set Status** to "Active"
-4. **Website updates** automatically!
+### 🚀 NEW: Full Auto-Scraping (Paste URL Only!)
+1. **Paste affiliate URL** in column A
+2. **Watch the magic**: Name, price, image, store, discount % ALL auto-populate!
+3. **Optional**: Add category manually
+4. **Done!** Product appears on website automatically
 
-### Method 2: Bulk Import
-1. **Copy multiple URLs** into column A
-2. **Fill in** product details
-3. **All products** appear on website instantly
+### 🎯 What Happens When You Paste a URL:
+- ⚡ **Instant**: Store detection (Amazon/Walmart/Target/Home Depot)
+- 🔍 **Auto-scrape**: Product name from page title/headers
+- 💰 **Auto-scrape**: Current price and original price
+- 📊 **Auto-calculate**: Discount percentage
+- 🖼️ **Auto-scrape**: Main product image
+- ✅ **Auto-set**: Status to "Active"
+- 📱 **Auto-update**: Website in ~5 minutes
 
-## 🎨 Advanced Features:
+### 📋 Bulk Adding Made Easy:
+1. **Paste multiple URLs** (one per row)
+2. **Each auto-scrapes** its own data
+3. **All products** appear instantly!
 
-### Auto-Detection:
-- **Store names** are auto-detected from URLs
-- **Discount percentages** auto-calculated
-- **Status** defaults to "Active"
+## 🎨 ENHANCED AUTO-SCRAPING FEATURES:
 
-### Real-Time Updates:
-- **Edit any field** → Website updates in ~5 minutes
+### 🤖 Advanced Web Scraping:
+- **Multi-pattern extraction**: Uses multiple strategies to find product data
+- **Store-specific scrapers**: Optimized for Amazon, Walmart, Target, Home Depot
+- **Image optimization**: Extracts high-quality product images
+- **Price intelligence**: Finds both current and original prices
+- **Error handling**: Graceful fallbacks if scraping fails
+
+### ⚡ Smart Auto-Detection:
+- **Store badges** with color coding
+- **Discount calculations** with percentage display
+- **URL shortener** detection (amzn.to, etc.)
+- **Status management** with defaults
+
+### 🔄 Real-Time System:
+- **5-minute cache** for optimal performance
+- **Live updates** when you edit cells
+- **Loading indicators** during scraping
+- **Error messages** if scraping fails
 - **Change Status** to "Inactive" → Product disappears
 - **Add new rows** → New products appear
 
@@ -102,13 +126,38 @@ Add these headers in Row 1:
 - **Missing data** → Uses fallback values
 - **Sheet unavailable** → Shows cached products
 
+## 🧪 TEST YOUR AUTO-SCRAPING SYSTEM:
+
+### Quick Test - Paste These URLs:
+Try these sample URLs in column A to test auto-scraping:
+
+```
+https://www.amazon.com/dp/B08N5WRWNW
+https://www.walmart.com/ip/Apple-AirPods-Pro/408992430
+https://www.target.com/p/apple-airpods-3rd-generation/-/A-83658619
+https://www.homedepot.com/p/DEWALT-20-Volt-MAX-Cordless-Drill/305605871
+```
+
+### What Should Happen:
+- ⏳ **"Loading..."** appears in Name field
+- 🤖 **Product details** auto-populate within 10-30 seconds
+- 🏪 **Store badge** appears automatically
+- 💰 **Prices and discounts** calculate automatically
+- 🖼️ **Product image** loads automatically
+
+### Test the Google Apps Script:
+1. **In Apps Script Editor**: Run the `testScraping()` function
+2. **Check logs**: View > Logs to see scraping results
+3. **Debug issues**: Look for error messages
+
 ## 🚀 You're Ready!
 
 Once setup is complete:
-1. **Add products** to your Google Sheet
-2. **Watch them appear** on your website automatically
-3. **Edit anytime** from any device
-4. **Scale easily** to thousands of products
+1. **Paste URLs** in your Google Sheet (Column A)
+2. **Watch auto-scraping** populate all details
+3. **Products appear** on website automatically
+4. **Edit anytime** from any device
+5. **Scale easily** to thousands of products
 
 ## 🔧 Troubleshooting:
 

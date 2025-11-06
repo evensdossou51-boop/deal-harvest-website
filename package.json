@@ -1,0 +1,13 @@
+{
+  "name": "deal-harvest-website",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'Static site'"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "node-fetch": "^2.6.12"
+  }
+}

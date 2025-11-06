@@ -29,41 +29,29 @@
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <div class="header-content">
-                <div class="logo-section">
+            <div class="header-content header-flex">
+                <div class="logo-section header-left">
                     <a href="index.html" class="logo-link">
                         <img src="logo.png" alt="DealHarvest" class="logo">
                         <h1 class="site-name">DealHarvest</h1>
                     </a>
                 </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main">
-        <div class="container">
-            <h2 class="main-title">Discover Today's Best Deals</h2>
-            
-            <!-- Search and Filter Section -->
-            <div class="search-section">
-                <div class="search-container">
-                    <input type="text" class="search-input" placeholder="Search for deals..." id="searchInput">
-                    <button class="search-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="m21 21-4.35-4.35"></path>
-                        </svg>
-                    </button>
+                <div class="header-center">
+                    <div class="search-container header-search-container">
+                        <input type="text" class="search-input search-input-small" placeholder="Search for deals..." id="searchInput">
+                        <button class="search-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                
-                <!-- Filter Section -->
-                <div class="filter-section">
-                    <div class="filters-container">
-                        <!-- Category Filter -->
+                <div class="header-filters header-right">
+                    <div class="filters-container header-filters-container">
                         <div class="filter-group">
                             <label for="categoryFilter" class="filter-label">Category</label>
-                            <select id="categoryFilter" class="filter-select">
+                            <select id="categoryFilter" class="filter-select filter-select-small">
                                 <option value="">All Categories</option>
                                 <option value="electronics">📱 Electronics</option>
                                 <option value="home-garden">🏡 Home & Garden</option>
@@ -77,11 +65,9 @@
                                 <option value="furniture">🛋️ Furniture</option>
                             </select>
                         </div>
-                        
-                        <!-- Store Filter -->
                         <div class="filter-group">
                             <label for="storeFilter" class="filter-label">Store</label>
-                            <select id="storeFilter" class="filter-select">
+                            <select id="storeFilter" class="filter-select filter-select-small">
                                 <option value="">All Stores</option>
                                 <option value="amazon">📦 Amazon</option>
                                 <option value="walmart">🛒 Walmart</option>
@@ -89,13 +75,47 @@
                                 <option value="homedepot">🔨 Home Depot</option>
                             </select>
                         </div>
-                        
-                        <!-- Clear Filters Button -->
-                        <button class="clear-filters-btn" id="clearFilters">Reset</button>
+                        <button class="clear-filters-btn clear-filters-btn-small" id="clearFilters">Reset</button>
                     </div>
                 </div>
             </div>
+        </div>
 
+    </header>
+
+    <!-- Hero Video Section (now outside header) -->
+    <section class="hero-video-section">
+        <div class="container">
+            <video class="hero-video" id="heroVideo" src="websiteloop.mp4" poster="" autoplay loop muted playsinline></video>
+        </div>
+    </section>
+
+    <!-- Product Round Panels Section -->
+    <section class="round-panels-section">
+        <div class="round-panels-container">
+            <div class="round-panel">
+                <h3 class="round-panel-title">Pick up where you left off</h3>
+                <div class="round-panel-content" id="panel1"></div>
+            </div>
+            <div class="round-panel">
+                <h3 class="round-panel-title">Keep shopping for</h3>
+                <div class="round-panel-content" id="panel2"></div>
+            </div>
+            <div class="round-panel">
+                <h3 class="round-panel-title">Continue shopping deals</h3>
+                <div class="round-panel-content" id="panel3"></div>
+            </div>
+            <div class="round-panel">
+                <h3 class="round-panel-title">Buy again</h3>
+                <div class="round-panel-content" id="panel4"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <h2 class="main-title">Discover Today's Best Deals</h2>
             <!-- Products Grid -->
             <div class="products-grid" id="productsGrid">
                 <!-- Products will be loaded here by JavaScript -->
@@ -137,5 +157,65 @@
     <script src="google-sheets-api.js"></script>
     <script src="script.js"></script>
     <script src="cookies.js"></script>
+    
+    <!-- Admin Add Product Modal (hidden by default) -->
+    <div id="adminModalBackdrop" class="admin-modal-backdrop" style="display:none;">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3>Add Product</h3>
+                <button id="adminCloseModal" class="admin-close-btn" aria-label="Close">×</button>
+            </div>
+            <div class="admin-modal-body">
+                <label>
+                    Product Name
+                    <input id="adminName" type="text" placeholder="e.g., Echo Dot (5th Gen)">
+                </label>
+                <label>
+                    Product Image URL
+                    <input id="adminImage" type="url" placeholder="https://...">
+                </label>
+                <label>
+                    Product Link (URL)
+                    <input id="adminUrl" type="url" placeholder="https://amzn.to/... or https://www.amazon.com/...">
+                </label>
+                <div class="admin-modal-actions" style="justify-content:flex-start;gap:10px;">
+                    <button id="adminFetchDetails" class="admin-save-btn" type="button">Fetch Details</button>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.9rem;">
+                        <input id="adminAutoFetch" type="checkbox" checked>
+                        Auto‑fetch details when adding
+                    </label>
+                </div>
+                <label>
+                    Price (optional)
+                    <input id="adminPrice" type="text" placeholder="$49.99">
+                </label>
+                <label>
+                    Category (optional)
+                    <input id="adminCategory" type="text" placeholder="electronics">
+                </label>
+                <div class="admin-modal-actions">
+                    <button id="adminSaveProduct" class="admin-save-btn">Save Product</button>
+                </div>
+                <hr style="margin:14px 0;border:none;border-top:1px solid #eee;">
+                <label>
+                    Bulk Paste Links (one per line)
+                    <textarea id="adminBulkLinks" rows="5" placeholder="https://amzn.to/...\nhttps://www.amazon.com/...\nhttps://www.walmart.com/...\n..."></textarea>
+                </label>
+                <div class="admin-modal-actions">
+                    <button id="adminBulkImport" class="admin-save-btn">Bulk Add from Links</button>
+                </div>
+                <div class="admin-modal-actions">
+                    <button id="adminClearAll" class="admin-save-btn" style="background:#dc2626">Clear All Products</button>
+                </div>
+                <div class="admin-modal-actions">
+                    <button id="adminRefreshSheets" class="admin-save-btn" style="background:#059669">Refresh from Google Sheets</button>
+                </div>
+                <p class="admin-hint">Tip: Add ?admin=1 to the page URL to show the Add button.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Admin Button (shown only in admin mode) -->
+    <button id="adminAddBtn" class="admin-fab" title="Add Product" style="display:none;">＋</button>
 </body>
 </html>
