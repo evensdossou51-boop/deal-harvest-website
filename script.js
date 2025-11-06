@@ -72,6 +72,9 @@ class UIManager {
         // Ensure filters are cleared so products show immediately
         this.clearFilterUI();
         this.renderProducts();
+
+        // Setup hero video playlist (websiteloop1.mp4 -> websiteloop2.mp4 -> repeat)
+        this.setupHeroPlaylist();
     }
 
     // Create an inline SVG placeholder image (no network dependency)
@@ -625,6 +628,71 @@ class UIManager {
         if (categoryFilter) categoryFilter.value = '';
         if (storeFilter) storeFilter.value = '';
         if (searchInput) searchInput.value = '';
+    }
+
+    // HERO VIDEO: simple playlist that alternates between two files with minimal gap
+    setupHeroPlaylist() {
+        const video = document.getElementById('heroVideo');
+        if (!video) return;
+
+        // Files present in the workspace
+        const playlist = ['websiteloop1.mp4', 'websiteloop2.mp4'];
+        let index = 0;
+
+        // Secondary hidden preloader to warm up the next source
+        const preloader = document.createElement('video');
+        preloader.preload = 'auto';
+        preloader.muted = true;
+        preloader.playsInline = true;
+
+        const queueNext = () => {
+            const next = playlist[(index + 1) % playlist.length];
+            if (preloader.src.endsWith(next)) return;
+            preloader.src = next;
+            try { preloader.load(); } catch (_) {}
+        };
+
+        // Ensure current video is one of the playlist
+        const initial = playlist[0];
+        if (!video.src || !video.src.endsWith(initial)) {
+            video.src = initial;
+        }
+        video.setAttribute('playsinline', '');
+        video.setAttribute('muted', '');
+        video.muted = true; // needed for autoplay on mobile
+
+        // Try to play; if blocked, wait for a user gesture once
+        const tryPlay = () => {
+            try {
+                const p = video.play();
+                if (p && typeof p.catch === 'function') {
+                    p.catch(() => {/* ignore */});
+                }
+            } catch (_) {}
+        };
+        tryPlay();
+        const onFirstInteract = () => { tryPlay(); cleanupInteract(); };
+        const cleanupInteract = () => {
+            window.removeEventListener('touchstart', onFirstInteract);
+            window.removeEventListener('click', onFirstInteract);
+        };
+        window.addEventListener('touchstart', onFirstInteract, { once: true, passive: true });
+        window.addEventListener('click', onFirstInteract, { once: true });
+        queueNext();
+
+        video.addEventListener('ended', () => {
+            index = (index + 1) % playlist.length;
+            const next = playlist[index];
+            // Swap source and play immediately
+            video.src = next;
+            try {
+                video.load();
+                const p = video.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            } catch (_) {}
+            // Preload the following video
+            queueNext();
+        });
     }
 
 
