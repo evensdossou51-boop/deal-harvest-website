@@ -1,18 +1,20 @@
 /* ROUND PRODUCT PANELS SECTION */
+.site-root body, body {
+    overflow-x: hidden; /* prevent 100vw overflow creating horizontal scrollbars */
+}
 .round-panels-section {
-    width: 100vw;
+    width: 100%;
     background: transparent;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin: 0;
+    margin: -120px 0 0 0; /* pull panels upward without transform for more stable layout */
     padding: 0 0 32px 0;
-    transform: translateY(-50%);
-    transition: transform 0.3s;
+    transition: margin 0.3s ease;
 }
 .round-panels-container {
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 1200px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -71,6 +73,9 @@
         width: 160px;
         height: 160px;
     }
+    .round-panels-section {
+        margin-top: -80px; /* reduce overlap at smaller widths */
+    }
 }
 @media (max-width: 900px) {
     .round-panels-container {
@@ -79,15 +84,16 @@
         align-items: center;
     }
     .round-panel {
-        width: 100vw;
+        width: min(92vw, 320px);
+        height: auto; /* let content drive height on mobile */
+        aspect-ratio: 1 / 1; /* keep circle */
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 0 auto 32px auto;
+        margin: 8px auto 12px auto;
         padding: 0;
-        transform: translateY(-50%);
-        transition: transform 0.3s;
     }
+    .round-panels-section { margin-top: 8px !important; }
 }
 /* HERO VIDEO SECTION */
 .hero-video-section {

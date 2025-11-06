@@ -95,8 +95,14 @@ class UIManager {
     }
 
     updateRoundPanels() {
-        // If not enough products, do nothing
-        if (!Array.isArray(allProducts) || allProducts.length < 3) return;
+        const section = document.querySelector('.round-panels-section');
+        // If not enough products, hide the section to avoid empty circles
+        if (!Array.isArray(allProducts) || allProducts.length < 3) {
+            if (section) section.style.display = 'none';
+            return;
+        } else {
+            if (section) section.style.display = '';
+        }
 
         // For each of the 4 panels
         for (let i = 1; i <= 4; i++) {
