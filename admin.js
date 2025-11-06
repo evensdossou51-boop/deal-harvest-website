@@ -37,6 +37,16 @@ class ProductManager {
             this.downloadJSON();
         });
 
+        // Preview button
+        document.getElementById('previewBtn').addEventListener('click', () => {
+            this.showPreview();
+        });
+
+        // Close preview
+        document.getElementById('closePreview').addEventListener('click', () => {
+            document.getElementById('previewModal').style.display = 'none';
+        });
+
         // Initial render
         this.render();
     }
@@ -154,6 +164,85 @@ class ProductManager {
         this.products = this.products.filter(p => p.id !== id);
         this.saveToLocalStorage();
         this.render();
+        this.showSuccess('Product removed successfully!');
+    }
+
+    showPreview() {
+        if (this.products.length === 0) {
+            alert('No products to preview. Add some products first!');
+            return;
+        }
+
+        const modal = document.getElementById('previewModal');
+        const content = document.getElementById('previewContent');
+
+        content.innerHTML = this.products.map((product, index) => `
+            <div class="preview-product">
+                <div class="preview-slideshow" id="slideshow-${product.id}">
+                    ${product.images.map((img, i) => `
+                        <img src="${this.escapeHtml(img)}" class="${i === 0 ? 'active' : ''}" alt="${this.escapeHtml(product.name)}">
+                    `).join('')}
+                    ${product.images.length > 1 ? `
+                        <div class="preview-nav">
+                            ${product.images.map((_, i) => `
+                                <button class="${i === 0 ? 'active' : ''}" onclick="productManager.switchPreviewImage(${product.id}, ${i})"></button>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="preview-details">
+                    <h3>${this.escapeHtml(product.name)}</h3>
+                    <p><strong>Store:</strong> ${this.escapeHtml(product.store)}</p>
+                    <p><strong>Category:</strong> ${this.escapeHtml(product.category)}</p>
+                    <p>${this.escapeHtml(product.description)}</p>
+                    ${product.highlights.length > 0 ? `
+                        <div class="preview-highlights">
+                            <strong>Highlights:</strong>
+                            ${product.highlights.map(h => `<div>✓ ${this.escapeHtml(h)}</div>`).join('')}
+                        </div>
+                    ` : ''}
+                    <p style="word-break: break-all; font-size: 0.85rem; color: #999;">
+                        <strong>URL:</strong> ${this.escapeHtml(product.url)}
+                    </p>
+                </div>
+            </div>
+        `).join('');
+
+        modal.style.display = 'block';
+
+        // Auto-start slideshows
+        this.products.forEach(product => {
+            if (product.images.length > 1) {
+                this.startAutoSlideshow(product.id);
+            }
+        });
+    }
+
+    switchPreviewImage(productId, imageIndex) {
+        const slideshow = document.getElementById(`slideshow-${productId}`);
+        if (!slideshow) return;
+
+        const images = slideshow.querySelectorAll('img');
+        const buttons = slideshow.querySelectorAll('.preview-nav button');
+
+        images.forEach((img, i) => {
+            img.classList.toggle('active', i === imageIndex);
+        });
+
+        buttons.forEach((btn, i) => {
+            btn.classList.toggle('active', i === imageIndex);
+        });
+    }
+
+    startAutoSlideshow(productId) {
+        const product = this.products.find(p => p.id === productId);
+        if (!product || product.images.length <= 1) return;
+
+        let currentIndex = 0;
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % product.images.length;
+            this.switchPreviewImage(productId, currentIndex);
+        }, 3000); // Change image every 3 seconds
     }
 
     render() {
@@ -193,11 +282,11 @@ class ProductManager {
                         <div class="product-name">${this.escapeHtml(product.name)}</div>
                         <div class="product-meta">
                             <span class="badge badge-store">${this.escapeHtml(product.store)}</span>
-                            <span class="badge badge-price">${product.images.length} images</span>
+                            <span class="badge badge-price">${product.images.length} image${product.images.length !== 1 ? 's' : ''}</span>
                         </div>
                     </div>
                     <button class="btn btn-danger" onclick="productManager.removeProduct(${product.id})">
-                        Delete
+                        🗑️ Delete
                     </button>
                 </div>
             `).join('');
