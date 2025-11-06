@@ -73,16 +73,17 @@ html, body {
 /* Remove all responsive breakpoints for round panels */
 /* HERO VIDEO SECTION */
 .hero-video-section {
-    width: 1200px; /* fixed width */
-    margin: 0 auto;
+    width: 100%; /* full width of viewport */
+    min-width: 1240px; /* match body min-width to prevent shrinking below site width */
+    margin: 0;
     position: relative;
     background: linear-gradient(90deg, #ede9fe 0%, #f3f4f6 100%);
     padding: 0 0 24px 0;
     overflow: hidden;
 }
 .hero-video-section .container {
-    width: 1200px;
-    margin: 0 auto;
+    width: 100%;
+    margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -90,12 +91,12 @@ html, body {
     justify-content: center;
 }
 .hero-video {
-    width: 1200px; /* fixed width */
-    height: 340px; /* fixed height */
-    object-fit: cover;
+    width: 100%; /* video spans full section width */
+    height: 340px; /* fixed height maintains aspect */
+    object-fit: cover; /* crop video to fit while maintaining quality */
     border-radius: 0;
     box-shadow: 0 4px 32px rgba(124,58,237,0.10);
-    margin: 0 auto;
+    margin: 0;
     background: #222;
     display: block;
 }
