@@ -222,18 +222,33 @@ class UIManager {
         }
     }
 
-    // Load products (currently disabled to remove all items)
+    // Load products from products.json file
     async loadProducts() {
         this.showLoading();
         try {
-            // Remove any locally saved custom products
-            localStorage.removeItem('customProducts');
-        } catch (_) {}
-        // Clear all products and render empty grid
-        this.fullProductList = [];
-        allProducts = [];
+            // Fetch products from products.json
+            const response = await fetch('products.json');
+            if (!response.ok) {
+                throw new Error('Failed to load products');
+            }
+            
+            const products = await response.json();
+            
+            // Set products
+            this.fullProductList = products;
+            allProducts = products;
+            
+            console.log(`✅ Loaded ${products.length} products from products.json`);
+            
+        } catch (error) {
+            console.error('Error loading products:', error);
+            // If products.json doesn't exist or fails, show empty state
+            this.fullProductList = [];
+            allProducts = [];
+        }
+        
         this.hideLoading();
-        this.renderProducts([]);
+        this.renderProducts();
     }
 
     // Merge lists, unique by URL
