@@ -97,5 +97,16 @@
         "category": "Cell Phones & Accessories",
         "image": "charger block.png",
         "affiliateLink": "https://amzn.to/43ROflX"
+    },
+    {
+        "id": 11,
+        "name": "Professional Wireless Lavalier Lapel Microphone for iPhone, iPad, mini",
+        "description": "Professional Wireless Lavalier Lapel Microphone for iPhone, iPad, mini Video Recording Mic forInterview Video Podcast Vlog YouTube&Livestream, Noise Reduction, Plug &Play",
+        "originalPrice": 9.99,
+        "salePrice": 9.99,
+        "store": "amazon",
+        "category": "Musical Instruments",
+        "image": "wirelessiphone mic.png",
+        "affiliateLink": "https://amzn.to/3XnZfUp"
     }
 ]
