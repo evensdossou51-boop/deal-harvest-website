@@ -532,11 +532,12 @@
                 sha = fileData.sha;
             }
 
-            // Prepare new content
+            // Prepare new content with timestamp for cache busting
+            const timestamp = new Date().toISOString();
             const jsonContent = JSON.stringify(products, null, 4);
             const encodedContent = btoa(unescape(encodeURIComponent(jsonContent)));
             
-            // Update file
+            // Update file with cache-busting commit message
             const updateResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
                 method: 'PUT',
                 headers: {
@@ -545,7 +546,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    message: `Update products.json with ${products.length} products`,
+                    message: `Update products.json with ${products.length} products - ${timestamp}`,
                     content: encodedContent,
                     sha: sha,
                     branch: branch

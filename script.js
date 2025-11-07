@@ -3,6 +3,124 @@
  * Handles product data fetching, filtering (store/category/search), and pagination.
  */
 
+let currentProductsHash = '';
+
+// Function to calculate a simple hash of the products array
+function calculateProductsHash(products) {
+    return btoa(JSON.stringify(products.map(p => p.id + p.name + p.salePrice))).slice(0, 16);
+}
+
+// Function to check for updates
+async function checkForUpdates() {
+    try {
+        const timestamp = Date.now();
+        const response = await fetch(`products.json?v=${timestamp}`, {
+            cache: 'no-cache',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache'
+            }
+        });
+        
+        if (response.ok) {
+            const newProducts = await response.json();
+            const newHash = calculateProductsHash(newProducts);
+            
+            if (currentProductsHash && newHash !== currentProductsHash) {
+                console.log('🔄 Products updated! Refreshing...');
+                ALL_PRODUCTS = newProducts;
+                currentProductsHash = newHash;
+                applyFiltersAndRender();
+                
+                // Show update notification
+                showUpdateNotification();
+            } else if (!currentProductsHash) {
+                currentProductsHash = newHash;
+            }
+        }
+    } catch (error) {
+        console.log('Update check failed:', error);
+    }
+}
+
+// Show update notification
+function showUpdateNotification(message = '🔄 Products updated!') {
+    const notification = document.createElement('div');
+    notification.className = 'update-notification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 10000;
+        font-weight: 600;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.innerHTML = message;
+    
+    // Add animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+        style.remove();
+    }, 3000);
+}
+
+// Manual refresh function
+function manualRefresh() {
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.classList.add('spinning');
+    }
+    
+    showUpdateNotification('🔄 Refreshing products...');
+    
+    // Force reload products with cache-busting
+    const timestamp = Date.now();
+    fetch(`products.json?v=${timestamp}`, {
+        cache: 'no-cache',
+        headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        }
+    })
+    .then(response => response.json())
+    .then(products => {
+        ALL_PRODUCTS = products;
+        currentProductsHash = calculateProductsHash(products);
+        applyFiltersAndRender();
+        
+        if (refreshBtn) {
+            refreshBtn.classList.remove('spinning');
+        }
+        
+        showUpdateNotification('✅ Products updated successfully!');
+    })
+    .catch(error => {
+        if (refreshBtn) {
+            refreshBtn.classList.remove('spinning');
+        }
+        
+        showUpdateNotification('❌ Refresh failed. Please try again.');
+        console.error('Refresh error:', error);
+    });
+}
+
 const PRODUCTS_PER_PAGE = 32;
 let currentPage = 1;
 let ALL_PRODUCTS = []; 
@@ -162,12 +280,26 @@ nextPageBtn.addEventListener('click', () => {
 // 6. INITIAL RENDER - FETCHES DATA
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('products.json');
+        // Add cache-busting parameter to prevent browser caching
+        const timestamp = Date.now();
+        const response = await fetch(`products.json?v=${timestamp}`, {
+            cache: 'no-cache',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         ALL_PRODUCTS = await response.json(); 
+        currentProductsHash = calculateProductsHash(ALL_PRODUCTS);
         applyFiltersAndRender();
+        
+        // Start periodic update checking (every 30 seconds)
+        setInterval(checkForUpdates, 30000);
         
     } catch (error) {
         productsGrid.innerHTML = '<div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;"><h3>Data Load Error</h3><p>Could not load product data. Please check your <code>products.json</code> file.</p></div>';

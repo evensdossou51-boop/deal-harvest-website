@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>DealHarvest - Discover Today's Best Deals</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
@@ -58,6 +61,12 @@
                     <option value="health-beauty">💄 Health & Beauty</option>
                     <option value="automotive">🚗 Automotive</option>
                 </select>
+            </div>
+
+            <div class="refresh-section">
+                <button id="refreshBtn" class="refresh-btn" onclick="forceRefresh()" title="Refresh products">
+                    🔄
+                </button>
             </div>
         </div>
     </header>

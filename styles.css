@@ -378,6 +378,64 @@ body {
     gap: 30px;
 }
 
+/* --- REFRESH BUTTON STYLING --- */
+.refresh-section {
+    display: flex;
+    align-items: center;
+}
+
+.refresh-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+
+.refresh-btn:hover {
+    transform: scale(1.1) rotate(180deg);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.refresh-btn.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- UPDATE NOTIFICATION --- */
+.update-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.update-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Responsive Overrides */
 @media (max-width: 768px) {
     .header-flex {
@@ -387,6 +445,11 @@ body {
     .products-grid {
         grid-template-columns: repeat(2, 1fr); 
     }
+    .refresh-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
 }
 @media (max-width: 480px) {
     .products-grid {
@@ -395,5 +458,11 @@ body {
     .cookie-content {
         flex-direction: column;
         text-align: center;
+    }
+    .update-notification {
+        bottom: 10px;
+        right: 10px;
+        font-size: 14px;
+        padding: 10px 16px;
     }
 }
