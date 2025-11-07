@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Product Manager - DealHarvest</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 10px; text-align: center; }
+        .subtitle { color: #666; text-align: center; margin-bottom: 30px; }
+        .status-bar {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .step h3 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea { height: 80px; resize: vertical; }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+            margin-bottom: 10px;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-success { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+        .btn-danger { background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #b8daff;
+        }
+        .columns-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .columns-info strong {
+            color: #1976d2;
+        }
+        .preview-section {
+            margin-top: 30px;
+            border-top: 2px solid #eee;
+            padding-top: 30px;
+        }
+        .product-preview {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #28a745;
+        }
+        .github-setup {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Live Product Manager</h1>
+        <p class="subtitle">Import from Google Sheets & Auto-Update Your Website</p>
+
+        <div class="status-bar">
+            <strong>Repository:</strong> evensdossou51-boop/deal-harvest-website<br>
+            <strong>Website:</strong> <a href="https://dealharvest.click" target="_blank">dealharvest.click</a>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- GitHub Token Setup -->
+        <div class="github-setup">
+            <h3>🔐 GitHub Setup Required</h3>
+            <p>To automatically update your website, you need a GitHub Personal Access Token:</p>
+            <ol style="margin: 10px 0; padding-left: 20px;">
+                <li>Go to <a href="https://github.com/settings/personal-access-tokens/tokens" target="_blank">GitHub Settings → Developer settings → Personal access tokens</a></li>
+                <li>Click "Generate new token (classic)"</li>
+                <li>Give it a name like "DealHarvest Product Manager"</li>
+                <li>Select scopes: <strong>repo</strong> (full control of private repositories)</li>
+                <li>Click "Generate token" and copy it</li>
+            </ol>
+            <div class="input-group">
+                <label for="githubToken">GitHub Personal Access Token:</label>
+                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                <small style="color: #666;">This token is stored locally in your browser and never sent anywhere except GitHub.</small>
+            </div>
+        </div>
+
+        <!-- Google Sheet Setup -->
+        <div class="step">
+            <h3><span class="step-number">1</span>Google Sheet Configuration</h3>
+            <div class="two-column">
+                <div class="input-group">
+                    <label for="sheetId">Google Sheet ID:</label>
+                    <input type="text" id="sheetId" value="10mH0CmZH289z_8sTekXWWuNvivDNn9bhi6hEbhgMZic">
+                </div>
+                <div class="input-group">
+                    <label for="sheetName">Sheet Name:</label>
+                    <input type="text" id="sheetName" value="Sheet1">
+                </div>
+            </div>
+            <a href="https://docs.google.com/spreadsheets/d/10mH0CmZH289z_8sTekXWWuNvivDNn9bhi6hEbhgMZic/edit?usp=sharing" target="_blank" class="btn btn-info">📊 Open Your Google Sheet</a>
+            
+            <div class="columns-info">
+                <strong>Required Columns (A-I):</strong><br>
+                A: id | B: name | C: description | D: originalPrice | E: salePrice | F: store | G: category | H: image | I: affiliateLink
+            </div>
+        </div>
+
+        <!-- Import & Update -->
+        <div class="step">
+            <h3><span class="step-number">2</span>Import & Update Website</h3>
+            <button class="btn" onclick="previewProducts()">👁️ Preview Products from Sheet</button>
+            <button class="btn btn-success" onclick="importAndUpdate()">🚀 Import & Update Live Website</button>
+            <button class="btn btn-danger" onclick="clearAllProducts()">🗑️ Clear All Products</button>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section" id="previewSection" style="display: none;">
+            <h3>📋 Product Preview</h3>
+            <div id="productPreview"></div>
+        </div>
+    </div>
+
+    <script>
+        // Save/load GitHub token securely in localStorage
+        const tokenInput = document.getElementById('githubToken');
+        tokenInput.value = localStorage.getItem('github_token') || '';
+        tokenInput.addEventListener('input', () => {
+            localStorage.setItem('github_token', tokenInput.value);
+        });
+
+        let currentProducts = [];
+
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 8000);
+        }
+
+        async function previewProducts() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '⏳ Loading Preview...';
+
+            try {
+                const products = await fetchGoogleSheetData();
+                currentProducts = products;
+                displayPreview(products);
+                showAlert(`✅ Loaded ${products.length} products from your Google Sheet`, 'success');
+            } catch (error) {
+                showAlert(`❌ Preview Error: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '👁️ Preview Products from Sheet';
+            }
+        }
+
+        async function importAndUpdate() {
+            const githubToken = document.getElementById('githubToken').value.trim();
+            
+            if (!githubToken) {
+                showAlert('❌ Please enter your GitHub Personal Access Token first', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '🚀 Updating Website...';
+
+            try {
+                // Get products from sheet if not already loaded
+                if (currentProducts.length === 0) {
+                    currentProducts = await fetchGoogleSheetData();
+                }
+
+                // Update GitHub repository
+                await updateGitHubRepository(currentProducts, githubToken);
+                
+                showAlert(`🎉 SUCCESS! Your website has been updated with ${currentProducts.length} products!<br><br>
+                          🌐 View your updated website: <a href="https://dealharvest.click" target="_blank" style="color: #155724; text-decoration: underline;">dealharvest.click</a><br>
+                          ⏱️ Changes may take 1-2 minutes to appear online.`, 'success');
+                
+            } catch (error) {
+                showAlert(`❌ Update Error: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 Import & Update Live Website';
+            }
+        }
+
+        async function clearAllProducts() {
+            if (!confirm('⚠️ This will remove ALL products from your website. Are you sure?')) {
+                return;
+            }
+
+            const githubToken = document.getElementById('githubToken').value.trim();
+            
+            if (!githubToken) {
+                showAlert('❌ Please enter your GitHub Personal Access Token first', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '🗑️ Clearing Products...';
+
+            try {
+                await updateGitHubRepository([], githubToken);
+                currentProducts = [];
+                document.getElementById('previewSection').style.display = 'none';
+                showAlert('✅ All products cleared from your website', 'success');
+            } catch (error) {
+                showAlert(`❌ Clear Error: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🗑️ Clear All Products';
+            }
+        }
+
+        async function fetchGoogleSheetData() {
+            const sheetId = document.getElementById('sheetId').value.trim();
+            const sheetName = document.getElementById('sheetName').value.trim();
+            
+            if (!sheetId) {
+                throw new Error('Please enter a Google Sheet ID');
+            }
+
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
+            
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Failed to access Google Sheet. Make sure it\'s publicly accessible.');
+            }
+            
+            const csvText = await response.text();
+            return convertCSVToJSON(csvText);
+        }
+
+        function convertCSVToJSON(csvText) {
+            const lines = csvText.split('\n').filter(line => line.trim() !== '');
+            
+            if (lines.length < 2) {
+                throw new Error('Sheet appears empty or only has headers');
+            }
+
+            const products = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = parseCSVLine(lines[i]);
+                
+                if (values.length < 9) continue;
+                if (!values[1] || !values[8]) continue; // name or affiliate link missing
+                
+                let imageValue = cleanValue(values[7]) || 'placeholder.jpg';
+                if (imageValue && !imageValue.startsWith('http') && !imageValue.startsWith('images/')) {
+                    imageValue = imageValue; // Keep as filename for images/ folder
+                }
+
+                const product = {
+                    id: parseInt(values[0]) || i,
+                    name: cleanValue(values[1]),
+                    description: cleanValue(values[2]) || 'No description available',
+                    originalPrice: parseFloat(values[3]) || 0,
+                    salePrice: parseFloat(values[4]) || parseFloat(values[3]) || 0,
+                    store: cleanValue(values[5]) || 'amazon',
+                    category: cleanValue(values[6]) || 'electronics',
+                    image: imageValue,
+                    affiliateLink: cleanValue(values[8])
+                };
+                
+                products.push(product);
+            }
+            
+            return products;
+        }
+
+        function cleanValue(value) {
+            if (!value) return '';
+            return value.replace(/^["']|["']$/g, '').trim();
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current.trim());
+            return result;
+        }
+
+        function displayPreview(products) {
+            const previewSection = document.getElementById('previewSection');
+            const productPreview = document.getElementById('productPreview');
+            
+            if (products.length === 0) {
+                productPreview.innerHTML = '<p>No products found in the sheet.</p>';
+                previewSection.style.display = 'block';
+                return;
+            }
+
+            const previewHTML = products.map(product => `
+                <div class="product-preview">
+                    <strong>${product.name}</strong> (ID: ${product.id})<br>
+                    <small>${product.store.toUpperCase()} | ${product.category} | $${product.salePrice}</small><br>
+                    <small>Image: ${product.image} | Link: ${product.affiliateLink.substring(0, 50)}...</small>
+                </div>
+            `).join('');
+
+            productPreview.innerHTML = `<p><strong>${products.length} products ready to import:</strong></p>${previewHTML}`;
+            previewSection.style.display = 'block';
+        }
+
+        async function updateGitHubRepository(products, githubToken) {
+            const owner = 'evensdossou51-boop';
+            const repo = 'deal-harvest-website';
+            const path = 'products.json';
+            const branch = 'main';
+            
+            // Get current file to get its SHA
+            const getFileResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            let sha = '';
+            if (getFileResponse.ok) {
+                const fileData = await getFileResponse.json();
+                sha = fileData.sha;
+            }
+
+            // Prepare new content
+            const jsonContent = JSON.stringify(products, null, 4);
+            const encodedContent = btoa(unescape(encodeURIComponent(jsonContent)));
+            
+            // Update file
+            const updateResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: `Update products.json with ${products.length} products`,
+                    content: encodedContent,
+                    sha: sha,
+                    branch: branch
+                })
+            });
+
+            if (!updateResponse.ok) {
+                const errorData = await updateResponse.json();
+                throw new Error(`GitHub API Error: ${errorData.message || 'Unknown error'}`);
+            }
+
+            return await updateResponse.json();
+        }
+    </script>
+</body>
+</html>
