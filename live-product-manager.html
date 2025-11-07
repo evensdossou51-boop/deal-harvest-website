@@ -167,6 +167,11 @@
 
         <div id="alertContainer"></div>
 
+        <!-- Progress Indicator -->
+        <div id="progressBar" style="display: none; background: #e9ecef; border-radius: 10px; margin-bottom: 20px; overflow: hidden;">
+            <div id="progressFill" style="height: 20px; background: linear-gradient(90deg, #28a745, #20c997); width: 0%; transition: width 0.3s ease; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;"></div>
+        </div>
+
         <!-- GitHub Token Setup -->
         <div class="github-setup">
             <h3>🔐 GitHub Setup Required</h3>
@@ -244,18 +249,43 @@
             }, 8000);
         }
 
+        function updateProgress(percentage, text) {
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            
+            if (percentage === 0) {
+                progressBar.style.display = 'none';
+                return;
+            }
+            
+            progressBar.style.display = 'block';
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = text;
+            
+            if (percentage >= 100) {
+                setTimeout(() => {
+                    progressBar.style.display = 'none';
+                }, 2000);
+            }
+        }
+
         async function previewProducts() {
             const btn = event.target;
             btn.disabled = true;
             btn.textContent = '⏳ Loading Preview...';
 
             try {
+                showAlert('📥 Connecting to Google Sheets...', 'info');
                 const products = await fetchGoogleSheetData();
                 currentProducts = products;
                 displayPreview(products);
-                showAlert(`✅ Loaded ${products.length} products from your Google Sheet`, 'success');
+                showAlert(`✅ Loaded ${products.length} products from your Google Sheet. Ready to import!`, 'success');
             } catch (error) {
-                showAlert(`❌ Preview Error: ${error.message}`, 'error');
+                console.error('Preview error:', error);
+                showAlert(`❌ Preview Error: ${error.message}<br><br>🔧 <strong>Troubleshooting:</strong><br>
+                          • Make sure your Google Sheet is set to "Anyone with the link can view"<br>
+                          • Check that Row 1 has the correct headers: id, name, description, originalPrice, salePrice, store, category, image, affiliateLink<br>
+                          • Ensure you have data in Row 2 and beyond`, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = '👁️ Preview Products from Sheet';
@@ -275,19 +305,36 @@
             btn.textContent = '🚀 Updating Website...';
 
             try {
-                // Get products from sheet if not already loaded
+                // Step 1: Fetch data
+                updateProgress(20, 'Fetching Google Sheets data...');
+                showAlert('📥 Fetching latest data from Google Sheets...', 'info');
+                currentProducts = await fetchGoogleSheetData();
+                
                 if (currentProducts.length === 0) {
-                    currentProducts = await fetchGoogleSheetData();
+                    throw new Error('No products found in Google Sheet. Please check your sheet has data and is publicly accessible.');
                 }
 
-                // Update GitHub repository
+                // Step 2: Prepare update
+                updateProgress(50, `Processing ${currentProducts.length} products...`);
+                showAlert(`✅ Found ${currentProducts.length} products. Updating website...`, 'info');
+
+                // Step 3: Update repository
+                updateProgress(75, 'Updating GitHub repository...');
                 await updateGitHubRepository(currentProducts, githubToken);
                 
+                // Step 4: Trigger rebuild
+                updateProgress(90, 'Triggering website rebuild...');
+                await triggerPagesRebuild(githubToken);
+                
+                // Step 5: Complete
+                updateProgress(100, 'Update complete!');
                 showAlert(`🎉 SUCCESS! Your website has been updated with ${currentProducts.length} products!<br><br>
                           🌐 View your updated website: <a href="https://dealharvest.click" target="_blank" style="color: #155724; text-decoration: underline;">dealharvest.click</a><br>
-                          ⏱️ Changes may take 1-2 minutes to appear online.`, 'success');
+                          ⚡ Changes should appear in 30-60 seconds!`, 'success');
                 
             } catch (error) {
+                updateProgress(0);
+                console.error('Import error:', error);
                 showAlert(`❌ Update Error: ${error.message}`, 'error');
             } finally {
                 btn.disabled = false;
@@ -332,14 +379,31 @@
                 throw new Error('Please enter a Google Sheet ID');
             }
 
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
+            // Add cache-busting parameter to get fresh data
+            const timestamp = Date.now();
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}&t=${timestamp}`;
             
-            const response = await fetch(url);
+            console.log('Fetching from URL:', url);
+            
+            const response = await fetch(url, {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache'
+                }
+            });
+            
             if (!response.ok) {
-                throw new Error('Failed to access Google Sheet. Make sure it\'s publicly accessible.');
+                throw new Error(`Failed to access Google Sheet (Status: ${response.status}). Make sure it's publicly accessible.`);
             }
             
             const csvText = await response.text();
+            console.log('Raw CSV data:', csvText.substring(0, 500)); // Log first 500 chars for debugging
+            
+            if (!csvText || csvText.trim().length === 0) {
+                throw new Error('Google Sheet appears to be empty');
+            }
+            
             return convertCSVToJSON(csvText);
         }
 
@@ -494,6 +558,31 @@
             }
 
             return await updateResponse.json();
+        }
+
+        async function triggerPagesRebuild(githubToken) {
+            // Trigger GitHub Pages rebuild by making a dummy request to the Pages API
+            try {
+                const owner = 'evensdossou51-boop';
+                const repo = 'deal-harvest-website';
+                
+                // First, try to trigger a pages build
+                const pagesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/pages/builds`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (pagesResponse.ok) {
+                    console.log('✅ GitHub Pages rebuild triggered successfully');
+                } else {
+                    console.log('⚠️ Could not trigger Pages rebuild, but file was updated');
+                }
+            } catch (error) {
+                console.log('⚠️ Pages rebuild trigger failed, but file was updated:', error.message);
+            }
         }
     </script>
 </body>
