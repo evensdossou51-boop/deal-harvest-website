@@ -344,7 +344,10 @@
         }
 
         function convertCSVToJSON(csvText) {
+            console.log('Raw CSV text:', csvText); // Debug log
+            
             const lines = csvText.split('\n').filter(line => line.trim() !== '');
+            console.log('Filtered lines:', lines); // Debug log
             
             if (lines.length < 2) {
                 throw new Error('Sheet appears empty or only has headers');
@@ -354,9 +357,19 @@
             
             for (let i = 1; i < lines.length; i++) {
                 const values = parseCSVLine(lines[i]);
+                console.log(`Row ${i} parsed values:`, values); // Debug log
                 
-                if (values.length < 9) continue;
-                if (!values[1] || !values[8]) continue; // name or affiliate link missing
+                // More lenient checking - only require name and at least 3 columns
+                if (values.length < 3) {
+                    console.log(`Skipping row ${i}: too few columns`);
+                    continue;
+                }
+                
+                const nameValue = cleanValue(values[1]);
+                if (!nameValue || nameValue.trim() === '') {
+                    console.log(`Skipping row ${i}: empty name`);
+                    continue;
+                }
                 
                 let imageValue = cleanValue(values[7]) || 'placeholder.jpg';
                 if (imageValue && !imageValue.startsWith('http') && !imageValue.startsWith('images/')) {
@@ -365,16 +378,17 @@
 
                 const product = {
                     id: parseInt(values[0]) || i,
-                    name: cleanValue(values[1]),
+                    name: nameValue,
                     description: cleanValue(values[2]) || 'No description available',
                     originalPrice: parseFloat(values[3]) || 0,
                     salePrice: parseFloat(values[4]) || parseFloat(values[3]) || 0,
                     store: cleanValue(values[5]) || 'amazon',
                     category: cleanValue(values[6]) || 'electronics',
                     image: imageValue,
-                    affiliateLink: cleanValue(values[8])
+                    affiliateLink: cleanValue(values[8]) || 'https://example.com'
                 };
                 
+                console.log(`Adding product:`, product); // Debug log
                 products.push(product);
             }
             
@@ -382,8 +396,12 @@
         }
 
         function cleanValue(value) {
-            if (!value) return '';
-            return value.replace(/^["']|["']$/g, '').trim();
+            if (!value || value === null || value === undefined) return '';
+            // Remove quotes and extra whitespace
+            let cleaned = String(value).replace(/^["']|["']$/g, '').trim();
+            // Handle escaped quotes
+            cleaned = cleaned.replace(/""/g, '"');
+            return cleaned;
         }
 
         function parseCSVLine(line) {
