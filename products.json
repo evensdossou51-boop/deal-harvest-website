@@ -75,5 +75,16 @@
         "category": "Home",
         "image": "christmas stockings.png",
         "affiliateLink": "https://amzn.to/4nEtNMF"
+    },
+    {
+        "id": 9,
+        "name": "Breville Barista Express Espresso Machine",
+        "description": "PRECISE ESPRESSO EXTRACTION: Digital temperature control (PID) delivers water at precisely the right temperature, ensuring optimal espresso extraction",
+        "originalPrice": 699.95,
+        "salePrice": 549.95,
+        "store": "amazon",
+        "category": "Kitchen & Dining",
+        "image": "espresso.png",
+        "affiliateLink": "https://amzn.to/3WKmQyt"
     }
 ]
