@@ -1,12 +1,20 @@
 /**
- * DealHarvest Affiliate Store Script - Manual JSON Fetch
- * Handles product data fetching, filtering (store/category/search), and pagination.
+ * DealHarvest Affiliate Store Script - Optimized Version
+ * Uses centralized utilities to eliminate code duplication
  */
+
+// Import utilities if available
+const { CONFIG, CacheManager, HashManager, NotificationManager } = 
+    window.DealHarvest || {};
 
 let currentProductsHash = '';
 
-// Function to calculate a simple hash of the products array
+// Function to calculate a simple hash of the products array (fallback)
 function calculateProductsHash(products) {
+    if (HashManager) {
+        return HashManager.calculateProductsHash(products);
+    }
+    // Fallback implementation
     return btoa(JSON.stringify(products.map(p => p.id + p.name + p.salePrice))).slice(0, 16);
 }
 
@@ -14,13 +22,20 @@ function calculateProductsHash(products) {
 async function checkForUpdates() {
     try {
         const timestamp = Date.now();
-        const response = await fetch(`products.json?v=${timestamp}`, {
-            cache: 'no-cache',
-            headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache'
-            }
-        });
+        let response;
+        
+        if (CacheManager) {
+            response = await CacheManager.fetchWithCacheBust('products.json');
+        } else {
+            // Fallback implementation
+            response = await fetch(`products.json?v=${timestamp}`, {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache'
+                }
+            });
+        }
         
         if (response.ok) {
             const data = await response.json();
@@ -57,7 +72,12 @@ async function checkForUpdates() {
                 if (data.updateSource) {
                     updateMessage = `Updated via ${data.updateSource}!`;
                 }
-                showUpdateNotification(updateMessage);
+                
+                if (NotificationManager) {
+                    NotificationManager.showSuccess(updateMessage);
+                } else {
+                    showUpdateNotification(updateMessage);
+                }
                 
             } else if (!currentProductsHash) {
                 currentProductsHash = newHash;
@@ -112,18 +132,25 @@ function manualRefresh() {
         refreshBtn.classList.add('spinning');
     }
     
-    showUpdateNotification('🔄 Refreshing products...');
+    if (NotificationManager) {
+        NotificationManager.showProgress('Refreshing products...');
+    } else {
+        showUpdateNotification('🔄 Refreshing products...');
+    }
     
     // Force reload products with cache-busting
-    const timestamp = Date.now();
-    fetch(`products.json?v=${timestamp}`, {
-        cache: 'no-cache',
-        headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-        }
-    })
+    const fetchPromise = CacheManager ? 
+        CacheManager.fetchWithCacheBust('products.json') :
+        fetch(`products.json?v=${Date.now()}`, {
+            cache: 'no-cache',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
+    
+    fetchPromise
     .then(response => response.json())
     .then(data => {
         let products;
@@ -147,14 +174,22 @@ function manualRefresh() {
             refreshBtn.classList.remove('spinning');
         }
         
-        showUpdateNotification('✅ Products updated successfully!');
+        if (NotificationManager) {
+            NotificationManager.showSuccess('Products updated successfully!');
+        } else {
+            showUpdateNotification('✅ Products updated successfully!');
+        }
     })
     .catch(error => {
         if (refreshBtn) {
             refreshBtn.classList.remove('spinning');
         }
         
-        showUpdateNotification('❌ Refresh failed. Please try again.');
+        if (NotificationManager) {
+            NotificationManager.showError('Refresh failed. Please try again.');
+        } else {
+            showUpdateNotification('❌ Refresh failed. Please try again.');
+        }
         console.error('Refresh error:', error);
     });
 }
@@ -318,16 +353,17 @@ nextPageBtn.addEventListener('click', () => {
 // 6. INITIAL RENDER - FETCHES DATA
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // Add cache-busting parameter to prevent browser caching
-        const timestamp = Date.now();
-        const response = await fetch(`products.json?v=${timestamp}`, {
-            cache: 'no-cache',
-            headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            }
-        });
+        // Use utility for cache-busted fetch if available
+        const response = CacheManager ? 
+            await CacheManager.fetchWithCacheBust('products.json') :
+            await fetch(`products.json?v=${Date.now()}`, {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -354,7 +390,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // If updated within last 5 minutes, show notification
                 if (timeDiff < 5 * 60 * 1000) {
                     setTimeout(() => {
-                        showUpdateNotification(`✅ Fresh products loaded! Updated ${Math.round(timeDiff/1000/60)} minutes ago`);
+                        const message = `Fresh products loaded! Updated ${Math.round(timeDiff/1000/60)} minutes ago`;
+                        if (NotificationManager) {
+                            NotificationManager.showSuccess(message);
+                        } else {
+                            showUpdateNotification(`✅ ${message}`);
+                        }
                     }, 1000);
                 }
             }
@@ -365,8 +406,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentProductsHash = calculateProductsHash(ALL_PRODUCTS);
         applyFiltersAndRender();
         
-        // Start periodic update checking (every 30 seconds)
-        setInterval(checkForUpdates, 30000);
+        // Start periodic update checking
+        const interval = CONFIG?.UPDATE_CHECK_INTERVAL || 30000;
+        setInterval(checkForUpdates, interval);
         
     } catch (error) {
         productsGrid.innerHTML = '<div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;"><h3>Data Load Error</h3><p>Could not load product data. Please check your <code>products.json</code> file.</p></div>';
