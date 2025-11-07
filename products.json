@@ -31,5 +31,16 @@
         "category": "Luggage",
         "image": "Luggage 3 Piece.png",
         "affiliateLink": "https://amzn.to/43WvoGi"
+    },
+    {
+        "id": 4,
+        "name": "Toniebox 1 Audio Player",
+        "description": "New and innovative audio player for kids 3+ that is great for bedtime stories, music, and education.",
+        "originalPrice": 99.99,
+        "salePrice": 99.99,
+        "store": "amazon",
+        "category": "Toys & Games",
+        "image": "Toniebox.png",
+        "affiliateLink": "https://amzn.to/3WLCxWb"
     }
 ]
