@@ -1,13 +1,13 @@
 [
     {
-        "id": 1,
+        "id": 2,
         "name": "BWireless Bluetooth Headphones",
-        "description": "C2: Premium noise-cancelling headphones with 30-hour battery life",
-        "originalPrice": 199.99,
-        "salePrice": 149.99,
+        "description": "Matching Couples Pajamas: These matching onesies for couples christmas are sold individually—each order includes one pajama. If you're looking to match with your lover, simply select the gender (for him/her), style, and size and add to cart. Perfect for adult couples to lounge at home on weekends: slip into these matching hooded onesies, binge shows, cook together, and soak in cozy, sweet intimacy—like a warm hug that lingers.",
+        "originalPrice": 0,
+        "salePrice": 0,
         "store": "amazon",
         "category": "electronics",
-        "image": "headphones.jpg",
-        "affiliateLink": "https://www.amazon.com/dp/SAMPLE123/?tag=YOUR_TAG"
+        "image": "placeholder.jpg",
+        "affiliateLink": "https://example.com"
     }
 ]
