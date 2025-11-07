@@ -553,6 +553,8 @@
                     sha = fileData.sha;
                     currentContent = atob(fileData.content);
                     
+                    console.log('✅ Existing file found, will update with SHA:', sha);
+                    
                     // Create backup with current content
                     const backupContent = btoa(unescape(encodeURIComponent(currentContent)));
                     await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${backupPath}`, {
@@ -569,6 +571,8 @@
                         })
                     });
                     console.log('✅ Backup created:', backupPath);
+                } else {
+                    console.log('ℹ️ No existing file found, will create new file');
                 }
 
                 // Prepare new content with additional metadata for persistence
@@ -586,6 +590,22 @@
                 
                 // Update main file with enhanced commit message and force flag
                 const commitMessage = `🔄 FORCE UPDATE: ${products.length} products via Google Sheets - ${timestamp} - ID: update-${Date.now()}`;
+                
+                const requestBody = {
+                    message: commitMessage,
+                    content: encodedContent,
+                    branch: branch,
+                    committer: {
+                        name: 'DealHarvest Bot',
+                        email: 'bot@dealharvest.click'
+                    }
+                };
+
+                // Only include SHA if file exists (for updates), omit for new files
+                if (sha) {
+                    requestBody.sha = sha;
+                }
+
                 const updateResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
                     method: 'PUT',
                     headers: {
@@ -595,25 +615,17 @@
                         'X-GitHub-Media-Type': 'github.v3',
                         'Cache-Control': 'no-cache'
                     },
-                    body: JSON.stringify({
-                        message: commitMessage,
-                        content: encodedContent,
-                        sha: sha,
-                        branch: branch,
-                        committer: {
-                            name: 'DealHarvest Bot',
-                            email: 'bot@dealharvest.click'
-                        }
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 if (!updateResponse.ok) {
                     const errorData = await updateResponse.json();
+                    console.error('❌ GitHub API Error:', errorData);
                     throw new Error(`GitHub API Error: ${errorData.message || 'Unknown error'}`);
                 }
 
                 const result = await updateResponse.json();
-                console.log('✅ Main file updated successfully');
+                console.log('✅ Main file updated successfully:', result.content.download_url);
                 
                 // Wait and verify the update
                 await new Promise(resolve => setTimeout(resolve, 2000));
