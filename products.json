@@ -64,5 +64,16 @@
         "category": "Books & Textbooks",
         "image": "bible.png",
         "affiliateLink": "https://amzn.to/3LxGLOG"
+    },
+    {
+        "id": 8,
+        "name": "Valery Madelman 21 Inches Christmas Stockings Decorations",
+        "description": "Valery Madelman 21 Inches Christmas Stockings Decorations, Dark Blue Shark Plush Stocking with Name Tag, Fabric Cute Stockings Christmas for Fireplace Decor",
+        "originalPrice": 20.99,
+        "salePrice": 12.59,
+        "store": "amazon",
+        "category": "Home",
+        "image": "christmas stockings.png",
+        "affiliateLink": "https://amzn.to/4nEtNMF"
     }
 ]
