@@ -9,5 +9,16 @@
         "category": "General",
         "image": "pajamas.png",
         "affiliateLink": "https://amzn.to/3WM0i0i"
+    },
+    {
+        "id": 3,
+        "name": "Fisher-Price Baby & Toddler Toy",
+        "description": "Fisher-Price Baby & Toddler Toy Laugh & Learn Pull & Play Learning Wagon",
+        "originalPrice": 48.99,
+        "salePrice": 29.99,
+        "store": "amazon",
+        "category": "Kids",
+        "image": "todler toy.png",
+        "affiliateLink": "https://amzn.to/3LpWEXC"
     }
 ]
