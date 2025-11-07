@@ -1,1 +1,13 @@
-[]
+[
+    {
+        "id": 1,
+        "name": "Sample Product",
+        "description": "This is a sample product to test the site works",
+        "originalPrice": 29.99,
+        "salePrice": 19.99,
+        "store": "amazon",
+        "category": "electronics",
+        "image": "logo.png",
+        "affiliateLink": "https://example.com"
+    }
+]
