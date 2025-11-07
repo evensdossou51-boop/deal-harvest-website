@@ -86,5 +86,16 @@
         "category": "Kitchen & Dining",
         "image": "espresso.png",
         "affiliateLink": "https://amzn.to/3WKmQyt"
+    },
+    {
+        "id": 10,
+        "name": "INIU USB C Charger Block",
+        "description": "INIU USB C Charger Block, 100W 3-Port PD Fast Charging, Compact Foldable Charger with USB C Cable, GaN Tech Power Adapter for MacBook Air Pro, iPad, iPhone 17 16 Pro Max, Samsung S25 S24, Switch 2 etc",
+        "originalPrice": 32.99,
+        "salePrice": 32.99,
+        "store": "amazon",
+        "category": "Cell Phones & Accessories",
+        "image": "charger block.png",
+        "affiliateLink": "https://amzn.to/43ROflX"
     }
 ]
