@@ -9,5 +9,16 @@
         "category": "electronics",
         "image": "placeholder.jpg",
         "affiliateLink": "https://example.com"
+    },
+    {
+        "id": 3,
+        "name": "Guitar",
+        "description": "BAss guitar",
+        "originalPrice": 0,
+        "salePrice": 115,
+        "store": "Target",
+        "category": "Instrument",
+        "image": "placeholder.jpg",
+        "affiliateLink": "https://amzn.to/4hIiqle"
     }
 ]
