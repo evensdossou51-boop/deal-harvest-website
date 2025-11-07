@@ -1,13 +1,13 @@
 [
     {
         "id": 1,
-        "name": "Test Product - Wireless Headphones",
-        "description": "Sample product to verify the website is working correctly",
-        "originalPrice": 99.99,
-        "salePrice": 79.99,
+        "name": "BWireless Bluetooth Headphones",
+        "description": "C2: Premium noise-cancelling headphones with 30-hour battery life",
+        "originalPrice": 199.99,
+        "salePrice": 149.99,
         "store": "amazon",
         "category": "electronics",
-        "image": "logo.png",
-        "affiliateLink": "https://example.com/test-product"
+        "image": "headphones.jpg",
+        "affiliateLink": "https://www.amazon.com/dp/SAMPLE123/?tag=YOUR_TAG"
     }
 ]
