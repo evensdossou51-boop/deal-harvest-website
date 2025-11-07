@@ -43,7 +43,7 @@ function createProductCard(product) {
     const imageSrc = product.image.startsWith('http') ? product.image : `images/${product.image}`;
 
     return `
-        <div class="product-card" data-store="${product.store}" data-category="${product.category}">
+        <div class="product-card" data-store="${product.store.toLowerCase()}" data-category="${product.category.toLowerCase()}">
             ${discountBadge} 
             <div class="product-image-wrapper">
                 <img src="${imageSrc}" alt="${product.name}" class="product-main-image">
@@ -73,13 +73,13 @@ function applyFiltersAndRender() {
             product.name.toLowerCase().includes(searchVal) ||
             (product.description && product.description.toLowerCase().includes(searchVal));
         
-        // Category Filter
+        // Category Filter - Case insensitive matching
         const matchesCategory = currentFilters.category === '' ||
-            product.category === currentFilters.category;
+            product.category.toLowerCase() === currentFilters.category.toLowerCase();
             
-        // Store Filter
+        // Store Filter - Case insensitive matching
         const matchesStore = currentFilters.store === 'all' ||
-            product.store === currentFilters.store;
+            product.store.toLowerCase() === currentFilters.store.toLowerCase();
 
         return matchesSearch && matchesCategory && matchesStore;
     });

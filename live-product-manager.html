@@ -446,8 +446,8 @@
                     description: cleanValue(values[2]) || 'No description available',
                     originalPrice: parseFloat(values[3]) || 0,
                     salePrice: parseFloat(values[4]) || parseFloat(values[3]) || 0,
-                    store: cleanValue(values[5]) || 'amazon',
-                    category: cleanValue(values[6]) || 'electronics',
+                    store: (cleanValue(values[5]) || 'amazon').toLowerCase(),
+                    category: (cleanValue(values[6]) || 'electronics').toLowerCase(),
                     image: imageValue,
                     affiliateLink: cleanValue(values[8]) || 'https://example.com'
                 };

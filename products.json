@@ -1,13 +1,24 @@
 [
     {
-        "id": 1,
-        "name": "BWireless Bluetooth Headphones",
-        "description": "C2: Premium noise-cancelling headphones with 30-hour battery life",
+        "id": 2,
+        "name": "Wireless Bluetooth Headphones",
+        "description": "High-quality wireless headphones with noise cancellation and long battery life. Perfect for music lovers and professionals.",
         "originalPrice": 199.99,
         "salePrice": 149.99,
         "store": "amazon",
         "category": "electronics",
-        "image": "headphones.jpg",
-        "affiliateLink": "https://www.amazon.com/dp/SAMPLE123/?tag=YOUR_TAG"
+        "image": "placeholder.jpg",
+        "affiliateLink": "https://example.com"
+    },
+    {
+        "id": 3,
+        "name": "Guitar",
+        "description": "Bass guitar",
+        "originalPrice": 150,
+        "salePrice": 115,
+        "store": "target",
+        "category": "sports",
+        "image": "placeholder.jpg",
+        "affiliateLink": "https://amzn.to/4hIiqle"
     }
 ]
