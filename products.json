@@ -53,5 +53,16 @@
         "category": "Home",
         "image": "white plunger.png",
         "affiliateLink": "https://amzn.to/3JGJK71"
+    },
+    {
+        "id": 7,
+        "name": "The Bible in 52 Weeks",
+        "description": "The Bible in 52 Weeks: A Yearlong Bible Study for Women",
+        "originalPrice": 14.99,
+        "salePrice": 7.85,
+        "store": "amazon",
+        "category": "Books & Textbooks",
+        "image": "bible.png",
+        "affiliateLink": "https://amzn.to/3LxGLOG"
     }
 ]
