@@ -1,4 +1,4 @@
-[[]
+[
     {
         "id": 1,
         "name": "Noise-Cancelling Headphones Pro X",
@@ -53,5 +53,16 @@
         "category": "sports",
         "image": "tracker.jpg",
         "affiliateLink": "https://www.amazon.com/dp/B08P1Q2R3S/?tag=YOUR_AMAZON_ID"
+    },
+    {
+        "id": 6,
+        "name": "Onesie Couples Matching Pajamas",
+        "description": "Funny Plaid Zipper Hooded Pjs Sets for Women & Men Soft Warm Christmas Jumpsuit",
+        "originalPrice": 29.99,
+        "salePrice": 26.98,
+        "store": "amazon",
+        "category": "General",
+        "image": "pajamas.png",
+        "affiliateLink": "https://amzn.to/3WM0i0i"
     }
 ]
