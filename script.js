@@ -3,9 +3,18 @@
  * Uses centralized utilities to eliminate code duplication
  */
 
-// Import utilities if available
-const { CONFIG, CacheManager, HashManager, NotificationManager } = 
-    window.DealHarvest || {};
+// Import utilities if available (with fallback)
+let CONFIG, CacheManager, HashManager, NotificationManager;
+try {
+    const utilities = window.DealHarvest || {};
+    CONFIG = utilities.CONFIG;
+    CacheManager = utilities.CacheManager;
+    HashManager = utilities.HashManager;
+    NotificationManager = utilities.NotificationManager;
+    console.log('✅ Utilities loaded successfully');
+} catch (error) {
+    console.warn('⚠️ Utilities not available, using fallbacks');
+}
 
 let currentProductsHash = '';
 
@@ -256,6 +265,9 @@ function createProductCard(product) {
  * 3. RENDERING & FILTERING
  */
 function applyFiltersAndRender() {
+    console.log('🔍 Applying filters:', currentFilters); // Debug log
+    console.log('📊 Total products before filtering:', ALL_PRODUCTS.length); // Debug log
+    
     let filteredProducts = ALL_PRODUCTS.filter(product => {
         const searchVal = currentFilters.search.toLowerCase();
         
@@ -272,8 +284,17 @@ function applyFiltersAndRender() {
         const matchesStore = currentFilters.store === 'all' ||
             product.store.toLowerCase() === currentFilters.store.toLowerCase();
 
-        return matchesSearch && matchesCategory && matchesStore;
+        const matches = matchesSearch && matchesCategory && matchesStore;
+        
+        // Debug specific store filtering
+        if (currentFilters.store !== 'all') {
+            console.log(`Product: ${product.name}, Store: "${product.store}" vs Filter: "${currentFilters.store}", Matches: ${matchesStore}`);
+        }
+
+        return matches;
     });
+    
+    console.log('📊 Filtered products:', filteredProducts.length); // Debug log
     
     const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 
@@ -307,47 +328,54 @@ function updatePaginationControls(totalPages) {
 }
 
 // 5. EVENT LISTENERS
-searchInput.addEventListener('input', () => {
-    currentFilters.search = searchInput.value;
-    currentPage = 1;
-    applyFiltersAndRender();
-});
-document.getElementById('searchForm').addEventListener('submit', (e) => e.preventDefault()); // Stop page reload
-
-categoryFilter.addEventListener('change', () => {
-    currentFilters.category = categoryFilter.value;
-    currentPage = 1;
-    applyFiltersAndRender();
-});
-
-storeFilterGrid.addEventListener('click', (e) => {
-    const btn = e.target.closest('.store-option-btn');
-    if (!btn) return;
-    
-    storeFilterGrid.querySelectorAll('.store-option-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    currentFilters.store = btn.dataset.store;
-    currentPage = 1;
-    applyFiltersAndRender();
-});
-
-prevPageBtn.addEventListener('click', () => {
-    if (currentPage > 1) {
-        currentPage--;
+// Add error handling for DOM elements
+try {
+    searchInput.addEventListener('input', () => {
+        currentFilters.search = searchInput.value;
+        currentPage = 1;
         applyFiltersAndRender();
-        window.scrollTo({ top: productsGrid.offsetTop - 100, behavior: 'smooth' });
-    }
-});
+    });
+    document.getElementById('searchForm').addEventListener('submit', (e) => e.preventDefault()); // Stop page reload
 
-nextPageBtn.addEventListener('click', () => {
-    const totalPages = Math.ceil(ALL_PRODUCTS.length / PRODUCTS_PER_PAGE); // Simple check, filtering is done inside applyFilters
-    if (currentPage < totalPages) {
-        currentPage++;
+    categoryFilter.addEventListener('change', () => {
+        currentFilters.category = categoryFilter.value;
+        currentPage = 1;
         applyFiltersAndRender();
-        window.scrollTo({ top: productsGrid.offsetTop - 100, behavior: 'smooth' });
-    }
-});
+    });
+
+    storeFilterGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.store-option-btn');
+        if (!btn) return;
+        
+        console.log('Store button clicked:', btn.dataset.store); // Debug log
+        
+        storeFilterGrid.querySelectorAll('.store-option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        currentFilters.store = btn.dataset.store;
+        currentPage = 1;
+        applyFiltersAndRender();
+    });
+
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            applyFiltersAndRender();
+            window.scrollTo({ top: productsGrid.offsetTop - 100, behavior: 'smooth' });
+        }
+    });
+
+    nextPageBtn.addEventListener('click', () => {
+        const totalPages = Math.ceil(ALL_PRODUCTS.length / PRODUCTS_PER_PAGE); // Simple check, filtering is done inside applyFilters
+        if (currentPage < totalPages) {
+            currentPage++;
+            applyFiltersAndRender();
+            window.scrollTo({ top: productsGrid.offsetTop - 100, behavior: 'smooth' });
+        }
+    });
+} catch (error) {
+    console.error('Error setting up event listeners:', error);
+}
 
 
 // 6. INITIAL RENDER - FETCHES DATA
@@ -375,12 +403,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (Array.isArray(data)) {
             // Old format - direct array
             ALL_PRODUCTS = data;
+            console.log('📊 Products loaded (old format):', ALL_PRODUCTS.length);
+            console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
         } else if (data.products && Array.isArray(data.products)) {
             // New format - object with metadata
             ALL_PRODUCTS = data.products;
             console.log('📊 Products loaded from:', data.updateSource || 'unknown source');
             console.log('📅 Last updated:', data.lastUpdated || 'unknown time');
             console.log('🔢 Product count:', data.productCount || ALL_PRODUCTS.length);
+            console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
             
             // Show update info in notification if recent
             if (data.lastUpdated) {
