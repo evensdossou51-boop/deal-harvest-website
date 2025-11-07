@@ -1,0 +1,57 @@
+[[]
+    {
+        "id": 1,
+        "name": "Noise-Cancelling Headphones Pro X",
+        "description": "Premium wireless headphones with crystal clear audio and 30-hour battery life.",
+        "originalPrice": 249.99,
+        "salePrice": 199.99,
+        "store": "amazon",
+        "category": "electronics",
+        "image": "headphone.jpg",
+        "affiliateLink": "https://www.amazon.com/dp/B09V7N4W7K/?tag=YOUR_AMAZON_ID"
+    },
+    {
+        "id": 2,
+        "name": "Smart Wi-Fi Thermostat (Energy Star)",
+        "description": "Programmable thermostat with intelligent scheduling to save you money.",
+        "originalPrice": 100.00,
+        "salePrice": 79.50,
+        "store": "homedepot",
+        "category": "home-garden",
+        "image": "thermostat.jpg",
+        "affiliateLink": "https://www.homedepot.com/p/THERM_PROD_5873/?aid=YOUR_HD_ID"
+    },
+    {
+        "id": 3,
+        "name": "Classic Fit Denim Jeans for Men",
+        "description": "Durable, comfortable denim perfect for everyday wear. Multiple sizes available.",
+        "originalPrice": 45.00,
+        "salePrice": 35.00,
+        "store": "walmart",
+        "category": "fashion",
+        "image": "jeans.jpg",
+        "affiliateLink": "https://www.walmart.com/ip/CLASSIC_JEAN_ID_1122/?id=YOUR_WM_ID"
+    },
+    {
+        "id": 4,
+        "name": "Stainless Steel Blender Pro",
+        "description": "High-powered motor easily crushes ice for smoothies and shakes.",
+        "originalPrice": 129.99,
+        "salePrice": 129.99,
+        "store": "target",
+        "category": "home-garden",
+        "image": "blender.jpg",
+        "affiliateLink": "https://www.target.com/p/BLENDER_PRO_1337/?id=YOUR_TGT_ID"
+    },
+    {
+        "id": 5,
+        "name": "Essential Fitness Tracker Band",
+        "description": "Tracks steps, heart rate, and sleep quality.",
+        "originalPrice": 50.00,
+        "salePrice": 50.00,
+        "store": "amazon",
+        "category": "sports",
+        "image": "tracker.jpg",
+        "affiliateLink": "https://www.amazon.com/dp/B08P1Q2R3S/?tag=YOUR_AMAZON_ID"
+    }
+]
