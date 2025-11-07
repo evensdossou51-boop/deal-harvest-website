@@ -20,5 +20,16 @@
         "category": "Kids",
         "image": "todler toy.png",
         "affiliateLink": "https://amzn.to/3LpWEXC"
+    },
+    {
+        "id": 2,
+        "name": "Coolife Luggage 3 Piece Set Suitcase",
+        "description": "3 piece luggage set 20 inch,24 inch,28 inch upright",
+        "originalPrice": 179.99,
+        "salePrice": 139.99,
+        "store": "amazon",
+        "category": "Luggage",
+        "image": "Luggage 3 Piece.png",
+        "affiliateLink": "https://amzn.to/43WvoGi"
     }
 ]
