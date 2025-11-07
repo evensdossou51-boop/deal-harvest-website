@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - DealHarvest</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 30px; text-align: center; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea { height: 80px; resize: vertical; }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .products-list {
+            margin-top: 30px;
+            border-top: 2px solid #eee;
+            padding-top: 30px;
+        }
+        .product-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .price-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .helper-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .required { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛍️ Add New Product</h1>
+        
+        <form id="productForm">
+            <div class="form-group">
+                <label for="name">Product Name <span class="required">*</span></label>
+                <input type="text" id="name" required placeholder="e.g., Wireless Bluetooth Headphones">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description <span class="required">*</span></label>
+                <textarea id="description" required placeholder="Describe the product features and benefits..."></textarea>
+            </div>
+
+            <div class="price-group">
+                <div class="form-group">
+                    <label for="originalPrice">Original Price <span class="required">*</span></label>
+                    <input type="number" id="originalPrice" step="0.01" required placeholder="99.99">
+                </div>
+                <div class="form-group">
+                    <label for="salePrice">Sale Price <span class="required">*</span></label>
+                    <input type="number" id="salePrice" step="0.01" required placeholder="79.99">
+                    <div class="helper-text">Enter same as original price if no discount</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="store">Store <span class="required">*</span></label>
+                <select id="store" required>
+                    <option value="">Select Store</option>
+                    <option value="amazon">Amazon</option>
+                    <option value="walmart">Walmart</option>
+                    <option value="target">Target</option>
+                    <option value="homedepot">Home Depot</option>
+                    <option value="bestbuy">Best Buy</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category <span class="required">*</span></label>
+                <select id="category" required>
+                    <option value="">Select Category</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="home-garden">Home & Garden</option>
+                    <option value="fashion">Fashion & Clothing</option>
+                    <option value="sports">Sports & Outdoors</option>
+                    <option value="health-beauty">Health & Beauty</option>
+                    <option value="automotive">Automotive</option>
+                    <option value="books">Books</option>
+                    <option value="toys">Toys & Games</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Image Filename <span class="required">*</span></label>
+                <input type="text" id="image" required placeholder="product-image.jpg">
+                <div class="helper-text">Upload image to 'images' folder first, then enter filename here</div>
+            </div>
+
+            <div class="form-group">
+                <label for="affiliateLink">Affiliate Link <span class="required">*</span></label>
+                <input type="url" id="affiliateLink" required placeholder="https://www.amazon.com/dp/PRODUCT_ID/?tag=YOUR_TAG">
+            </div>
+
+            <button type="submit" class="btn">➕ Add Product</button>
+            <button type="button" class="btn" onclick="exportProducts()" style="background: #28a745;">📥 Download All Products</button>
+            <button type="button" class="btn" onclick="clearProducts()" style="background: #dc3545;">🗑️ Clear All Products</button>
+        </form>
+
+        <div class="products-list">
+            <h2>Added Products (<span id="productCount">0</span>)</h2>
+            <div id="productsList"></div>
+        </div>
+    </div>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('products') || '[]');
+        let nextId = Math.max(...products.map(p => p.id), 0) + 1;
+
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const product = {
+                id: nextId++,
+                name: document.getElementById('name').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                originalPrice: parseFloat(document.getElementById('originalPrice').value),
+                salePrice: parseFloat(document.getElementById('salePrice').value),
+                store: document.getElementById('store').value,
+                category: document.getElementById('category').value,
+                image: document.getElementById('image').value.trim(),
+                affiliateLink: document.getElementById('affiliateLink').value.trim()
+            };
+
+            products.push(product);
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            this.reset();
+            displayProducts();
+            alert('✅ Product added successfully!');
+        });
+
+        function displayProducts() {
+            const productsList = document.getElementById('productsList');
+            const productCount = document.getElementById('productCount');
+            
+            productCount.textContent = products.length;
+            
+            if (products.length === 0) {
+                productsList.innerHTML = '<p>No products added yet.</p>';
+                return;
+            }
+
+            productsList.innerHTML = products.map((product, index) => `
+                <div class="product-item">
+                    <h4>${product.name}</h4>
+                    <p><strong>Store:</strong> ${product.store} | <strong>Category:</strong> ${product.category}</p>
+                    <p><strong>Price:</strong> $${product.salePrice.toFixed(2)} ${product.originalPrice !== product.salePrice ? `(was $${product.originalPrice.toFixed(2)})` : ''}</p>
+                    <button onclick="removeProduct(${index})" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function removeProduct(index) {
+            if (confirm('Remove this product?')) {
+                products.splice(index, 1);
+                localStorage.setItem('products', JSON.stringify(products));
+                displayProducts();
+            }
+        }
+
+        function exportProducts() {
+            if (products.length === 0) {
+                alert('No products to export!');
+                return;
+            }
+
+            const jsonString = JSON.stringify(products, null, 4);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'products.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('📥 Products exported! Replace your website\'s products.json file with this download.');
+        }
+
+        function clearProducts() {
+            if (confirm('Clear all products? This cannot be undone.')) {
+                products = [];
+                localStorage.setItem('products', JSON.stringify(products));
+                displayProducts();
+            }
+        }
+
+        // Initialize display
+        displayProducts();
+    </script>
+</body>
+</html>

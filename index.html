@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealHarvest - Discover Today's Best Deals</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    
+    <link rel="preload" href="images/logo.png" as="image">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTLM2WNQFS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        
+        gtag('consent', 'default', {
+            'analytics_storage': 'denied',
+            'ad_storage': 'denied'
+        });
+        
+        gtag('js', new Date());
+        gtag('config', 'G-XTLM2WNQFS', {
+            'anonymize_ip': true
+        });
+    </script>
+</head>
+<body>
+    
+    <header class="header">
+        <div class="container header-flex">
+            <div class="logo-section">
+                <a href="index.html" class="logo-link">
+                    <img src="images/logo.png" alt="DealHarvest Logo" class="logo">
+                    <h1 class="site-name">DealHarvest</h1>
+                </a>
+            </div>
+
+            <div class="search-section">
+                <form id="searchForm" class="search-container">
+                    <input type="text" class="search-input" placeholder="Search for deals...">
+                    <button type="submit" class="search-btn" aria-label="Search Deals">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <div class="category-filter-section">
+                <select id="categoryFilter" class="filter-select" aria-label="Select Category">
+                    <option value="">All Categories</option>
+                    <option value="electronics">📱 Electronics</option>
+                    <option value="home-garden">🏡 Home & Garden</option>
+                    <option value="fashion">👕 Fashion & Clothing</option>
+                    <option value="sports">⚽ Sports & Outdoors</option>
+                    <option value="health-beauty">💄 Health & Beauty</option>
+                    <option value="automotive">🚗 Automotive</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-video-section">
+        <div class="container">
+            <video class="hero-video" id="heroVideo" src="videos/websiteloop1.mp4" poster="images/video-poster.jpg" autoplay muted loop playsinline></video>
+        </div>
+    </section>
+
+    <main class="main">
+        <div class="container">
+            
+            <section class="store-filter-section">
+                <h2 class="section-title">Shop By Store</h2>
+                <div class="store-options-grid" id="storeFilterGrid">
+                    <button class="store-option-btn active" data-store="all">
+                        <span class="store-icon">🛍️</span>
+                        <span class="store-name">All Stores</span>
+                    </button>
+                    <button class="store-option-btn" data-store="amazon">
+                        <span class="store-icon">📦</span>
+                        <span class="store-name">Amazon</span>
+                    </button>
+                    <button class="store-option-btn" data-store="walmart">
+                        <span class="store-icon">🛒</span>
+                        <span class="store-name">Walmart</span>
+                    </button>
+                    <button class="store-option-btn" data-store="target">
+                        <span class="store-icon">🎯</span>
+                        <span class="store-name">Target</span>
+                    </button>
+                    <button class="store-option-btn" data-store="homedepot">
+                        <span class="store-icon">🔨</span>
+                        <span class="store-name">Home Depot</span>
+                    </button>
+                </div>
+            </section>
+            
+            <h2 class="main-title">Today's Featured Deals</h2>
+            
+            <div class="products-grid" id="productsGrid">
+                </div>
+            
+            <section class="pagination">
+                <button id="prevPageBtn" class="pagination-btn disabled">← Previous</button>
+                <span id="pageInfo" class="pagination-dots">Page 1</span>
+                <button id="nextPageBtn" class="pagination-btn">Next →</button>
+            </section>
+            
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-conditions.html">Terms of Service</a>
+                <a href="affiliate-disclosure.html">Affiliate Disclosure</a>
+                <a href="disclaimer.html">Disclaimer</a>
+            </div>
+            <p>&copy; 2025 DealHarvest. All rights reserved.</p>
+            <p class="affiliate-disclosure">As an Amazon Associate and participant in other affiliate programs, I earn from qualifying purchases.</p>
+        </div>
+    </footer>
+
+    <div id="cookieBanner" class="cookie-banner">
+        <div class="cookie-content">
+             <div class="cookie-text">
+                <h3>🍪 We use cookies</h3>
+                <p>We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. By clicking "Accept All", you consent to our use of cookies.</p>
+            </div>
+            <div class="cookie-buttons">
+                <button onclick="acceptAllCookies()" class="cookie-btn accept-all">Accept All</button>
+                <button onclick="acceptNecessaryCookies()" class="cookie-btn necessary-only">Necessary Only</button>
+                <a href="privacy-policy.html" class="cookie-link">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="cookies.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
