@@ -42,5 +42,16 @@
         "category": "Toys & Games",
         "image": "Toniebox.png",
         "affiliateLink": "https://amzn.to/3WLCxWb"
+    },
+    {
+        "id": 5,
+        "name": "Clorox Toilet Plunger with Hideaway Holder",
+        "description": "Clorox Toilet Plunger with Hideaway Holder Caddy Heavy-Duty Compact Design with Non-Skid Rubber Base for Bathroom Convenient Storage Toilet Unclogger, 6.5x19.5-Inch, White",
+        "originalPrice": 17.99,
+        "salePrice": 13.97,
+        "store": "amazon",
+        "category": "Home",
+        "image": "white plunger.png",
+        "affiliateLink": "https://amzn.to/3JGJK71"
     }
 ]
