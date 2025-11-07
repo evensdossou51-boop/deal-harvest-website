@@ -23,17 +23,42 @@ async function checkForUpdates() {
         });
         
         if (response.ok) {
-            const newProducts = await response.json();
+            const data = await response.json();
+            let newProducts;
+            
+            // Handle both old format (array) and new format (object with metadata)
+            if (Array.isArray(data)) {
+                newProducts = data;
+            } else if (data.products && Array.isArray(data.products)) {
+                newProducts = data.products;
+                
+                // Log update details for debugging
+                console.log('🔍 Update check - Source:', data.updateSource);
+                console.log('🔍 Update check - Time:', data.lastUpdated);
+                console.log('🔍 Update check - ID:', data.updateId);
+            } else {
+                console.warn('⚠️ Invalid data format during update check');
+                return;
+            }
+            
             const newHash = calculateProductsHash(newProducts);
             
             if (currentProductsHash && newHash !== currentProductsHash) {
                 console.log('🔄 Products updated! Refreshing...');
+                console.log('🔄 Old hash:', currentProductsHash);
+                console.log('🔄 New hash:', newHash);
+                
                 ALL_PRODUCTS = newProducts;
                 currentProductsHash = newHash;
                 applyFiltersAndRender();
                 
-                // Show update notification
-                showUpdateNotification();
+                // Show update notification with additional info
+                let updateMessage = 'New products available!';
+                if (data.updateSource) {
+                    updateMessage = `Updated via ${data.updateSource}!`;
+                }
+                showUpdateNotification(updateMessage);
+                
             } else if (!currentProductsHash) {
                 currentProductsHash = newHash;
             }
@@ -100,7 +125,20 @@ function manualRefresh() {
         }
     })
     .then(response => response.json())
-    .then(products => {
+    .then(data => {
+        let products;
+        
+        // Handle both old format (array) and new format (object with metadata)
+        if (Array.isArray(data)) {
+            products = data;
+        } else if (data.products && Array.isArray(data.products)) {
+            products = data.products;
+            console.log('🔄 Manual refresh - Source:', data.updateSource);
+            console.log('🔄 Manual refresh - Time:', data.lastUpdated);
+        } else {
+            throw new Error('Invalid data format');
+        }
+        
         ALL_PRODUCTS = products;
         currentProductsHash = calculateProductsHash(products);
         applyFiltersAndRender();
@@ -294,7 +332,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        ALL_PRODUCTS = await response.json(); 
+        
+        const data = await response.json();
+        
+        // Handle both old format (array) and new format (object with metadata)
+        if (Array.isArray(data)) {
+            // Old format - direct array
+            ALL_PRODUCTS = data;
+        } else if (data.products && Array.isArray(data.products)) {
+            // New format - object with metadata
+            ALL_PRODUCTS = data.products;
+            console.log('📊 Products loaded from:', data.updateSource || 'unknown source');
+            console.log('📅 Last updated:', data.lastUpdated || 'unknown time');
+            console.log('🔢 Product count:', data.productCount || ALL_PRODUCTS.length);
+            
+            // Show update info in notification if recent
+            if (data.lastUpdated) {
+                const updateTime = new Date(data.lastUpdated);
+                const timeDiff = Date.now() - updateTime.getTime();
+                
+                // If updated within last 5 minutes, show notification
+                if (timeDiff < 5 * 60 * 1000) {
+                    setTimeout(() => {
+                        showUpdateNotification(`✅ Fresh products loaded! Updated ${Math.round(timeDiff/1000/60)} minutes ago`);
+                    }, 1000);
+                }
+            }
+        } else {
+            throw new Error('Invalid data format in products.json');
+        }
+        
         currentProductsHash = calculateProductsHash(ALL_PRODUCTS);
         applyFiltersAndRender();
         
