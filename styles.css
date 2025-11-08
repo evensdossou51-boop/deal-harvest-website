@@ -147,15 +147,18 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     background: white;
     border: 2px solid #e5e7eb;
     border-radius: 50%;
     width: 90px;
     height: 90px;
-    padding: 10px;
+    padding: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    position: relative;
 }
 
 .store-icon {
@@ -164,24 +167,45 @@ body {
     margin-bottom: 5px;
 }
 
+.store-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 3px;
+}
+
 .store-logo {
-    width: 40px;
-    height: 24px;
+    width: 28px;
+    height: 18px;
     object-fit: contain;
-    margin-bottom: 5px;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+    max-width: 80%;
+    max-height: 80%;
+}
+
+.store-fallback {
+    font-size: 1.5rem;
     filter: grayscale(100%);
     transition: filter 0.3s ease;
 }
 
 .store-option-btn:hover .store-logo,
-.store-option-btn.active .store-logo {
+.store-option-btn.active .store-logo,
+.store-option-btn:hover .store-fallback,
+.store-option-btn.active .store-fallback {
     filter: grayscale(0%);
 }
 
 .store-name {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 600;
     color: #4b5563;
+    text-align: center;
+    line-height: 1.1;
+    margin-top: 2px;
 }
 
 .store-option-btn:hover,

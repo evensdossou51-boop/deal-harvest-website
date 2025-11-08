@@ -119,15 +119,24 @@
                         <span class="store-name">All Stores</span>
                     </button>
                     <button class="store-option-btn" data-store="amazon">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" class="store-logo">
+                        <div class="store-logo-container">
+                            <img src="https://logo.clearbit.com/amazon.com" alt="Amazon" class="store-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span class="store-fallback" style="display:none;">📦</span>
+                        </div>
                         <span class="store-name">Amazon</span>
                     </button>
                     <button class="store-option-btn" data-store="walmart">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg" alt="Walmart" class="store-logo">
+                        <div class="store-logo-container">
+                            <img src="https://logo.clearbit.com/walmart.com" alt="Walmart" class="store-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span class="store-fallback" style="display:none;">🏪</span>
+                        </div>
                         <span class="store-name">Walmart</span>
                     </button>
                     <button class="store-option-btn" data-store="ebay">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg" alt="eBay" class="store-logo">
+                        <div class="store-logo-container">
+                            <img src="https://logo.clearbit.com/ebay.com" alt="eBay" class="store-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span class="store-fallback" style="display:none;">🔨</span>
+                        </div>
                         <span class="store-name">eBay</span>
                     </button>
                 </div>
