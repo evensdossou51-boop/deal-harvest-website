@@ -1,0 +1,26 @@
+{
+  "name": "deal-harvest-walmart-importer",
+  "version": "1.0.0",
+  "description": "Automated Walmart product importer for Deal Harvest website",
+  "main": "walmart-importer.js",
+  "scripts": {
+    "import": "node walmart-importer.js",
+    "import-test": "node walmart-importer.js --test",
+    "schedule-daily": "node scheduler.js daily",
+    "schedule-weekly": "node scheduler.js weekly"
+  },
+  "keywords": [
+    "walmart",
+    "affiliate",
+    "automation",
+    "import",
+    "products"
+  ],
+  "author": "Deal Harvest",
+  "license": "MIT",
+  "dependencies": {
+    "node-cron": "^3.0.2",
+    "axios": "^1.4.0",
+    "sharp": "^0.32.0"
+  }
+}
