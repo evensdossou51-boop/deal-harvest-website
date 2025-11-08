@@ -163,5 +163,16 @@
         "category": "Amazon Gift Cards",
         "image": "amazongiftcard.png",
         "affiliateLink": "https://amzn.to/4nI6vp2"
+    },
+    {
+        "id": 17,
+        "name": "Colgate Optic White Advanced Hydrogen Peroxide Toothpaste Pack,",
+        "description": "Colgate Optic White Advanced Hydrogen Peroxide Toothpaste Pack, Teeth Whitening Toothpaste, Enamel-Safe Hydrogen Peroxide Formula, Helps Remove Tea, Coffee, and Wine Stains, Icy Fresh, 3 Pack, 3.2 oz",
+        "originalPrice": 14.99,
+        "salePrice": 12.9,
+        "store": "amazon",
+        "category": "Beauty & Grooming",
+        "image": "colgate.png",
+        "affiliateLink": "https://amzn.to/3LlUnN8"
     }
 ]
