@@ -152,5 +152,16 @@
         "category": "Beauty & Grooming",
         "image": "Shampoo brazilian.png",
         "affiliateLink": "https://amzn.to/47JYpX7"
+    },
+    {
+        "id": 16,
+        "name": "Amazon eGift Card",
+        "description": "Amazon eGift Card",
+        "originalPrice": 50,
+        "salePrice": 50,
+        "store": "amazon",
+        "category": "Amazon Gift Cards",
+        "image": "amazongiftcard.png",
+        "affiliateLink": "https://amzn.to/4nI6vp2"
     }
 ]
