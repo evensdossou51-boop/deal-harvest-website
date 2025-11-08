@@ -185,5 +185,16 @@
         "category": "Health & Household",
         "image": "cascade.png",
         "affiliateLink": "https://amzn.to/4nMJYYh"
+    },
+    {
+        "id": 19,
+        "name": "hyha Waterproof Dog Bed Blanket",
+        "description": "hyha Waterproof Dog Bed Blanket, Soft Pet Blankets, Waterproof Couch Cover for Dogs, Reversible Sofa Covers Washable for Furniture (30x70 Inch, Grey/Dark Grey)",
+        "originalPrice": 6.99,
+        "salePrice": 6.99,
+        "store": "amazon",
+        "category": "Pet Food & Supplies",
+        "image": "dogblanket.png",
+        "affiliateLink": "https://amzn.to/47vONAn"
     }
 ]
