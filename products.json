@@ -108,5 +108,16 @@
         "category": "Musical Instruments",
         "image": "wirelessiphone mic.png",
         "affiliateLink": "https://amzn.to/3XnZfUp"
+    },
+    {
+        "id": 12,
+        "name": "medicube Kojic Acid Turmeric",
+        "description": "Smoothing Toner for Face & Body | Lightweight Toner for Balancing Uneven Skin Tone & Texture | Niacinamide, Glycolic Acid for Clear Glass Skin | 8.45 fl.oz",
+        "originalPrice": 20.8,
+        "salePrice": 18.3,
+        "store": "amazon",
+        "category": "Beauty & Grooming",
+        "image": "medicube.png",
+        "affiliateLink": "https://amzn.to/49acgbC"
     }
 ]
