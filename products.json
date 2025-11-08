@@ -174,5 +174,16 @@
         "category": "Beauty & Grooming",
         "image": "colgate.png",
         "affiliateLink": "https://amzn.to/3LlUnN8"
+    },
+    {
+        "id": 18,
+        "name": "Cascade Platinum Plus Dishwasher Pods",
+        "description": "Cascade Platinum Plus Dishwasher Pods, Dishwasher Detergent, Dish Detergent Soap, Lemon, 47 Count",
+        "originalPrice": 19.94,
+        "salePrice": 19.94,
+        "store": "amazon",
+        "category": "Health & Household",
+        "image": "cascade.png",
+        "affiliateLink": "https://amzn.to/4nMJYYh"
     }
 ]
