@@ -164,6 +164,20 @@ body {
     margin-bottom: 5px;
 }
 
+.store-logo {
+    width: 40px;
+    height: 24px;
+    object-fit: contain;
+    margin-bottom: 5px;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.store-option-btn:hover .store-logo,
+.store-option-btn.active .store-logo {
+    filter: grayscale(0%);
+}
+
 .store-name {
     font-size: 0.75rem;
     font-weight: 600;
