@@ -110,7 +110,7 @@
     <main class="main">
         <div class="container">
             
-            <!-- Store filter section with Amazon, Walmart, and eBay -->
+            <!-- Store filter section with Amazon only (Walmart and eBay hidden) -->
             <section class="store-filter-section">
                 <h2 class="section-title">Shop By Store</h2>
                 <div class="store-options-grid" id="storeFilterGrid">
@@ -125,14 +125,15 @@
                         </div>
                         <span class="store-name">Amazon</span>
                     </button>
-                    <button class="store-option-btn" data-store="walmart">
+                    <!-- Walmart and eBay buttons hidden -->
+                    <button class="store-option-btn" data-store="walmart" style="display: none;">
                         <div class="store-logo-container">
                             <img src="https://logo.clearbit.com/walmart.com" alt="Walmart" class="store-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span class="store-fallback" style="display:none;">🏪</span>
                         </div>
                         <span class="store-name">Walmart</span>
                     </button>
-                    <button class="store-option-btn" data-store="ebay">
+                    <button class="store-option-btn" data-store="ebay" style="display: none;">
                         <div class="store-logo-container">
                             <img src="https://logo.clearbit.com/ebay.com" alt="eBay" class="store-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span class="store-fallback" style="display:none;">🔨</span>
