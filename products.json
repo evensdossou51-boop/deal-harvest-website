@@ -196,5 +196,16 @@
         "category": "Pet Food & Supplies",
         "image": "dogblanket.png",
         "affiliateLink": "https://amzn.to/47vONAn"
+    },
+    {
+        "id": 20,
+        "name": "DREAM PAIRS Kids Girls Sneakers",
+        "description": "DREAM PAIRS Kids Girls Sneakers Jelly Sole Lace up Shoes Lightweight Walking Shoes for Girls Boys",
+        "originalPrice": 34.99,
+        "salePrice": 25.59,
+        "store": "amazon",
+        "category": "Shoes, Handbags, Wallets, Sunglasses",
+        "image": "KidsGirks SNeakers.png",
+        "affiliateLink": "https://amzn.to/4otH3Vo"
     }
 ]
