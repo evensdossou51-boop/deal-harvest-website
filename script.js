@@ -52,9 +52,9 @@ async function checkForUpdates() {
             
             // Handle both old format (array) and new format (object with metadata)
             if (Array.isArray(data)) {
-                newProducts = data.filter(product => product.store.toLowerCase() === 'amazon');
+                newProducts = data; // Include all stores
             } else if (data.products && Array.isArray(data.products)) {
-                newProducts = data.products.filter(product => product.store.toLowerCase() === 'amazon');
+                newProducts = data.products; // Include all stores
                 
                 // Log update details for debugging
                 console.log('🔍 Update check - Source:', data.updateSource);
@@ -209,7 +209,7 @@ let ALL_PRODUCTS = [];
 let currentFilters = {
     search: '',
     category: '',
-    store: 'amazon' // Amazon only store
+    store: 'all' // Show all stores (Amazon and Walmart)
 };
 
 // 1. DOM ELEMENTS
@@ -280,8 +280,9 @@ function applyFiltersAndRender() {
         const matchesCategory = currentFilters.category === '' ||
             product.category.toLowerCase() === currentFilters.category.toLowerCase();
             
-        // Store Filter - Only Amazon products allowed
-        const matchesStore = product.store.toLowerCase() === 'amazon';
+        // Store Filter - Support Amazon and Walmart
+        const matchesStore = currentFilters.store === 'all' || 
+            product.store.toLowerCase() === currentFilters.store.toLowerCase();
 
         const matches = matchesSearch && matchesCategory && matchesStore;
         
@@ -401,15 +402,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Handle both old format (array) and new format (object with metadata)
         if (Array.isArray(data)) {
             // Old format - direct array
-            ALL_PRODUCTS = data.filter(product => product.store.toLowerCase() === 'amazon');
-            console.log('📊 Products loaded (old format):', data.length, '→ Amazon only:', ALL_PRODUCTS.length);
+            ALL_PRODUCTS = data; // Include all stores
+            console.log('📊 Products loaded (old format):', data.length);
             console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
         } else if (data.products && Array.isArray(data.products)) {
             // New format - object with metadata
-            ALL_PRODUCTS = data.products.filter(product => product.store.toLowerCase() === 'amazon');
+            ALL_PRODUCTS = data.products; // Include all stores
             console.log('📊 Products loaded from:', data.updateSource || 'unknown source');
             console.log('📅 Last updated:', data.lastUpdated || 'unknown time');
-            console.log('🔢 Product count:', data.productCount || data.products.length, '→ Amazon only:', ALL_PRODUCTS.length);
+            console.log('🔢 Product count:', data.productCount || data.products.length);
             console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
             
             // Show update info in notification if recent

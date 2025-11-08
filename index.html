@@ -110,13 +110,21 @@
     <main class="main">
         <div class="container">
             
-            <!-- Store filter section hidden - Amazon only -->
-            <section class="store-filter-section" style="display: none;">
+            <!-- Store filter section with Amazon and Walmart -->
+            <section class="store-filter-section">
                 <h2 class="section-title">Shop By Store</h2>
                 <div class="store-options-grid" id="storeFilterGrid">
+                    <button class="store-option-btn active" data-store="all">
+                        <span class="store-icon">🛍️</span>
+                        <span class="store-name">All Stores</span>
+                    </button>
                     <button class="store-option-btn" data-store="amazon">
-                        <span class="store-icon">�</span>
+                        <span class="store-icon">🛒</span>
                         <span class="store-name">Amazon</span>
+                    </button>
+                    <button class="store-option-btn" data-store="walmart">
+                        <span class="store-icon">🏪</span>
+                        <span class="store-name">Walmart</span>
                     </button>
                 </div>
             </section>
