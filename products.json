@@ -130,5 +130,16 @@
         "category": "Toys & Games",
         "image": "batman toy.png",
         "affiliateLink": "https://amzn.to/3LrwNhY"
+    },
+    {
+        "id": 14,
+        "name": "Deep Cleansing Shampoo",
+        "description": "Inoar BotoHair Collagen Smoothing System with Keratin, Deep Cleansing Shampoo, Collagen Smoothing System & Reconstructor Balm, 33.8 fl oz Each",
+        "originalPrice": 179,
+        "salePrice": 179,
+        "store": "amazon",
+        "category": "Beauty & Grooming",
+        "image": "botohair.png",
+        "affiliateLink": "https://amzn.to/47uE49j"
     }
 ]
