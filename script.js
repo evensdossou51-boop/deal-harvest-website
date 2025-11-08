@@ -286,15 +286,22 @@ function applyFiltersAndRender() {
 
         const matches = matchesSearch && matchesCategory && matchesStore;
         
-        // Debug specific store filtering
+        // Enhanced debug logging for store filtering
         if (currentFilters.store !== 'all') {
-            console.log(`Product: ${product.name}, Store: "${product.store}" vs Filter: "${currentFilters.store}", Matches: ${matchesStore}`);
+            console.log(`🏪 Product: "${product.name}" | Product Store: "${product.store}" | Filter: "${currentFilters.store}" | Match: ${matchesStore}`);
         }
 
         return matches;
     });
     
     console.log('📊 Filtered products:', filteredProducts.length); // Debug log
+    
+    // Store filtering summary
+    if (currentFilters.store !== 'all') {
+        const storeProducts = ALL_PRODUCTS.filter(p => p.store.toLowerCase() === currentFilters.store.toLowerCase());
+        console.log(`🏪 Store Filter Summary: "${currentFilters.store}" has ${storeProducts.length} total products`);
+        console.log(`🏪 After all filters: ${filteredProducts.length} products shown`);
+    }
     
     const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 
@@ -347,12 +354,14 @@ try {
         const btn = e.target.closest('.store-option-btn');
         if (!btn) return;
         
-        console.log('Store button clicked:', btn.dataset.store); // Debug log
+        console.log('🏪 Store button clicked:', btn.dataset.store); // Debug log
+        console.log('🏪 Before filter change - Current store filter:', currentFilters.store);
         
         storeFilterGrid.querySelectorAll('.store-option-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         currentFilters.store = btn.dataset.store;
+        console.log('🏪 After filter change - New store filter:', currentFilters.store);
         currentPage = 1;
         applyFiltersAndRender();
     });
