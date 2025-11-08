@@ -119,5 +119,16 @@
         "category": "Beauty & Grooming",
         "image": "medicube.png",
         "affiliateLink": "https://amzn.to/49acgbC"
+    },
+    {
+        "id": 13,
+        "name": "Fisher-Price Imaginext DC Super",
+        "description": "Fisher-Price Imaginext DC Super Friends Batman Toy, Batbot Xtreme Robot Playset, 30 Inches Tall with Figure for Pretend Play Kids Ages 3+ Years​",
+        "originalPrice": 129.99,
+        "salePrice": 88.99,
+        "store": "amazon",
+        "category": "Toys & Games",
+        "image": "batman toy.png",
+        "affiliateLink": "https://amzn.to/3LrwNhY"
     }
 ]
