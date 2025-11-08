@@ -6,6 +6,8 @@
   "scripts": {
     "import": "node walmart-importer.js",
     "import-test": "node walmart-importer.js --test",
+    "import-shein": "node shein-importer.js",
+    "import-both": "node shein-importer.js && node walmart-importer.js",
     "schedule-daily": "node scheduler.js daily",
     "schedule-weekly": "node scheduler.js weekly"
   },
