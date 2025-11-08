@@ -207,38 +207,5 @@
     "category": "Shoes, Handbags, Wallets, Sunglasses",
     "image": "KidsGirks SNeakers.png",
     "affiliateLink": "https://amzn.to/4otH3Vo"
-  },
-  {
-    "id": 21,
-    "name": "SHEIN Casual Summer Dress",
-    "description": "Trendy casual dress perfect for summer outings",
-    "originalPrice": 25.99,
-    "salePrice": 15.99,
-    "store": "shein",
-    "category": "Amazon Fashion",
-    "image": "shein_sw2208055439068593.png",
-    "affiliateLink": "https://api-shein.shein.com/h5/sharejump/appsharejump/?lan=en&share_type=goods&site=iosshus&localcountry=us&currency=USD&id=sw2208055439068593&url_from=GM70015096703038952003895200303"
-  },
-  {
-    "id": 21,
-    "name": "SHEIN Crop Top Set",
-    "description": "Stylish crop top and skirt set",
-    "originalPrice": 19.99,
-    "salePrice": 12.99,
-    "store": "shein",
-    "category": "Amazon Fashion",
-    "image": "shein_sw2208055439068594.png",
-    "affiliateLink": "https://api-shein.shein.com/h5/sharejump/appsharejump/?lan=en&share_type=goods&site=iosshus&localcountry=us&currency=USD&id=sw2208055439068594&url_from=GM70015096703038952003895200303"
-  },
-  {
-    "id": 21,
-    "name": "SHEIN Home Decoration Set",
-    "description": "Beautiful home decor items",
-    "originalPrice": 14.99,
-    "salePrice": 8.99,
-    "store": "shein",
-    "category": "Home",
-    "image": "shein_sh2208055439068595.png",
-    "affiliateLink": "https://api-shein.shein.com/h5/sharejump/appsharejump/?lan=en&share_type=goods&site=iosshus&localcountry=us&currency=USD&id=sh2208055439068595&url_from=GM70015096703038952003895200303"
   }
 ]
