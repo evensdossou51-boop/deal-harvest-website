@@ -141,5 +141,16 @@
         "category": "Beauty & Grooming",
         "image": "botohair.png",
         "affiliateLink": "https://amzn.to/47uE49j"
+    },
+    {
+        "id": 15,
+        "name": "Shampoo with Brazilian Keratin Treatment",
+        "description": "Clarifying Shampoo with Brazilian Keratin Treatment and Intensive Hair Mask KIT Tratamiento de Keratina Alisado 120ml 4fl.oz",
+        "originalPrice": 69.99,
+        "salePrice": 69.99,
+        "store": "amazon",
+        "category": "Beauty & Grooming",
+        "image": "Shampoo brazilian.png",
+        "affiliateLink": "https://amzn.to/47JYpX7"
     }
 ]
