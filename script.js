@@ -43,8 +43,21 @@ function calculateProductsHash(products) {
     if (HashManager) {
         return HashManager.calculateProductsHash(products);
     }
-    // Fallback implementation
-    return btoa(JSON.stringify(products.map(p => p.id + p.name + p.salePrice))).slice(0, 16);
+    // Fallback implementation - Unicode-safe hash
+    try {
+        const dataString = JSON.stringify(products.map(p => p.id + p.name + p.salePrice));
+        // Use a simple hash function instead of btoa to avoid Unicode issues
+        let hash = 0;
+        for (let i = 0; i < dataString.length; i++) {
+            const char = dataString.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        return Math.abs(hash).toString(36).slice(0, 16);
+    } catch (error) {
+        console.warn('Hash calculation failed, using timestamp:', error);
+        return Date.now().toString(36).slice(-8);
+    }
 }
 
 // Function to check for updates
@@ -71,7 +84,14 @@ async function checkForUpdates() {
                 return;
             }
             
-            const newHash = calculateProductsHash(newProducts);
+            // Calculate new hash with error handling
+            let newHash;
+            try {
+                newHash = calculateProductsHash(newProducts);
+            } catch (hashError) {
+                console.warn('⚠️ Hash calculation failed in update check:', hashError);
+                return;
+            }
             
             if (currentProductsHash && newHash !== currentProductsHash) {
                 console.log('🔄 Products updated! Refreshing...');
@@ -439,7 +459,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Invalid data format in products.json');
         }
         
-        currentProductsHash = calculateProductsHash(ALL_PRODUCTS);
+        // Calculate hash with error handling
+        try {
+            currentProductsHash = calculateProductsHash(ALL_PRODUCTS);
+            console.log('✅ Product hash calculated successfully');
+        } catch (hashError) {
+            console.warn('⚠️ Hash calculation failed:', hashError);
+            currentProductsHash = 'fallback_' + Date.now().toString(36);
+        }
+        
         applyFiltersAndRender();
         
         // Start periodic update checking
