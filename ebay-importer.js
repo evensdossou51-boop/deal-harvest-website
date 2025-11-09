@@ -169,25 +169,21 @@ class EbayImporter {
         // Generate affiliate URL
         const affiliateUrl = this.generateAffiliateUrl(ebayItem.itemWebUrl || ebayItem.itemAffiliateWebUrl);
 
+        // Extract price as number
+        const priceValue = parseFloat(ebayItem.price?.value || 0);
+        const originalPriceValue = ebayItem.marketingPrice?.originalPrice ? 
+            parseFloat(ebayItem.marketingPrice.originalPrice.value) : null;
+
         return {
             id: getNextId() + index,
-            title: ebayItem.title || 'eBay Product',
-            price: this.formatPrice(ebayItem.price),
-            originalPrice: this.formatOriginalPrice(ebayItem.marketingPrice),
-            image: ebayItem.image?.imageUrl || ebayItem.thumbnailImages?.[0]?.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image',
-            link: affiliateUrl,
+            name: ebayItem.title || 'eBay Product', // Use 'name' not 'title'
+            description: this.generateDescription(ebayItem),
+            salePrice: priceValue, // Use 'salePrice' as number not 'price' as string
+            originalPrice: originalPriceValue, // Use 'originalPrice' as number
             store: 'eBay',
             category: this.mapCategory(ebayItem.categories?.[0]?.categoryName),
-            rating: this.extractRating(ebayItem),
-            reviews: this.extractReviews(ebayItem),
-            description: this.generateDescription(ebayItem),
-            features: this.extractFeatures(ebayItem),
-            inStock: this.checkStock(ebayItem),
-            shippingInfo: this.extractShipping(ebayItem),
-            condition: ebayItem.condition || 'New',
-            seller: ebayItem.seller?.username || 'eBay Seller',
-            itemId: ebayItem.itemId,
-            legacyItemId: ebayItem.legacyItemId
+            image: ebayItem.image?.imageUrl || ebayItem.thumbnailImages?.[0]?.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image',
+            affiliateLink: affiliateUrl // Use 'affiliateLink' not 'link'
         };
     }
 
