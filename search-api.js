@@ -167,24 +167,11 @@ class SearchAPI {
         return categoryMap[ebayCategory] || 'Electronics';
     }
 
-    // Generate eBay affiliate URL
+    // Generate eBay URL (Smart Links will auto-monetize)
     generateEbayAffiliateUrl(originalUrl) {
         if (!originalUrl) return '#';
         
-        if (EBAY_CONFIG.CAMPAIGN_ID !== 'YOUR_CAMPAIGN_ID') {
-            const affiliateParams = new URLSearchParams({
-                campid: EBAY_CONFIG.CAMPAIGN_ID,
-                customid: EBAY_CONFIG.AFFILIATE_ID,
-                toolid: '10001',
-                mkevt: '1',
-                mkcid: '1'
-            });
-            
-            return originalUrl.includes('?') 
-                ? `${originalUrl}&${affiliateParams.toString()}`
-                : `${originalUrl}?${affiliateParams.toString()}`;
-        }
-        
+        // Return clean eBay URL - Smart Links will automatically add affiliate tracking
         return originalUrl;
     }
 
