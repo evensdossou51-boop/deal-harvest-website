@@ -16,6 +16,26 @@ try {
     console.warn('⚠️ Utilities not available, using fallbacks');
 }
 
+// Centralized function to fetch products.json with cache-busting
+async function fetchProductsJson() {
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(7);
+    const cacheBustUrl = `products.json?v=${timestamp}&r=${randomId}&cb=${Math.floor(Math.random() * 10000)}`;
+    
+    if (CacheManager) {
+        return await CacheManager.fetchWithCacheBust('products.json');
+    } else {
+        return await fetch(cacheBustUrl, {
+            cache: 'no-cache',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
+    }
+}
+
 let currentProductsHash = '';
 
 // Function to calculate a simple hash of the products array (fallback)
@@ -30,21 +50,7 @@ function calculateProductsHash(products) {
 // Function to check for updates
 async function checkForUpdates() {
     try {
-        const timestamp = Date.now();
-        let response;
-        
-        if (CacheManager) {
-            response = await CacheManager.fetchWithCacheBust('products.json');
-        } else {
-            // Fallback implementation
-            response = await fetch(`products.json?v=${timestamp}`, {
-                cache: 'no-cache',
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache'
-                }
-            });
-        }
+        const response = await fetchProductsJson();
         
         if (response.ok) {
             const data = await response.json();
@@ -148,16 +154,7 @@ function manualRefresh() {
     }
     
     // Force reload products with cache-busting
-    const fetchPromise = CacheManager ? 
-        CacheManager.fetchWithCacheBust('products.json') :
-        fetch(`products.json?v=${Date.now()}`, {
-            cache: 'no-cache',
-            headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            }
-        });
+    const fetchPromise = fetchProductsJson();
     
     fetchPromise
     .then(response => response.json())
@@ -390,24 +387,10 @@ try {
 // 6. INITIAL RENDER - FETCHES DATA
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // More aggressive cache-busting with multiple parameters
-        const timestamp = Date.now();
-        const randomId = Math.random().toString(36).substring(7);
-        const cacheBustUrl = `products.json?v=${timestamp}&r=${randomId}&cb=${Math.floor(Math.random() * 10000)}`;
+        console.log('🔄 Loading products...');
         
-        console.log('🔄 Loading products from:', cacheBustUrl);
-        
-        // Use utility for cache-busted fetch if available
-        const response = CacheManager ? 
-            await CacheManager.fetchWithCacheBust('products.json') :
-            await fetch(cacheBustUrl, {
-                cache: 'no-cache',
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0'
-                }
-            });
+        // Use centralized fetch function
+        const response = await fetchProductsJson();
         
         console.log('📡 Response status:', response.status, response.statusText);
         

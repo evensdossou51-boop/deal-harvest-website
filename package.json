@@ -1,27 +1,21 @@
 {
-  "name": "deal-harvest-walmart-importer",
+  "name": "deal-harvest-affiliate-site",
   "version": "1.0.0",
-  "description": "Automated Walmart product importer for Deal Harvest website",
-  "main": "walmart-importer.js",
+  "description": "Multi-store affiliate product website with automated importing",
+  "main": "ebay-importer.js",
   "scripts": {
-    "import": "node walmart-importer.js",
-    "import-test": "node walmart-importer.js --test",
-    "import-category": "node amazon-category-importer.js",
-    "schedule-daily": "node scheduler.js daily",
-    "schedule-weekly": "node scheduler.js weekly"
+    "import-ebay": "node ebay-importer.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "walmart",
     "affiliate",
     "automation",
     "import",
-    "products"
+    "products",
+    "ebay",
+    "amazon"
   ],
   "author": "Deal Harvest",
   "license": "MIT",
-  "dependencies": {
-    "node-cron": "^3.0.2",
-    "axios": "^1.4.0",
-    "sharp": "^0.32.0"
-  }
+  "dependencies": {}
 }

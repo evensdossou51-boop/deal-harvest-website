@@ -3,8 +3,8 @@
  * Integrates Amazon (static) and eBay (live API) search
  */
 
-// eBay API Configuration (placeholder - update with your credentials)
-const EBAY_CONFIG = {
+// eBay API Configuration - Load from local config if available
+let EBAY_CONFIG = {
     APP_ID: 'YOUR_APP_ID',
     DEV_ID: 'YOUR_DEV_ID', 
     CERT_ID: 'YOUR_CERT_ID',
@@ -13,6 +13,18 @@ const EBAY_CONFIG = {
     CAMPAIGN_ID: 'YOUR_CAMPAIGN_ID',
     AFFILIATE_ID: 'YOUR_AFFILIATE_ID'
 };
+
+// Try to load config from window or local file (shared with ebay-importer)
+if (typeof window !== 'undefined' && window.EBAY_CONFIG) {
+    EBAY_CONFIG = { ...EBAY_CONFIG, ...window.EBAY_CONFIG };
+} else if (typeof require !== 'undefined') {
+    try {
+        const localConfig = require('./ebay-config.local.js');
+        EBAY_CONFIG = { ...EBAY_CONFIG, ...localConfig };
+    } catch (error) {
+        console.log('ℹ️ Using default eBay config in search-api.js');
+    }
+}
 
 class SearchAPI {
     constructor() {
