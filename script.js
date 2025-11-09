@@ -343,9 +343,15 @@ function applyFiltersAndRender() {
             product.store.toLowerCase() === currentFilters.store.toLowerCase();
         
         // eBay Category Filter - Additional filtering for eBay products
-        if (currentFilters.store === 'ebay' && currentEbayCategory && currentEbayCategory !== 'all') {
+        if (currentFilters.store === 'ebay' && currentEbayCategory) {
             const productCategory = getEbayProductCategory(product);
-            matchesStore = matchesStore && (productCategory === currentEbayCategory);
+            if (currentEbayCategory === 'all') {
+                // For "Browse All", only show products that have a valid category
+                matchesStore = matchesStore && (productCategory !== null);
+            } else {
+                // For specific categories, only show products that match
+                matchesStore = matchesStore && (productCategory === currentEbayCategory);
+            }
         }
 
         // ADVANCED FILTERS
@@ -443,40 +449,52 @@ let isEbayCategoriesVisible = false;
 function getEbayProductCategory(product) {
     const name = product.name.toLowerCase();
     const description = product.description.toLowerCase();
+    const category = product.category ? product.category.toLowerCase() : '';
     
-    // Christmas/Holiday detection (seasonal priority)
-    if (name.includes('christmas') || name.includes('holiday') || name.includes('winter') || 
-        description.includes('christmas') || name.includes('decor')) {
+    // Christmas/Holiday detection (seasonal priority - very specific)
+    if (name.includes('christmas') || name.includes('xmas') || name.includes('santa') || 
+        name.includes('holiday decor') || description.includes('christmas stocking') ||
+        description.includes('festive gifts') || category.includes('christmas')) {
         return 'christmas';
     }
     
-    // Electronics & Tech
-    if (name.includes('electronic') || name.includes('headphone') || name.includes('bluetooth') || 
-        name.includes('smart') || name.includes('led') || name.includes('iphone') || 
-        name.includes('audio') || name.includes('bracelet') || name.includes('carrier')) {
+    // Electronics & Tech (specific tech products)
+    if (name.includes('phone') || name.includes('computer') || name.includes('laptop') || 
+        name.includes('tablet') || name.includes('headphone') || name.includes('earbuds') ||
+        name.includes('bluetooth') || name.includes('charger') || name.includes('cable') ||
+        name.includes('smart watch') || name.includes('camera') || name.includes('tv') ||
+        category.includes('electronics') || category.includes('computers') || 
+        category.includes('cell phone')) {
         return 'electronics';
     }
     
-    // Home & Decor
-    if (name.includes('wall art') || name.includes('decor') || name.includes('printable') || 
-        name.includes('poster') || name.includes('nursery') || name.includes('organizer')) {
+    // Home & Decor (furniture, home improvement, decor)
+    if (name.includes('furniture') || name.includes('wall art') || name.includes('home decor') || 
+        name.includes('curtain') || name.includes('rug') || name.includes('lamp') ||
+        name.includes('bedding') || name.includes('kitchen') || name.includes('garden') ||
+        category.includes('home') || category.includes('kitchen') || category.includes('garden')) {
         return 'home-decor';
     }
     
-    // Health & Fitness
-    if (name.includes('fitness') || name.includes('health') || name.includes('tracker') || 
-        name.includes('monitor')) {
+    // Health & Fitness (wellness, exercise, medical)
+    if (name.includes('fitness') || name.includes('exercise') || name.includes('yoga') || 
+        name.includes('workout') || name.includes('vitamin') || name.includes('supplement') ||
+        name.includes('medical') || name.includes('health monitor') ||
+        category.includes('health') || category.includes('fitness') || category.includes('sports')) {
         return 'health-fitness';
     }
     
-    // Digital & DIY
-    if (name.includes('diy') || name.includes('digital download') || name.includes('jpeg') || 
-        name.includes('vinyl') || name.includes('sublimation') || name.includes('file')) {
+    // Digital & DIY (crafts, digital products, DIY kits)
+    if (name.includes('diy kit') || name.includes('craft') || name.includes('digital download') || 
+        name.includes('printable') || name.includes('pattern') || name.includes('template') ||
+        name.includes('sewing') || name.includes('knitting') ||
+        category.includes('crafts') || category.includes('art')) {
         return 'digital-diy';
     }
     
-    // Default category
-    return 'electronics';
+    // Default: check if it's a general category that doesn't fit above
+    // Return null to indicate "no specific eBay category match"
+    return null;
 }
 
 function updateEbayCategoryCounts() {
@@ -487,21 +505,24 @@ function updateEbayCategoryCounts() {
         'home-decor': 0,
         'health-fitness': 0,
         'digital-diy': 0,
-        'all': ebayProducts.length
+        'all': 0  // Will count only categorized products for "Browse All"
     };
     
     // Count products in each category
     ebayProducts.forEach(product => {
         const category = getEbayProductCategory(product);
-        categories[category]++;
+        if (category) {  // Only count products that match a category
+            categories[category]++;
+            categories['all']++;  // Also count for "Browse All"
+        }
     });
     
     // Update the count displays
     Object.keys(categories).forEach(category => {
-        const countElement = document.querySelector(`[data-category="${category}"] .category-count`);
+        const countElement = document.querySelector(`[data-category="${category}"] .count-number`);
         if (countElement) {
             const count = categories[category];
-            countElement.textContent = `${count} item${count !== 1 ? 's' : ''}`;
+            countElement.textContent = count;
         }
     });
     
