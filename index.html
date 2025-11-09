@@ -146,7 +146,72 @@
                 </div>
             </section>
             
-            <h2 class="main-title">Today's Featured Deals</h2>
+            <!-- eBay Category Selection (hidden by default) -->
+            <section class="ebay-categories-section" id="ebayCategoriesSection" style="display: none;">
+                <h2 class="section-title">🏪 eBay Categories</h2>
+                <div class="ebay-categories-grid" id="ebayCategoriesGrid">
+                    <!-- Christmas Category (Seasonal Priority) -->
+                    <button class="ebay-category-card seasonal" data-category="christmas">
+                        <div class="category-icon">🎄</div>
+                        <div class="category-info">
+                            <h3>Christmas Deals</h3>
+                            <p class="category-count">0 items</p>
+                            <span class="seasonal-badge">Seasonal</span>
+                        </div>
+                    </button>
+                    
+                    <!-- Electronics Category -->
+                    <button class="ebay-category-card" data-category="electronics">
+                        <div class="category-icon">📱</div>
+                        <div class="category-info">
+                            <h3>Electronics & Tech</h3>
+                            <p class="category-count">0 items</p>
+                        </div>
+                    </button>
+                    
+                    <!-- Home & Decor Category -->
+                    <button class="ebay-category-card" data-category="home-decor">
+                        <div class="category-icon">🏠</div>
+                        <div class="category-info">
+                            <h3>Home & Decor</h3>
+                            <p class="category-count">0 items</p>
+                        </div>
+                    </button>
+                    
+                    <!-- Health & Fitness Category -->
+                    <button class="ebay-category-card" data-category="health-fitness">
+                        <div class="category-icon">💪</div>
+                        <div class="category-info">
+                            <h3>Health & Fitness</h3>
+                            <p class="category-count">0 items</p>
+                        </div>
+                    </button>
+                    
+                    <!-- Digital & DIY Category -->
+                    <button class="ebay-category-card" data-category="digital-diy">
+                        <div class="category-icon">🎨</div>
+                        <div class="category-info">
+                            <h3>Digital & DIY</h3>
+                            <p class="category-count">0 items</p>
+                        </div>
+                    </button>
+                    
+                    <!-- Browse All -->
+                    <button class="ebay-category-card browse-all" data-category="all">
+                        <div class="category-icon">🔍</div>
+                        <div class="category-info">
+                            <h3>Browse All eBay</h3>
+                            <p class="category-count">0 items</p>
+                        </div>
+                    </button>
+                </div>
+                
+                <button class="back-to-stores-btn" id="backToStoresBtn">
+                    ← Back to Stores
+                </button>
+            </section>
+            
+            <h2 class="main-title" id="mainTitle">Today's Featured Deals</h2>
             
             <div class="products-grid" id="productsGrid">
                 </div>

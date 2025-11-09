@@ -297,9 +297,15 @@ function applyFiltersAndRender() {
         const matchesCategory = currentFilters.category === '' ||
             product.category.toLowerCase() === currentFilters.category.toLowerCase();
             
-        // Store Filter - Support Amazon and Walmart
-        const matchesStore = currentFilters.store === 'all' || 
+        // Store Filter - Support Amazon and eBay with categories
+        let matchesStore = currentFilters.store === 'all' || 
             product.store.toLowerCase() === currentFilters.store.toLowerCase();
+        
+        // eBay Category Filter - Additional filtering for eBay products
+        if (currentFilters.store === 'ebay' && currentEbayCategory && currentEbayCategory !== 'all') {
+            const productCategory = getEbayProductCategory(product);
+            matchesStore = matchesStore && (productCategory === currentEbayCategory);
+        }
 
         const matches = matchesSearch && matchesCategory && matchesStore;
         
@@ -351,6 +357,154 @@ function updatePaginationControls(totalPages) {
     paginationContainer.style.display = totalPages <= 1 ? 'none' : 'flex';
 }
 
+// EBAY CATEGORY SYSTEM
+let currentEbayCategory = null;
+let isEbayCategoriesVisible = false;
+
+// eBay category mapping and detection
+function getEbayProductCategory(product) {
+    const name = product.name.toLowerCase();
+    const description = product.description.toLowerCase();
+    
+    // Christmas/Holiday detection (seasonal priority)
+    if (name.includes('christmas') || name.includes('holiday') || name.includes('winter') || 
+        description.includes('christmas') || name.includes('decor')) {
+        return 'christmas';
+    }
+    
+    // Electronics & Tech
+    if (name.includes('electronic') || name.includes('headphone') || name.includes('bluetooth') || 
+        name.includes('smart') || name.includes('led') || name.includes('iphone') || 
+        name.includes('audio') || name.includes('bracelet') || name.includes('carrier')) {
+        return 'electronics';
+    }
+    
+    // Home & Decor
+    if (name.includes('wall art') || name.includes('decor') || name.includes('printable') || 
+        name.includes('poster') || name.includes('nursery') || name.includes('organizer')) {
+        return 'home-decor';
+    }
+    
+    // Health & Fitness
+    if (name.includes('fitness') || name.includes('health') || name.includes('tracker') || 
+        name.includes('monitor')) {
+        return 'health-fitness';
+    }
+    
+    // Digital & DIY
+    if (name.includes('diy') || name.includes('digital download') || name.includes('jpeg') || 
+        name.includes('vinyl') || name.includes('sublimation') || name.includes('file')) {
+        return 'digital-diy';
+    }
+    
+    // Default category
+    return 'electronics';
+}
+
+function updateEbayCategoryCounts() {
+    const ebayProducts = ALL_PRODUCTS.filter(p => p.store.toLowerCase() === 'ebay');
+    const categories = {
+        'christmas': 0,
+        'electronics': 0,
+        'home-decor': 0,
+        'health-fitness': 0,
+        'digital-diy': 0,
+        'all': ebayProducts.length
+    };
+    
+    // Count products in each category
+    ebayProducts.forEach(product => {
+        const category = getEbayProductCategory(product);
+        categories[category]++;
+    });
+    
+    // Update the count displays
+    Object.keys(categories).forEach(category => {
+        const countElement = document.querySelector(`[data-category="${category}"] .category-count`);
+        if (countElement) {
+            const count = categories[category];
+            countElement.textContent = `${count} item${count !== 1 ? 's' : ''}`;
+        }
+    });
+    
+    console.log('🏷️ eBay Category Counts:', categories);
+}
+
+function showEbayCategorySelection() {
+    console.log('🏪 Showing eBay category selection');
+    
+    // Hide main products and show eBay categories
+    const productsGrid = document.getElementById('productsGrid');
+    const ebayCategoriesSection = document.getElementById('ebayCategoriesSection');
+    const mainTitle = document.getElementById('mainTitle');
+    const pagination = document.querySelector('.pagination');
+    
+    if (productsGrid) productsGrid.style.display = 'none';
+    if (pagination) pagination.style.display = 'none';
+    if (mainTitle) mainTitle.style.display = 'none';
+    if (ebayCategoriesSection) ebayCategoriesSection.style.display = 'block';
+    
+    // Update category counts
+    updateEbayCategoryCounts();
+    
+    isEbayCategoriesVisible = true;
+}
+
+function hideEbayCategorySelection() {
+    console.log('🏪 Hiding eBay category selection');
+    
+    // Show main products and hide eBay categories
+    const productsGrid = document.getElementById('productsGrid');
+    const ebayCategoriesSection = document.getElementById('ebayCategoriesSection');
+    const mainTitle = document.getElementById('mainTitle');
+    const pagination = document.querySelector('.pagination');
+    
+    if (productsGrid) productsGrid.style.display = 'grid';
+    if (pagination) pagination.style.display = 'flex';
+    if (mainTitle) mainTitle.style.display = 'block';
+    if (ebayCategoriesSection) ebayCategoriesSection.style.display = 'none';
+    
+    isEbayCategoriesVisible = false;
+    currentEbayCategory = null;
+}
+
+function filterEbayByCategory(category) {
+    console.log('🏷️ Filtering eBay products by category:', category);
+    
+    // Set filters for eBay products with specific category
+    currentFilters.store = 'ebay';
+    currentEbayCategory = category;
+    currentPage = 1;
+    
+    // Update store filter UI
+    const storeFilterGrid = document.getElementById('storeFilterGrid');
+    storeFilterGrid.querySelectorAll('.store-option-btn').forEach(b => b.classList.remove('active'));
+    const ebayBtn = storeFilterGrid.querySelector('[data-store="ebay"]');
+    if (ebayBtn) ebayBtn.classList.add('active');
+    
+    // Hide categories and show filtered products
+    hideEbayCategorySelection();
+    
+    // Update main title
+    const mainTitle = document.getElementById('mainTitle');
+    if (mainTitle) {
+        if (category === 'all') {
+            mainTitle.textContent = '🔨 All eBay Products';
+        } else {
+            const categoryNames = {
+                'christmas': '🎄 Christmas Deals',
+                'electronics': '📱 Electronics & Tech',
+                'home-decor': '🏠 Home & Decor',
+                'health-fitness': '💪 Health & Fitness',
+                'digital-diy': '🎨 Digital & DIY'
+            };
+            mainTitle.textContent = categoryNames[category] || '🔨 eBay Products';
+        }
+    }
+    
+    applyFiltersAndRender();
+}
+
 // 5. EVENT LISTENERS
 // Add error handling for DOM elements
 try {
@@ -372,6 +526,13 @@ try {
         if (!btn) return;
         
         console.log('🏪 Store button clicked:', btn.dataset.store); // Debug log
+        
+        // Special handling for eBay - show category selection
+        if (btn.dataset.store === 'ebay') {
+            showEbayCategorySelection();
+            return;
+        }
+        
         console.log('🏪 Before filter change - Current store filter:', currentFilters.store);
         
         storeFilterGrid.querySelectorAll('.store-option-btn').forEach(b => b.classList.remove('active'));
@@ -380,6 +541,9 @@ try {
         currentFilters.store = btn.dataset.store;
         console.log('🏪 After filter change - New store filter:', currentFilters.store);
         currentPage = 1;
+        
+        // Hide eBay categories if showing
+        hideEbayCategorySelection();
         applyFiltersAndRender();
     });
 
@@ -399,6 +563,52 @@ try {
             window.scrollTo({ top: productsGrid.offsetTop - 100, behavior: 'smooth' });
         }
     });
+
+    // eBay Category Selection Event Listeners
+    const ebayCategoriesGrid = document.getElementById('ebayCategoriesGrid');
+    const backToStoresBtn = document.getElementById('backToStoresBtn');
+    
+    if (ebayCategoriesGrid) {
+        ebayCategoriesGrid.addEventListener('click', (e) => {
+            const categoryCard = e.target.closest('.ebay-category-card');
+            if (!categoryCard) return;
+            
+            const category = categoryCard.dataset.category;
+            console.log('🏷️ eBay category selected:', category);
+            filterEbayByCategory(category);
+        });
+    }
+    
+    if (backToStoresBtn) {
+        backToStoresBtn.addEventListener('click', () => {
+            console.log('🔙 Back to stores clicked');
+            
+            // Reset filters and show all stores
+            currentFilters.store = 'all';
+            currentFilters.category = '';
+            currentFilters.search = '';
+            currentPage = 1;
+            currentEbayCategory = null;
+            
+            // Update UI
+            const storeFilterGrid = document.getElementById('storeFilterGrid');
+            storeFilterGrid.querySelectorAll('.store-option-btn').forEach(b => b.classList.remove('active'));
+            const allStoresBtn = storeFilterGrid.querySelector('[data-store="all"]');
+            if (allStoresBtn) allStoresBtn.classList.add('active');
+            
+            // Reset search and category filters
+            if (searchInput) searchInput.value = '';
+            if (categoryFilter) categoryFilter.value = '';
+            
+            // Reset main title
+            const mainTitle = document.getElementById('mainTitle');
+            if (mainTitle) mainTitle.textContent = 'Today\'s Featured Deals';
+            
+            hideEbayCategorySelection();
+            applyFiltersAndRender();
+        });
+    }
+
 } catch (error) {
     console.error('Error setting up event listeners:', error);
 }
