@@ -390,10 +390,17 @@ try {
 // 6. INITIAL RENDER - FETCHES DATA
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+        // More aggressive cache-busting with multiple parameters
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substring(7);
+        const cacheBustUrl = `products.json?v=${timestamp}&r=${randomId}&cb=${Math.floor(Math.random() * 10000)}`;
+        
+        console.log('🔄 Loading products from:', cacheBustUrl);
+        
         // Use utility for cache-busted fetch if available
         const response = CacheManager ? 
             await CacheManager.fetchWithCacheBust('products.json') :
-            await fetch(`products.json?v=${Date.now()}`, {
+            await fetch(cacheBustUrl, {
                 cache: 'no-cache',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -402,11 +409,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         
+        console.log('📡 Response status:', response.status, response.statusText);
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
+        
+        console.log('🔍 Raw data type:', typeof data);
+        console.log('🔍 Is array:', Array.isArray(data));
+        console.log('🔍 Data preview:', data.slice ? data.slice(0, 2) : data);
         
         // Handle both old format (array) and new format (object with metadata)
         if (Array.isArray(data)) {
@@ -451,8 +464,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         setInterval(checkForUpdates, interval);
         
     } catch (error) {
-        productsGrid.innerHTML = '<div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;"><h3>Data Load Error</h3><p>Could not load product data. Please check your <code>products.json</code> file.</p></div>';
+        const errorDetails = `
+            <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                <h3>Data Load Error</h3>
+                <p>Could not load product data. Please check your <code>products.json</code> file.</p>
+                <details style="margin-top: 20px; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    <summary style="cursor: pointer; font-weight: bold;">Technical Details</summary>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px; overflow-x: auto;">${error.message}</pre>
+                    <p style="margin-top: 10px;"><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                    <p><strong>URL:</strong> ${window.location.href}</p>
+                    <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #007cba; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Try Again</button>
+                </details>
+            </div>
+        `;
+        productsGrid.innerHTML = errorDetails;
         console.error("Error fetching product data:", error);
+        console.error("Stack trace:", error.stack);
     }
     
     // Auto-play video
