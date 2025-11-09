@@ -6,6 +6,7 @@
   "scripts": {
     "import": "node walmart-importer.js",
     "import-test": "node walmart-importer.js --test",
+    "import-category": "node amazon-category-importer.js",
     "schedule-daily": "node scheduler.js daily",
     "schedule-weekly": "node scheduler.js weekly"
   },
