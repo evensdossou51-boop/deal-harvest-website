@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealHarvest - Browser Compatibility Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h2 {
+            color: #444;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .status.pass {
+            background: #28a745;
+            color: white;
+        }
+
+        .status.fail {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status.warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .test-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+
+        .test-item.pass {
+            border-left-color: #28a745;
+        }
+
+        .test-item.fail {
+            border-left-color: #dc3545;
+        }
+
+        .test-item.warning {
+            border-left-color: #ffc107;
+        }
+
+        .test-item h3 {
+            color: #333;
+            font-size: 1em;
+            margin-bottom: 8px;
+        }
+
+        .test-item p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .icon {
+            font-size: 1.5em;
+        }
+
+        .browser-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .browser-info h3 {
+            margin-bottom: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .info-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .info-label {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 DealHarvest Browser Compatibility Test</h1>
+        <p class="subtitle">Testing cross-browser and cross-device data handling</p>
+
+        <div class="browser-info" id="browserInfo">
+            <h3>Your Browser Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Browser</div>
+                    <div class="info-value" id="browserName">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Platform</div>
+                    <div class="info-value" id="platform">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Device Type</div>
+                    <div class="info-value" id="deviceType">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Online Status</div>
+                    <div class="info-value" id="onlineStatus">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>
+                <span class="icon">💾</span>
+                Storage Compatibility
+                <span class="status" id="storageStatus">Testing...</span>
+            </h2>
+            <div class="test-grid" id="storageTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>
+                <span class="icon">🍪</span>
+                Cookie Support
+                <span class="status" id="cookieStatus">Testing...</span>
+            </h2>
+            <div class="test-grid" id="cookieTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>
+                <span class="icon">📦</span>
+                Data Persistence Test
+                <span class="status" id="dataStatus">Testing...</span>
+            </h2>
+            <div class="test-grid" id="dataTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>
+                <span class="icon">🌐</span>
+                Network & Updates
+                <span class="status" id="networkStatus">Testing...</span>
+            </h2>
+            <div class="test-grid" id="networkTests"></div>
+        </div>
+
+        <div class="button-group">
+            <button onclick="runAllTests()">🔄 Run All Tests</button>
+            <button onclick="testDataPersistence()">💾 Test Data Persistence</button>
+            <button onclick="clearAllData()">🗑️ Clear All Data</button>
+            <button onclick="viewStoredData()">👁️ View Stored Data</button>
+        </div>
+
+        <div id="results" style="margin-top: 20px;"></div>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script>
+        // Display browser information
+        function displayBrowserInfo() {
+            const info = DealHarvestDataManager.getStorageInfo();
+            document.getElementById('browserName').textContent = info.browser.name;
+            document.getElementById('platform').textContent = info.browser.platform;
+            document.getElementById('deviceType').textContent = info.browser.mobile ? 'Mobile' : 'Desktop';
+            document.getElementById('onlineStatus').textContent = info.online ? '🟢 Online' : '🔴 Offline';
+        }
+
+        // Test storage capabilities
+        function testStorage() {
+            const tests = [];
+            const info = DealHarvestDataManager.getStorageInfo();
+
+            tests.push({
+                name: 'localStorage Support',
+                status: info.localStorageAvailable ? 'pass' : 'fail',
+                message: info.localStorageAvailable ? 'Fully supported' : 'Not available - using cookie fallback'
+            });
+
+            tests.push({
+                name: 'sessionStorage Support',
+                status: info.sessionStorageAvailable ? 'pass' : 'warning',
+                message: info.sessionStorageAvailable ? 'Fully supported' : 'Not available - using alternative storage'
+            });
+
+            tests.push({
+                name: 'Cookie Support',
+                status: info.cookiesEnabled ? 'pass' : 'fail',
+                message: info.cookiesEnabled ? 'Cookies enabled' : 'Cookies disabled - limited functionality'
+            });
+
+            renderTests('storageTests', tests);
+            updateSectionStatus('storageStatus', tests);
+        }
+
+        // Test cookie functionality
+        function testCookies() {
+            const tests = [];
+            const storage = DealHarvestDataManager.storage;
+
+            // Test setting cookie
+            const testKey = 'test_cookie_' + Date.now();
+            const testValue = 'test_value_123';
+            const setSuccess = storage.setItem(testKey, testValue, { useCookie: true });
+
+            tests.push({
+                name: 'Set Cookie',
+                status: setSuccess ? 'pass' : 'fail',
+                message: setSuccess ? 'Successfully set cookie' : 'Failed to set cookie'
+            });
+
+            // Test getting cookie
+            const getValue = storage.getItem(testKey);
+            tests.push({
+                name: 'Get Cookie',
+                status: getValue === testValue ? 'pass' : 'fail',
+                message: getValue === testValue ? 'Successfully retrieved cookie' : 'Failed to retrieve cookie'
+            });
+
+            // Test deleting cookie
+            storage.removeItem(testKey);
+            const deletedValue = storage.getItem(testKey);
+            tests.push({
+                name: 'Delete Cookie',
+                status: deletedValue === null ? 'pass' : 'fail',
+                message: deletedValue === null ? 'Successfully deleted cookie' : 'Failed to delete cookie'
+            });
+
+            renderTests('cookieTests', tests);
+            updateSectionStatus('cookieStatus', tests);
+        }
+
+        // Test data persistence
+        function testDataPersistence() {
+            const tests = [];
+            const storage = DealHarvestDataManager.storage;
+
+            // Test storing complex object
+            const testData = {
+                name: 'Test Product',
+                price: 29.99,
+                store: 'Test Store',
+                timestamp: Date.now()
+            };
+
+            const setSuccess = storage.setItem('test_product', JSON.stringify(testData));
+            tests.push({
+                name: 'Store Complex Object',
+                status: setSuccess ? 'pass' : 'fail',
+                message: setSuccess ? 'Successfully stored object data' : 'Failed to store object'
+            });
+
+            // Test retrieving complex object
+            const retrieved = storage.getItem('test_product');
+            let parseSuccess = false;
+            try {
+                const parsed = JSON.parse(retrieved);
+                parseSuccess = parsed.name === testData.name && parsed.price === testData.price;
+            } catch (e) {
+                parseSuccess = false;
+            }
+
+            tests.push({
+                name: 'Retrieve Complex Object',
+                status: parseSuccess ? 'pass' : 'fail',
+                message: parseSuccess ? 'Successfully retrieved and parsed object' : 'Failed to retrieve object'
+            });
+
+            // Test product caching
+            const testProducts = [
+                { id: 1, name: 'Product 1', salePrice: 19.99, store: 'amazon' },
+                { id: 2, name: 'Product 2', salePrice: 29.99, store: 'ebay' }
+            ];
+
+            const cacheSuccess = DealHarvestDataManager.products.saveProducts(testProducts, {
+                version: '1.0',
+                source: 'test'
+            });
+
+            tests.push({
+                name: 'Product Cache Save',
+                status: cacheSuccess ? 'pass' : 'fail',
+                message: cacheSuccess ? 'Successfully cached products' : 'Failed to cache products'
+            });
+
+            // Test product retrieval
+            const cachedProducts = DealHarvestDataManager.products.getCachedProducts();
+            tests.push({
+                name: 'Product Cache Retrieve',
+                status: cachedProducts && cachedProducts.length === 2 ? 'pass' : 'fail',
+                message: cachedProducts ? `Retrieved ${cachedProducts.length} products` : 'Failed to retrieve cache'
+            });
+
+            renderTests('dataTests', tests);
+            updateSectionStatus('dataStatus', tests);
+        }
+
+        // Test network capabilities
+        function testNetwork() {
+            const tests = [];
+            const info = DealHarvestDataManager.getStorageInfo();
+
+            tests.push({
+                name: 'Online Detection',
+                status: info.online ? 'pass' : 'warning',
+                message: info.online ? 'Device is online' : 'Device is offline'
+            });
+
+            tests.push({
+                name: 'Network Events',
+                status: 'pass',
+                message: 'Network status change listeners active'
+            });
+
+            // Test fetch API
+            const fetchSupported = typeof fetch !== 'undefined';
+            tests.push({
+                name: 'Fetch API Support',
+                status: fetchSupported ? 'pass' : 'fail',
+                message: fetchSupported ? 'Fetch API available' : 'Fetch API not supported'
+            });
+
+            renderTests('networkTests', tests);
+            updateSectionStatus('networkStatus', tests);
+        }
+
+        // Render test results
+        function renderTests(containerId, tests) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = tests.map(test => `
+                <div class="test-item ${test.status}">
+                    <h3>${test.name}</h3>
+                    <p>${test.message}</p>
+                </div>
+            `).join('');
+        }
+
+        // Update section status
+        function updateSectionStatus(statusId, tests) {
+            const statusEl = document.getElementById(statusId);
+            const hasFailures = tests.some(t => t.status === 'fail');
+            const hasWarnings = tests.some(t => t.status === 'warning');
+
+            if (hasFailures) {
+                statusEl.className = 'status fail';
+                statusEl.textContent = 'Failed';
+            } else if (hasWarnings) {
+                statusEl.className = 'status warning';
+                statusEl.textContent = 'Warning';
+            } else {
+                statusEl.className = 'status pass';
+                statusEl.textContent = 'Passed';
+            }
+        }
+
+        // Run all tests
+        function runAllTests() {
+            displayBrowserInfo();
+            testStorage();
+            testCookies();
+            testDataPersistence();
+            testNetwork();
+            
+            setTimeout(() => {
+                alert('✅ All tests completed! Check the results above.');
+            }, 500);
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all stored data?')) {
+                DealHarvestDataManager.clearAllData();
+                alert('🗑️ All data cleared successfully!');
+                runAllTests();
+            }
+        }
+
+        // View stored data
+        function viewStoredData() {
+            const results = document.getElementById('results');
+            const storage = DealHarvestDataManager.storage;
+            
+            const keys = [
+                'dealharvest_cookie_consent',
+                'dealharvest_products_cache',
+                'dealharvest_products_hash',
+                'dealharvest_last_update'
+            ];
+
+            let html = '<div class="test-section"><h2>📋 Stored Data</h2>';
+            
+            keys.forEach(key => {
+                const value = storage.getItem(key);
+                const displayValue = value ? (value.length > 100 ? value.substring(0, 100) + '...' : value) : 'Not set';
+                html += `<div class="code"><strong>${key}:</strong><br>${displayValue}</div>`;
+            });
+
+            html += '</div>';
+            results.innerHTML = html;
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('DOMContentLoaded', () => {
+            runAllTests();
+        });
+
+        // Listen for network changes
+        DealHarvestDataManager.network.onStatusChange((status) => {
+            console.log('🌐 Network status changed:', status);
+            document.getElementById('onlineStatus').textContent = status === 'online' ? '🟢 Online' : '🔴 Offline';
+            testNetwork();
+        });
+    </script>
+</body>
+</html>

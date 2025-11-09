@@ -1,16 +1,18 @@
 /**
  * DealHarvest Affiliate Store Script - Optimized Version
  * Uses centralized utilities to eliminate code duplication
+ * Enhanced with Universal Data Manager for cross-browser/device compatibility
  */
 
 // Import utilities if available (with fallback)
-let CONFIG, CacheManager, HashManager, NotificationManager;
+let CONFIG, CacheManager, HashManager, NotificationManager, DataManager;
 try {
     const utilities = window.DealHarvest || {};
     CONFIG = utilities.CONFIG;
     CacheManager = utilities.CacheManager;
     HashManager = utilities.HashManager;
     NotificationManager = utilities.NotificationManager;
+    DataManager = window.DealHarvestDataManager;
     console.log('✅ Utilities loaded successfully');
 } catch (error) {
     console.warn('⚠️ Utilities not available, using fallbacks');
@@ -18,6 +20,15 @@ try {
 
 // Centralized function to fetch products.json with cache-busting
 async function fetchProductsJson() {
+    // Check if we have cached data first
+    if (DataManager?.products) {
+        const cached = DataManager.products.getCachedProducts();
+        if (cached && cached.length > 0) {
+            console.log('📦 Using cached products');
+            return { ok: true, json: async () => cached };
+        }
+    }
+
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substring(7);
     const cacheBustUrl = `products.json?v=${timestamp}&r=${randomId}&cb=${Math.floor(Math.random() * 10000)}`;
@@ -640,6 +651,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             ALL_PRODUCTS = data; // Include all stores
             console.log('📊 Products loaded (old format):', data.length);
             console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
+            
+            // Cache products with Data Manager
+            if (DataManager?.products) {
+                DataManager.products.saveProducts(ALL_PRODUCTS, {
+                    version: '1.0',
+                    source: 'direct-array'
+                });
+            }
         } else if (data.products && Array.isArray(data.products)) {
             // New format - object with metadata
             ALL_PRODUCTS = data.products; // Include all stores
@@ -647,6 +666,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log('📅 Last updated:', data.lastUpdated || 'unknown time');
             console.log('🔢 Product count:', data.productCount || data.products.length);
             console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
+            
+            // Cache products with Data Manager
+            if (DataManager?.products) {
+                DataManager.products.saveProducts(ALL_PRODUCTS, {
+                    version: data.version || '1.0',
+                    source: data.updateSource,
+                    lastUpdated: data.lastUpdated
+                });
+            }
             
             // Show update info in notification if recent
             if (data.lastUpdated) {

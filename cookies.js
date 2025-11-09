@@ -2,13 +2,39 @@
  * DealHarvest Cookie Consent Manager (cookies.js)
  * Manages the cookie banner display and Google Analytics consent.
  * Works with the GA4 implementation in index.html, where consent is DENIED by default.
+ * Now uses Universal Data Manager for cross-browser/device compatibility
  */
 
 const COOKIE_CONSENT_KEY = 'dealharvest_cookie_consent';
 const COOKIE_BANNER_ID = 'cookieBanner';
 
+// Get storage manager (with fallback for older browsers)
+function getStorageManager() {
+    return window.DealHarvestDataManager?.storage || {
+        getItem: (key) => {
+            try {
+                return localStorage.getItem(key);
+            } catch (e) {
+                return document.cookie.replace(new RegExp('(?:(?:^|.*;)\\s*' + key + '\\s*\\=\\s*([^;]*).*$)|^.*$'), '$1') || null;
+            }
+        },
+        setItem: (key, value, options) => {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (e) {
+                const expires = new Date();
+                expires.setFullYear(expires.getFullYear() + 1);
+                document.cookie = `${key}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+                return true;
+            }
+        }
+    };
+}
+
 function getConsentStatus() {
-    return localStorage.getItem(COOKIE_CONSENT_KEY);
+    const storage = getStorageManager();
+    return storage.getItem(COOKIE_CONSENT_KEY);
 }
 
 function showCookieBanner() {
@@ -28,7 +54,14 @@ function hideCookieBanner() {
 }
 
 function setConsent(status) {
-    localStorage.setItem(COOKIE_CONSENT_KEY, status);
+    const storage = getStorageManager();
+    storage.setItem(COOKIE_CONSENT_KEY, status, {
+        storage: 'localStorage',
+        expireDays: 365,
+        useCookie: true // Ensure it works even if localStorage fails
+    });
+    
+    console.log('✅ Consent saved:', status);
 }
 
 function updateGAConsent(analytics_status, ad_status) {
