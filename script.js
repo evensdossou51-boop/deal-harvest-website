@@ -270,14 +270,44 @@ function createProductCard(product) {
     // Handle image src - check if it's a full URL or filename
     const imageSrc = product.image.startsWith('http') ? product.image : `images/${product.image}`;
 
+    // Generate condition badge
+    const conditionBadge = product.condition ? 
+        `<span class="condition-badge condition-${product.condition.toLowerCase().replace(/\s+/g, '-')}">${product.condition}</span>` : '';
+    
+    // Generate shipping badge
+    const shippingBadge = product.shipping && (product.shipping.toLowerCase().includes('free') || product.shipping === '$0.00') ?
+        `<span class="shipping-badge">⚡ Free Shipping</span>` : '';
+    
+    // Generate deal badge
+    const dealBadge = product.originalPrice && ((product.originalPrice - product.salePrice) / product.originalPrice) >= 0.3 ?
+        `<span class="deal-badge">🔥 Hot Deal</span>` : '';
+    
+    // Generate seller rating (for eBay)
+    const sellerRating = product.store.toLowerCase() === 'ebay' && product.sellerRating ?
+        `<div class="seller-rating">⭐ ${product.sellerRating}</div>` : '';
+
     return `
         <div class="product-card" data-store="${product.store.toLowerCase()}" data-category="${product.category.toLowerCase()}">
-            ${discountBadge} 
+            ${discountBadge}
+            ${dealBadge}
+            ${conditionBadge}
+            ${shippingBadge}
+            <button class="wishlist-btn" onclick="toggleWishlist(event, '${product.name}')" aria-label="Add to wishlist">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </button>
             <div class="product-image-wrapper">
-                <img src="${imageSrc}" alt="${product.name}" class="product-main-image">
+                <img src="${imageSrc}" alt="${product.name}" class="product-main-image" loading="lazy">
+                <div class="quick-view-overlay">
+                    <button class="quick-view-btn" onclick="openQuickView(event, ${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                        👁️ Quick View
+                    </button>
+                </div>
             </div>
             <h3 class="product-name">${product.name}</h3>
             <p class="product-store">${product.store.toUpperCase()}</p>
+            ${sellerRating}
             <p class="product-price">
                 <span class="sale-price">$${product.salePrice.toFixed(2)}</span>
                 ${product.originalPrice ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
@@ -318,7 +348,44 @@ function applyFiltersAndRender() {
             matchesStore = matchesStore && (productCategory === currentEbayCategory);
         }
 
-        const matches = matchesSearch && matchesCategory && matchesStore;
+        // ADVANCED FILTERS
+        // Price filter
+        const matchesPrice = product.salePrice >= advancedFiltersState.minPrice && 
+                           product.salePrice <= advancedFiltersState.maxPrice;
+        
+        // Condition filter
+        const matchesCondition = advancedFiltersState.condition.length === 0 ||
+            (product.condition && advancedFiltersState.condition.some(cond => 
+                product.condition.toLowerCase().includes(cond.toLowerCase())
+            ));
+        
+        // Shipping filter
+        let matchesShipping = advancedFiltersState.shipping.length === 0;
+        if (!matchesShipping && product.shipping) {
+            if (advancedFiltersState.shipping.includes('free') && 
+                (product.shipping.toLowerCase().includes('free') || product.shipping === '$0.00')) {
+                matchesShipping = true;
+            }
+            if (advancedFiltersState.shipping.includes('fast') && 
+                product.shipping.toLowerCase().includes('fast')) {
+                matchesShipping = true;
+            }
+        }
+        
+        // Deal filter
+        let matchesDeal = advancedFiltersState.deal.length === 0;
+        if (!matchesDeal && product.originalPrice) {
+            const discount = ((product.originalPrice - product.salePrice) / product.originalPrice);
+            if (advancedFiltersState.deal.includes('hot') && discount >= 0.3) {
+                matchesDeal = true;
+            }
+            if (advancedFiltersState.deal.includes('discount') && discount >= 0.3) {
+                matchesDeal = true;
+            }
+        }
+
+        const matches = matchesSearch && matchesCategory && matchesStore && 
+                       matchesPrice && matchesCondition && matchesShipping && matchesDeal;
         
         // Enhanced debug logging for store filtering
         if (currentFilters.store !== 'all') {
@@ -707,6 +774,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         applyFiltersAndRender();
+        updateStatistics();
         
         // Start periodic update checking
         const interval = CONFIG?.UPDATE_CHECK_INTERVAL || 30000;
@@ -737,3 +805,309 @@ document.addEventListener('DOMContentLoaded', async () => {
         video.play().catch(() => {}); 
     }
 });
+
+/**
+ * WISHLIST FUNCTIONALITY
+ */
+let wishlist = JSON.parse(localStorage.getItem('dealHarvestWishlist') || '[]');
+
+function toggleWishlist(event, productName) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const btn = event.currentTarget;
+    const index = wishlist.indexOf(productName);
+    
+    if (index > -1) {
+        wishlist.splice(index, 1);
+        btn.classList.remove('active');
+        showNotification('❤️ Removed from wishlist');
+    } else {
+        wishlist.push(productName);
+        btn.classList.add('active');
+        showNotification('💚 Added to wishlist!');
+    }
+    
+    localStorage.setItem('dealHarvestWishlist', JSON.stringify(wishlist));
+}
+
+/**
+ * QUICK VIEW MODAL
+ */
+function openQuickView(event, product) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const imageSrc = product.image.startsWith('http') ? product.image : `images/${product.image}`;
+    const savings = product.originalPrice ? ((product.originalPrice - product.salePrice) / product.originalPrice * 100).toFixed(0) : 0;
+    
+    const modal = document.createElement('div');
+    modal.className = 'quick-view-modal';
+    modal.innerHTML = `
+        <div class="quick-view-content">
+            <button class="close-modal" onclick="this.closest('.quick-view-modal').remove()">✕</button>
+            <div class="quick-view-grid">
+                <div class="quick-view-image">
+                    <img src="${imageSrc}" alt="${product.name}">
+                </div>
+                <div class="quick-view-info">
+                    <h2>${product.name}</h2>
+                    <div class="quick-view-store">${product.store.toUpperCase()}</div>
+                    ${product.condition ? `<div class="quick-view-condition">Condition: ${product.condition}</div>` : ''}
+                    ${product.description ? `<p class="quick-view-description">${product.description}</p>` : ''}
+                    <div class="quick-view-price">
+                        <span class="quick-view-sale">$${product.salePrice.toFixed(2)}</span>
+                        ${product.originalPrice ? `
+                            <span class="quick-view-original">$${product.originalPrice.toFixed(2)}</span>
+                            <span class="quick-view-savings">Save ${savings}%</span>
+                        ` : ''}
+                    </div>
+                    ${product.shipping ? `<div class="quick-view-shipping">📦 ${product.shipping}</div>` : ''}
+                    <a href="${product.affiliateLink}" target="_blank" class="quick-view-btn">
+                        View Full Details & Buy Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    setTimeout(() => modal.classList.add('active'), 10);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification-toast';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.classList.add('show'), 10);
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
+}
+
+/**
+ * ADVANCED FILTERS FUNCTIONALITY
+ */
+let advancedFiltersState = {
+    minPrice: 0,
+    maxPrice: 1000,
+    condition: [],
+    shipping: [],
+    deal: []
+};
+
+function toggleAdvancedFilters() {
+    const panel = document.getElementById('filtersPanel');
+    panel.classList.toggle('active');
+}
+
+function resetAdvancedFilters() {
+    advancedFiltersState = {
+        minPrice: 0,
+        maxPrice: 1000,
+        condition: [],
+        shipping: [],
+        deal: []
+    };
+    
+    document.getElementById('minPrice').value = 0;
+    document.getElementById('maxPrice').value = 1000;
+    document.getElementById('minPriceValue').textContent = '0';
+    document.getElementById('maxPriceValue').textContent = '1000';
+    
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.classList.remove('active');
+    });
+    
+    updateActiveFiltersDisplay();
+    applyFiltersAndRender();
+}
+
+function updateActiveFiltersDisplay() {
+    const container = document.getElementById('activeFilters');
+    const list = container.querySelector('.active-filters-list');
+    list.innerHTML = '';
+    
+    let hasFilters = false;
+    
+    // Price filter
+    if (advancedFiltersState.minPrice > 0 || advancedFiltersState.maxPrice < 1000) {
+        hasFilters = true;
+        list.innerHTML += `
+            <div class="active-filter-tag">
+                Price: $${advancedFiltersState.minPrice} - $${advancedFiltersState.maxPrice}
+                <button onclick="resetPriceFilter()">×</button>
+            </div>
+        `;
+    }
+    
+    // Condition filters
+    advancedFiltersState.condition.forEach(cond => {
+        hasFilters = true;
+        list.innerHTML += `
+            <div class="active-filter-tag">
+                ${cond}
+                <button onclick="removeFilter('condition', '${cond}')">×</button>
+            </div>
+        `;
+    });
+    
+    // Shipping filters
+    advancedFiltersState.shipping.forEach(ship => {
+        hasFilters = true;
+        list.innerHTML += `
+            <div class="active-filter-tag">
+                ${ship === 'free' ? 'Free Shipping' : 'Fast Delivery'}
+                <button onclick="removeFilter('shipping', '${ship}')">×</button>
+            </div>
+        `;
+    });
+    
+    // Deal filters
+    advancedFiltersState.deal.forEach(deal => {
+        hasFilters = true;
+        list.innerHTML += `
+            <div class="active-filter-tag">
+                ${deal === 'hot' ? '🔥 Hot Deals' : '30%+ Off'}
+                <button onclick="removeFilter('deal', '${deal}')">×</button>
+            </div>
+        `;
+    });
+    
+    container.style.display = hasFilters ? 'block' : 'none';
+}
+
+function resetPriceFilter() {
+    advancedFiltersState.minPrice = 0;
+    advancedFiltersState.maxPrice = 1000;
+    document.getElementById('minPrice').value = 0;
+    document.getElementById('maxPrice').value = 1000;
+    document.getElementById('minPriceValue').textContent = '0';
+    document.getElementById('maxPriceValue').textContent = '1000';
+    updateActiveFiltersDisplay();
+    applyFiltersAndRender();
+}
+
+function removeFilter(type, value) {
+    const index = advancedFiltersState[type].indexOf(value);
+    if (index > -1) {
+        advancedFiltersState[type].splice(index, 1);
+    }
+    
+    document.querySelectorAll(`.filter-chip[data-filter="${type}"][data-value="${value}"]`)
+        .forEach(chip => chip.classList.remove('active'));
+    
+    updateActiveFiltersDisplay();
+    applyFiltersAndRender();
+}
+
+// Initialize filter controls
+document.addEventListener('DOMContentLoaded', () => {
+    // Price sliders
+    const minPrice = document.getElementById('minPrice');
+    const maxPrice = document.getElementById('maxPrice');
+    const minPriceValue = document.getElementById('minPriceValue');
+    const maxPriceValue = document.getElementById('maxPriceValue');
+    
+    if (minPrice && maxPrice) {
+        minPrice.addEventListener('input', (e) => {
+            advancedFiltersState.minPrice = parseInt(e.target.value);
+            minPriceValue.textContent = e.target.value;
+            updateActiveFiltersDisplay();
+            applyFiltersAndRender();
+        });
+        
+        maxPrice.addEventListener('input', (e) => {
+            advancedFiltersState.maxPrice = parseInt(e.target.value);
+            maxPriceValue.textContent = e.target.value;
+            updateActiveFiltersDisplay();
+            applyFiltersAndRender();
+        });
+    }
+    
+    // Filter chips
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', function() {
+            const filterType = this.dataset.filter;
+            const filterValue = this.dataset.value;
+            
+            this.classList.toggle('active');
+            
+            const index = advancedFiltersState[filterType].indexOf(filterValue);
+            if (index > -1) {
+                advancedFiltersState[filterType].splice(index, 1);
+            } else {
+                advancedFiltersState[filterType].push(filterValue);
+            }
+            
+            updateActiveFiltersDisplay();
+            applyFiltersAndRender();
+        });
+    });
+    
+    // Grid view controls
+    document.querySelectorAll('.grid-size-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.grid-size-btn').forEach(b => b.classList.remove('active'));
+            // Add active to clicked button
+            this.classList.add('active');
+            
+            const columns = this.dataset.columns;
+            const productsGrid = document.getElementById('productsGrid');
+            
+            // Remove all grid classes
+            productsGrid.className = 'products-grid';
+            
+            // Add appropriate class
+            if (columns === 'list') {
+                productsGrid.classList.add('list-view');
+            } else {
+                productsGrid.classList.add(`grid-${columns}-col`);
+            }
+            
+            // Save preference
+            localStorage.setItem('gridViewPreference', columns);
+        });
+    });
+    
+    // Load saved grid preference
+    const savedGridView = localStorage.getItem('gridViewPreference') || '3';
+    const gridBtn = document.querySelector(`.grid-size-btn[data-columns="${savedGridView}"]`);
+    if (gridBtn) {
+        gridBtn.click();
+    }
+});
+
+/**
+ * UPDATE STATISTICS
+ */
+function updateStatistics() {
+    const totalProductsEl = document.getElementById('totalProductsStat');
+    if (totalProductsEl && ALL_PRODUCTS) {
+        // Animate the number
+        animateNumber(totalProductsEl, 0, ALL_PRODUCTS.length, 1000);
+    }
+}
+
+function animateNumber(element, start, end, duration) {
+    const range = end - start;
+    const increment = end > start ? 1 : -1;
+    const stepTime = Math.abs(Math.floor(duration / range));
+    let current = start;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        element.textContent = current;
+        if (current === end) {
+            clearInterval(timer);
+        }
+    }, stepTime);
+}

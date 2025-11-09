@@ -95,11 +95,73 @@
                     <option value="Video Games">🎮 Video Games</option>
                 </select>
             </div>
+        </div>
 
-            <div class="refresh-section">
-                <button id="refresh-btn" class="refresh-btn" onclick="manualRefresh()" title="Refresh products">
-                    🔄
+        <!-- Advanced Filters Section -->
+        <div class="advanced-filters" id="advancedFilters">
+            <div class="container">
+                <button class="toggle-filters-btn" onclick="toggleAdvancedFilters()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="21" x2="4" y2="14"></line>
+                        <line x1="4" y1="10" x2="4" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12" y2="3"></line>
+                        <line x1="20" y1="21" x2="20" y2="16"></line>
+                        <line x1="20" y1="12" x2="20" y2="3"></line>
+                        <line x1="1" y1="14" x2="7" y2="14"></line>
+                        <line x1="9" y1="8" x2="15" y2="8"></line>
+                        <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                    <span>Advanced Filters</span>
                 </button>
+
+                <div class="filters-panel" id="filtersPanel">
+                    <div class="filter-group">
+                        <label class="filter-label">Price Range</label>
+                        <div class="price-slider-container">
+                            <input type="range" id="minPrice" class="price-slider" min="0" max="1000" value="0" step="10">
+                            <input type="range" id="maxPrice" class="price-slider" min="0" max="1000" value="1000" step="10">
+                            <div class="price-values">
+                                <span>$<span id="minPriceValue">0</span></span>
+                                <span>$<span id="maxPriceValue">1000</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Condition</label>
+                        <div class="filter-chips">
+                            <button class="filter-chip" data-filter="condition" data-value="new">New</button>
+                            <button class="filter-chip" data-filter="condition" data-value="used">Used</button>
+                            <button class="filter-chip" data-filter="condition" data-value="refurbished">Refurbished</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Shipping</label>
+                        <div class="filter-chips">
+                            <button class="filter-chip" data-filter="shipping" data-value="free">Free Shipping</button>
+                            <button class="filter-chip" data-filter="shipping" data-value="fast">Fast Delivery</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Deals</label>
+                        <div class="filter-chips">
+                            <button class="filter-chip" data-filter="deal" data-value="hot">🔥 Hot Deals</button>
+                            <button class="filter-chip" data-filter="deal" data-value="discount">30%+ Off</button>
+                        </div>
+                    </div>
+
+                    <button class="reset-filters-btn" onclick="resetAdvancedFilters()">Reset All Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Filters Display -->
+        <div class="active-filters" id="activeFilters" style="display: none;">
+            <div class="container">
+                <div class="active-filters-list"></div>
             </div>
         </div>
     </header>
@@ -112,6 +174,68 @@
 
     <main class="main">
         <div class="container">
+            
+            <!-- Statistics Banner -->
+            <section class="stats-banner">
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="totalProductsStat">0</div>
+                        <div class="stat-label">Active Deals</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏪</div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="totalStoresStat">2</div>
+                        <div class="stat-label">Partner Stores</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <div class="stat-number">Up to 70%</div>
+                        <div class="stat-label">Savings</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-content">
+                        <div class="stat-number">Daily</div>
+                        <div class="stat-label">Updated</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trust Badges -->
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span>Verified Deals</span>
+                </div>
+                <div class="trust-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Trusted Sellers</span>
+                </div>
+                <div class="trust-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Safe Shopping</span>
+                </div>
+                <div class="trust-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    <span>Real-Time Updates</span>
+                </div>
+            </div>
             
             <!-- Store filter section with Amazon only -->
             <section class="store-filter-section">
@@ -148,61 +272,93 @@
             
             <!-- eBay Category Selection (hidden by default) -->
             <section class="ebay-categories-section" id="ebayCategoriesSection" style="display: none;">
-                <h2 class="section-title">🏪 eBay Categories</h2>
+                <div class="category-header-with-back">
+                    <button class="back-to-stores-btn" onclick="hideEbayCategorySelection()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Back to All Stores
+                    </button>
+                    <h2 class="section-title">🏪 eBay Categories</h2>
+                </div>
                 <div class="ebay-categories-grid" id="ebayCategoriesGrid">
                     <!-- Christmas Category (Seasonal Priority) -->
-                    <button class="ebay-category-card seasonal" data-category="christmas">
-                        <div class="category-icon">🎄</div>
+                    <button class="ebay-category-card seasonal" data-category="christmas" style="background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);">
+                        <div class="category-icon-large">🎄</div>
                         <div class="category-info">
                             <h3>Christmas Deals</h3>
-                            <p class="category-count">0 items</p>
-                            <span class="seasonal-badge">Seasonal</span>
+                            <p class="category-description">Festive gifts & decorations</p>
+                            <p class="category-count">
+                                <span class="count-number">0</span> items
+                            </p>
+                            <span class="seasonal-badge">⭐ Limited Time</span>
                         </div>
+                        <div class="category-gradient-overlay"></div>
                     </button>
                     
                     <!-- Electronics Category -->
-                    <button class="ebay-category-card" data-category="electronics">
-                        <div class="category-icon">📱</div>
+                    <button class="ebay-category-card" data-category="electronics" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="category-icon-large">�</div>
                         <div class="category-info">
                             <h3>Electronics & Tech</h3>
-                            <p class="category-count">0 items</p>
+                            <p class="category-description">Computers, phones & gadgets</p>
+                            <p class="category-count">
+                                <span class="count-number">0</span> items
+                            </p>
                         </div>
+                        <div class="category-gradient-overlay"></div>
                     </button>
                     
                     <!-- Home & Decor Category -->
-                    <button class="ebay-category-card" data-category="home-decor">
-                        <div class="category-icon">🏠</div>
+                    <button class="ebay-category-card" data-category="home-decor" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="category-icon-large">🏠</div>
                         <div class="category-info">
                             <h3>Home & Decor</h3>
-                            <p class="category-count">0 items</p>
+                            <p class="category-description">Furniture, kitchen & garden</p>
+                            <p class="category-count">
+                                <span class="count-number">0</span> items
+                            </p>
                         </div>
+                        <div class="category-gradient-overlay"></div>
                     </button>
                     
                     <!-- Health & Fitness Category -->
-                    <button class="ebay-category-card" data-category="health-fitness">
-                        <div class="category-icon">💪</div>
+                    <button class="ebay-category-card" data-category="health-fitness" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <div class="category-icon-large">💪</div>
                         <div class="category-info">
                             <h3>Health & Fitness</h3>
-                            <p class="category-count">0 items</p>
+                            <p class="category-description">Wellness & workout gear</p>
+                            <p class="category-count">
+                                <span class="count-number">0</span> items
+                            </p>
                         </div>
+                        <div class="category-gradient-overlay"></div>
                     </button>
                     
                     <!-- Digital & DIY Category -->
-                    <button class="ebay-category-card" data-category="digital-diy">
-                        <div class="category-icon">🎨</div>
+                    <button class="ebay-category-card" data-category="digital-diy" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <div class="category-icon-large">🎨</div>
                         <div class="category-info">
                             <h3>Digital & DIY</h3>
-                            <p class="category-count">0 items</p>
+                            <p class="category-description">Creative projects & crafts</p>
+                            <p class="category-count">
+                                <span class="count-number">0</span> items
+                            </p>
                         </div>
+                        <div class="category-gradient-overlay"></div>
                     </button>
                     
                     <!-- Browse All -->
-                    <button class="ebay-category-card browse-all" data-category="all">
-                        <div class="category-icon">🔍</div>
+                    <button class="ebay-category-card browse-all" data-category="all" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                        <div class="category-icon-large">🔍</div>
                         <div class="category-info">
                             <h3>Browse All eBay</h3>
-                            <p class="category-count">0 items</p>
+                            <p class="category-description">Everything we have!</p>
+                            <p class="category-count">
+                                <span class="count-number">0</span> items
+                            </p>
                         </div>
+                        <div class="category-gradient-overlay"></div>
                     </button>
                 </div>
                 
@@ -211,9 +367,59 @@
                 </button>
             </section>
             
-            <h2 class="main-title" id="mainTitle">Today's Featured Deals</h2>
+            <div class="products-header">
+                <h2 class="main-title" id="mainTitle">Today's Featured Deals</h2>
+                
+                <div class="view-controls">
+                    <div class="grid-size-controls">
+                        <button class="grid-size-btn" data-columns="2" title="Large Grid">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="3" y="3" width="8" height="8" rx="1"></rect>
+                                <rect x="13" y="3" width="8" height="8" rx="1"></rect>
+                                <rect x="3" y="13" width="8" height="8" rx="1"></rect>
+                                <rect x="13" y="13" width="8" height="8" rx="1"></rect>
+                            </svg>
+                        </button>
+                        <button class="grid-size-btn active" data-columns="3" title="Medium Grid">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="2" y="2" width="6" height="6" rx="1"></rect>
+                                <rect x="9" y="2" width="6" height="6" rx="1"></rect>
+                                <rect x="16" y="2" width="6" height="6" rx="1"></rect>
+                                <rect x="2" y="9" width="6" height="6" rx="1"></rect>
+                                <rect x="9" y="9" width="6" height="6" rx="1"></rect>
+                                <rect x="16" y="9" width="6" height="6" rx="1"></rect>
+                                <rect x="2" y="16" width="6" height="6" rx="1"></rect>
+                                <rect x="9" y="16" width="6" height="6" rx="1"></rect>
+                                <rect x="16" y="16" width="6" height="6" rx="1"></rect>
+                            </svg>
+                        </button>
+                        <button class="grid-size-btn" data-columns="4" title="Small Grid">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="2" y="2" width="4" height="4" rx="1"></rect>
+                                <rect x="7" y="2" width="4" height="4" rx="1"></rect>
+                                <rect x="12" y="2" width="4" height="4" rx="1"></rect>
+                                <rect x="17" y="2" width="4" height="4" rx="1"></rect>
+                                <rect x="2" y="7" width="4" height="4" rx="1"></rect>
+                                <rect x="7" y="7" width="4" height="4" rx="1"></rect>
+                                <rect x="12" y="7" width="4" height="4" rx="1"></rect>
+                                <rect x="17" y="7" width="4" height="4" rx="1"></rect>
+                            </svg>
+                        </button>
+                        <button class="grid-size-btn" data-columns="list" title="List View">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
             
-            <div class="products-grid" id="productsGrid">
+            <div class="products-grid grid-3-col" id="productsGrid">
                 </div>
             
             <section class="pagination">
