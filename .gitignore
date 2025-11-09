@@ -4,6 +4,7 @@
 .env.production
 .env.test
 ebay-config.local.js
+walmart-config.local.js
 
 # Node modules
 node_modules/
