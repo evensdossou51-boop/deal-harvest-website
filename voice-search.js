@@ -86,8 +86,24 @@
     results.hidden = false;
   }
 
+  // Microphone consent persistence
+  const MIC_CONSENT_KEY = 'dealharvest_mic_consent';
+  function getMicConsent(){ try { return localStorage.getItem(MIC_CONSENT_KEY) === 'granted'; } catch(_) { return false; } }
+  function setMicConsent(){ try { localStorage.setItem(MIC_CONSENT_KEY, 'granted'); } catch(_){} logEvent('voice_avatar_mic_consent'); }
+  function requestMicConsent(){
+    const existing = document.getElementById('micConsentDialog');
+    if (existing) return;
+    const dlg = document.createElement('div');
+    dlg.id = 'micConsentDialog';
+    dlg.className = 'ai-mic-dialog';
+    dlg.innerHTML = '<div class="ai-mic-dialog-inner">\n      <h3>Enable Voice Search?</h3>\n      <p>DealHarvest will access your microphone locally to capture a short search phrase. No audio is sent to our servers.</p>\n      <div class="ai-mic-actions">\n        <button type="button" class="ai-btn" id="micAllowBtn">Allow</button>\n        <button type="button" class="ai-btn secondary" id="micCancelBtn">Cancel</button>\n      </div>\n    </div>';
+    document.body.appendChild(dlg);
+    document.getElementById('micAllowBtn').addEventListener('click', ()=>{ setMicConsent(); dlg.remove(); startListening(); });
+    document.getElementById('micCancelBtn').addEventListener('click', ()=>{ dlg.remove(); speak('Voice search cancelled. You can enable it anytime.'); });
+  }
   function startListening(){
     if (!supportsSpeech) { showTextFallback(); return; }
+    if (!getMicConsent()){ requestMicConsent(); return; }
     try { recognition.abort(); } catch(_){}
     setLoading(true);
     speak('Hi! What are you looking for today?');
@@ -123,6 +139,8 @@
   }
   avatar.addEventListener('pointerenter', showConsentNotice);
   avatar.addEventListener('focus', showConsentNotice);
+  // If consent already granted, skip tooltip.
+  if (getMicConsent()) consentShown = true;
 
   // Speech handlers
   if (recognition) {

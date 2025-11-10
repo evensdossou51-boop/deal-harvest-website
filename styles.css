@@ -812,6 +812,15 @@ body {
 .ai-consent-notice.visible { opacity: 0.95; transform: translateY(0); }
 .ai-avatar.disabled { filter: grayscale(0.8) brightness(0.7); cursor: not-allowed; }
 
+/* Mic consent dialog */
+.ai-mic-dialog { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.ai-mic-dialog-inner { background: #fff; width: 100%; max-width: 420px; border-radius: 14px; padding: 16px; box-shadow: 0 16px 48px rgba(0,0,0,0.25); }
+.ai-mic-dialog-inner h3 { margin: 0 0 8px 0; font-size: 18px; }
+.ai-mic-dialog-inner p { margin: 0 0 12px 0; color: #374151; font-size: 14px; }
+.ai-mic-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.ai-btn.secondary { background: #6b7280; }
+.ai-btn.secondary:hover { background: #4b5563; }
+
 @media (max-width: 600px){
   .ai-avatar { width:60px; height:60px; bottom:16px; right:16px; }
   .ai-results { width: calc(100% - 40px); right:20px; left:20px; bottom:90px; }
