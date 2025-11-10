@@ -73,7 +73,9 @@
     link.href = buildEbaySearchUrl(query);
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    link.textContent = 'Open eBay results';
+  link.textContent = 'Open eBay results';
+  // Analytics for link click
+  link.addEventListener('click', ()=> logEvent('voice_avatar_result_click', { query_length: query.length }));
 
     container.appendChild(title);
     container.appendChild(desc);
@@ -107,6 +109,21 @@
     if (!results.contains(e.target) && !avatar.contains(e.target)) hideResults();
   });
 
+  // Consent tooltip on first hover/focus
+  let consentShown = false;
+  function showConsentNotice(){
+    if (consentShown) return;
+    consentShown = true;
+    const notice = document.createElement('div');
+    notice.className = 'ai-consent-notice';
+    notice.innerHTML = '<strong>Voice Search</strong><br>We use your microphone in your browser to capture a short search phrase. Audio is not sent to our servers.';
+    document.body.appendChild(notice);
+    requestAnimationFrame(()=> notice.classList.add('visible'));
+    setTimeout(()=>{ notice.classList.remove('visible'); setTimeout(()=> notice.remove(), 400); }, 6000);
+  }
+  avatar.addEventListener('pointerenter', showConsentNotice);
+  avatar.addEventListener('focus', showConsentNotice);
+
   // Speech handlers
   if (recognition) {
     recognition.onresult = (event)=>{
@@ -118,6 +135,7 @@
       renderLink(userQuery);
     };
     recognition.onend = ()=>{ setLoading(false); };
+    let failureCount = 0;
     recognition.onerror = (event)=>{
       console.warn('Speech recognition error:', event && event.error);
       setLoading(false);
@@ -128,6 +146,12 @@
         speak('Sorry, I did not catch that. Try again or type your search.');
       }
       logEvent('voice_avatar_error', { error: event && event.error });
+      failureCount++;
+      if (failureCount >= 3) {
+        avatar.classList.add('disabled');
+        avatar.setAttribute('aria-disabled','true');
+        avatar.title = 'Voice search temporarily disabled due to repeated errors.';
+      }
     };
   }
 
@@ -154,4 +178,11 @@
       input.focus();
     }
   }
+  // Public helper to reset disabled state
+  window.resetVoiceAvatarFailures = function(){
+    const cls = 'disabled';
+    avatar.classList.remove(cls);
+    avatar.removeAttribute('aria-disabled');
+    avatar.title = '';
+  };
 })();

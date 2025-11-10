@@ -792,6 +792,26 @@ body {
 .ai-text-input { width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; }
 .ai-actions { text-align:right; }
 
+/* Consent tooltip */
+.ai-consent-notice {
+    position: fixed;
+    bottom: 98px;
+    right: 20px;
+    background: #111827;
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.4;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .3s ease, transform .3s ease;
+    z-index: 1100;
+}
+.ai-consent-notice.visible { opacity: 0.95; transform: translateY(0); }
+.ai-avatar.disabled { filter: grayscale(0.8) brightness(0.7); cursor: not-allowed; }
+
 @media (max-width: 600px){
   .ai-avatar { width:60px; height:60px; bottom:16px; right:16px; }
   .ai-results { width: calc(100% - 40px); right:20px; left:20px; bottom:90px; }
