@@ -29,9 +29,7 @@
         });
     </script>
     
-    <!-- eBay Partner Network Smart Links -->
-    <script>window._epn = {campaign: 5339130628, smartPopover:false};</script>
-    <script src="https://epnt.ebay.com/static/epn-smart-tools.js"></script>
+    <!-- eBay Partner Network removed - Amazon only -->
 </head>
 <body>
     
@@ -239,144 +237,19 @@
             
             <!-- Store filter section with Amazon only -->
             <section class="store-filter-section">
-                <h2 class="section-title">Shop By Store</h2>
+                <h2 class="section-title">Shop Amazon Deals</h2>
                 <div class="store-options-grid" id="storeFilterGrid">
-                    <button class="store-option-btn active" data-store="all">
-                        <span class="store-icon">🛍️</span>
-                        <span class="store-name">All Stores</span>
-                    </button>
-                    <button class="store-option-btn" data-store="amazon">
+                    <button class="store-option-btn active" data-store="amazon">
                         <div class="store-logo-container">
                             <img src="https://logo.clearbit.com/amazon.com" alt="Amazon" class="store-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <span class="store-fallback" style="display:none;">📦</span>
                         </div>
                         <span class="store-name">Amazon</span>
                     </button>
-                    <button class="store-option-btn" data-store="walmart">
-                        <div class="store-logo-container">
-                            <img src="https://logo.clearbit.com/walmart.com" alt="Walmart" class="store-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <span class="store-fallback" style="display:none;">🏪</span>
-                        </div>
-                        <span class="store-name">Walmart</span>
-                    </button>
-                    <button class="store-option-btn" data-store="ebay">
-                        <div class="store-logo-container">
-                            <img src="https://logo.clearbit.com/ebay.com" alt="eBay" class="store-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <span class="store-fallback" style="display:none;">🔨</span>
-                        </div>
-                        <span class="store-name">eBay</span>
-                    </button>
                 </div>
             </section>
             
-            <!-- eBay Category Selection (hidden by default) -->
-            <section class="ebay-categories-section" id="ebayCategoriesSection" style="display: none;">
-                <div class="category-header-with-back">
-                    <button class="back-to-stores-btn" onclick="hideEbayCategorySelection()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 12H5M12 19l-7-7 7-7"/>
-                        </svg>
-                        Back to All Stores
-                    </button>
-                    <h2 class="section-title">🏪 eBay Categories</h2>
-                </div>
-                <div class="ebay-categories-grid" id="ebayCategoriesGrid">
-                    <!-- Christmas Category (Seasonal Priority) -->
-                    <button class="ebay-category-card seasonal" data-category="christmas" style="background: linear-gradient(135deg, #c41e3a 0%, #165b33 100%);">
-                        <div class="category-icon-large">🎄</div>
-                        <div class="category-info">
-                            <h3>Christmas Deals</h3>
-                            <p class="category-description">Festive gifts & decorations</p>
-                            <p class="category-count">
-                                <span class="count-number">0</span> items
-                            </p>
-                            <span class="seasonal-badge">⭐ Limited Time</span>
-                        </div>
-                        <div class="category-gradient-overlay"></div>
-                    </button>
-                    
-                    <!-- Electronics Category -->
-                    <button class="ebay-category-card" data-category="electronics" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <div class="category-icon-large">�</div>
-                        <div class="category-info">
-                            <h3>Electronics & Tech</h3>
-                            <p class="category-description">Computers, phones & gadgets</p>
-                            <p class="category-count">
-                                <span class="count-number">0</span> items
-                            </p>
-                        </div>
-                        <div class="category-gradient-overlay"></div>
-                    </button>
-                    
-                    <!-- Home & Decor Category -->
-                    <button class="ebay-category-card" data-category="home-decor" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        <div class="category-icon-large">🏠</div>
-                        <div class="category-info">
-                            <h3>Home & Decor</h3>
-                            <p class="category-description">Furniture, kitchen & garden</p>
-                            <p class="category-count">
-                                <span class="count-number">0</span> items
-                            </p>
-                        </div>
-                        <div class="category-gradient-overlay"></div>
-                    </button>
-                    
-                    <!-- Health & Fitness Category -->
-                    <button class="ebay-category-card" data-category="health-fitness" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                        <div class="category-icon-large">💪</div>
-                        <div class="category-info">
-                            <h3>Health & Fitness</h3>
-                            <p class="category-description">Wellness & workout gear</p>
-                            <p class="category-count">
-                                <span class="count-number">0</span> items
-                            </p>
-                        </div>
-                        <div class="category-gradient-overlay"></div>
-                    </button>
-                    
-                    <!-- Digital & DIY Category -->
-                    <button class="ebay-category-card" data-category="digital-diy" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                        <div class="category-icon-large">🎨</div>
-                        <div class="category-info">
-                            <h3>Digital & DIY</h3>
-                            <p class="category-description">Creative projects & crafts</p>
-                            <p class="category-count">
-                                <span class="count-number">0</span> items
-                            </p>
-                        </div>
-                        <div class="category-gradient-overlay"></div>
-                    </button>
-                    
-                    <!-- Browse All -->
-                    <button class="ebay-category-card browse-all" data-category="all" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
-                        <div class="category-icon-large">🔍</div>
-                        <div class="category-info">
-                            <h3>Browse All eBay</h3>
-                            <p class="category-description">Everything we have!</p>
-                            <p class="category-count">
-                                <span class="count-number">0</span> items
-                            </p>
-                        </div>
-                        <div class="category-gradient-overlay"></div>
-                    </button>
-                </div>
-                
-                <button class="back-to-stores-btn" id="backToStoresBtn">
-                    ← Back to Stores
-                </button>
-            </section>
-            
-            <div class="products-header">
-                <h2 class="main-title" id="mainTitle">Today's Featured Deals</h2>
-                
-                <div class="view-controls">
-                    <div class="grid-size-controls">
-                        <button class="grid-size-btn" data-columns="2" title="Large Grid">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <rect x="3" y="3" width="8" height="8" rx="1"></rect>
-                                <rect x="13" y="3" width="8" height="8" rx="1"></rect>
-                                <rect x="3" y="13" width="8" height="8" rx="1"></rect>
-                                <rect x="13" y="13" width="8" height="8" rx="1"></rect>
+            <!-- Products Section -->
                             </svg>
                         </button>
                         <button class="grid-size-btn active" data-columns="3" title="Medium Grid">

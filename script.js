@@ -237,7 +237,7 @@ let ALL_PRODUCTS = [];
 let currentFilters = {
     search: '',
     category: '',
-    store: 'all' // Show all stores (Amazon and Walmart)
+    store: 'amazon' // Amazon only
 };
 
 // 1. DOM ELEMENTS
@@ -282,9 +282,8 @@ function createProductCard(product) {
     const dealBadge = product.originalPrice && ((product.originalPrice - product.salePrice) / product.originalPrice) >= 0.3 ?
         `<span class="deal-badge">🔥 Hot Deal</span>` : '';
     
-    // Generate seller rating (for eBay)
-    const sellerRating = product.store.toLowerCase() === 'ebay' && product.sellerRating ?
-        `<div class="seller-rating">⭐ ${product.sellerRating}</div>` : '';
+    // No seller rating for Amazon-only view
+    const sellerRating = '';
 
     return `
         <div class="product-card" data-store="${product.store.toLowerCase()}" data-category="${product.category.toLowerCase()}">
@@ -338,21 +337,8 @@ function applyFiltersAndRender() {
         const matchesCategory = currentFilters.category === '' ||
             product.category.toLowerCase() === currentFilters.category.toLowerCase();
             
-        // Store Filter - Support Amazon and eBay with categories
-        let matchesStore = currentFilters.store === 'all' || 
-            product.store.toLowerCase() === currentFilters.store.toLowerCase();
-        
-        // eBay Category Filter - Additional filtering for eBay products
-        if (currentFilters.store === 'ebay' && currentEbayCategory) {
-            const productCategory = getEbayProductCategory(product);
-            if (currentEbayCategory === 'all') {
-                // For "Browse All", only show products that have a valid category
-                matchesStore = matchesStore && (productCategory !== null);
-            } else {
-                // For specific categories, only show products that match
-                matchesStore = matchesStore && (productCategory === currentEbayCategory);
-            }
-        }
+        // Store Filter - Only show Amazon products
+        let matchesStore = product.store.toLowerCase() === 'amazon';
 
         // ADVANCED FILTERS
         // Price filter
@@ -404,11 +390,10 @@ function applyFiltersAndRender() {
     console.log('📊 Filtered products:', filteredProducts.length); // Debug log
     
     // Store filtering summary
-    if (currentFilters.store !== 'all') {
-        const storeProducts = ALL_PRODUCTS.filter(p => p.store.toLowerCase() === currentFilters.store.toLowerCase());
-        console.log(`🏪 Store Filter Summary: "${currentFilters.store}" has ${storeProducts.length} total products`);
-        console.log(`🏪 After all filters: ${filteredProducts.length} products shown`);
-    }
+    // Store filtering summary for Amazon only
+    const storeProducts = ALL_PRODUCTS.filter(p => p.store.toLowerCase() === 'amazon');
+    console.log(`🏪 Store Filter Summary: "amazon" has ${storeProducts.length} total products`);
+    console.log(`🏪 After all filters: ${filteredProducts.length} products shown`);
     
     const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 
@@ -441,168 +426,7 @@ function updatePaginationControls(totalPages) {
     paginationContainer.style.display = totalPages <= 1 ? 'none' : 'flex';
 }
 
-// EBAY CATEGORY SYSTEM
-let currentEbayCategory = null;
-let isEbayCategoriesVisible = false;
-
-// eBay category mapping and detection
-function getEbayProductCategory(product) {
-    const name = product.name.toLowerCase();
-    const description = product.description.toLowerCase();
-    const category = product.category ? product.category.toLowerCase() : '';
-    
-    // Christmas/Holiday detection (seasonal priority - very specific)
-    if (name.includes('christmas') || name.includes('xmas') || name.includes('santa') || 
-        name.includes('holiday decor') || description.includes('christmas stocking') ||
-        description.includes('festive gifts') || category.includes('christmas')) {
-        return 'christmas';
-    }
-    
-    // Electronics & Tech (specific tech products)
-    if (name.includes('phone') || name.includes('computer') || name.includes('laptop') || 
-        name.includes('tablet') || name.includes('headphone') || name.includes('earbuds') ||
-        name.includes('bluetooth') || name.includes('charger') || name.includes('cable') ||
-        name.includes('smart watch') || name.includes('camera') || name.includes('tv') ||
-        category.includes('electronics') || category.includes('computers') || 
-        category.includes('cell phone')) {
-        return 'electronics';
-    }
-    
-    // Home & Decor (furniture, home improvement, decor)
-    if (name.includes('furniture') || name.includes('wall art') || name.includes('home decor') || 
-        name.includes('curtain') || name.includes('rug') || name.includes('lamp') ||
-        name.includes('bedding') || name.includes('kitchen') || name.includes('garden') ||
-        category.includes('home') || category.includes('kitchen') || category.includes('garden')) {
-        return 'home-decor';
-    }
-    
-    // Health & Fitness (wellness, exercise, medical)
-    if (name.includes('fitness') || name.includes('exercise') || name.includes('yoga') || 
-        name.includes('workout') || name.includes('vitamin') || name.includes('supplement') ||
-        name.includes('medical') || name.includes('health monitor') ||
-        category.includes('health') || category.includes('fitness') || category.includes('sports')) {
-        return 'health-fitness';
-    }
-    
-    // Digital & DIY (crafts, digital products, DIY kits)
-    if (name.includes('diy kit') || name.includes('craft') || name.includes('digital download') || 
-        name.includes('printable') || name.includes('pattern') || name.includes('template') ||
-        name.includes('sewing') || name.includes('knitting') ||
-        category.includes('crafts') || category.includes('art')) {
-        return 'digital-diy';
-    }
-    
-    // Default: check if it's a general category that doesn't fit above
-    // Return null to indicate "no specific eBay category match"
-    return null;
-}
-
-function updateEbayCategoryCounts() {
-    const ebayProducts = ALL_PRODUCTS.filter(p => p.store.toLowerCase() === 'ebay');
-    const categories = {
-        'christmas': 0,
-        'electronics': 0,
-        'home-decor': 0,
-        'health-fitness': 0,
-        'digital-diy': 0,
-        'all': 0  // Will count only categorized products for "Browse All"
-    };
-    
-    // Count products in each category
-    ebayProducts.forEach(product => {
-        const category = getEbayProductCategory(product);
-        if (category) {  // Only count products that match a category
-            categories[category]++;
-            categories['all']++;  // Also count for "Browse All"
-        }
-    });
-    
-    // Update the count displays
-    Object.keys(categories).forEach(category => {
-        const countElement = document.querySelector(`[data-category="${category}"] .count-number`);
-        if (countElement) {
-            const count = categories[category];
-            countElement.textContent = count;
-        }
-    });
-    
-    console.log('🏷️ eBay Category Counts:', categories);
-}
-
-function showEbayCategorySelection() {
-    console.log('🏪 Showing eBay category selection');
-    
-    // Hide main products and show eBay categories
-    const productsGrid = document.getElementById('productsGrid');
-    const ebayCategoriesSection = document.getElementById('ebayCategoriesSection');
-    const mainTitle = document.getElementById('mainTitle');
-    const pagination = document.querySelector('.pagination');
-    
-    if (productsGrid) productsGrid.style.display = 'none';
-    if (pagination) pagination.style.display = 'none';
-    if (mainTitle) mainTitle.style.display = 'none';
-    if (ebayCategoriesSection) ebayCategoriesSection.style.display = 'block';
-    
-    // Update category counts
-    updateEbayCategoryCounts();
-    
-    isEbayCategoriesVisible = true;
-}
-
-function hideEbayCategorySelection() {
-    console.log('🏪 Hiding eBay category selection');
-    
-    // Show main products and hide eBay categories
-    const productsGrid = document.getElementById('productsGrid');
-    const ebayCategoriesSection = document.getElementById('ebayCategoriesSection');
-    const mainTitle = document.getElementById('mainTitle');
-    const pagination = document.querySelector('.pagination');
-    
-    if (productsGrid) productsGrid.style.display = 'grid';
-    if (pagination) pagination.style.display = 'flex';
-    if (mainTitle) mainTitle.style.display = 'block';
-    if (ebayCategoriesSection) ebayCategoriesSection.style.display = 'none';
-    
-    isEbayCategoriesVisible = false;
-    currentEbayCategory = null;
-}
-
-function filterEbayByCategory(category) {
-    console.log('🏷️ Filtering eBay products by category:', category);
-    
-    // Set filters for eBay products with specific category
-    currentFilters.store = 'ebay';
-    currentEbayCategory = category;
-    currentPage = 1;
-    
-    // Update store filter UI
-    const storeFilterGrid = document.getElementById('storeFilterGrid');
-    storeFilterGrid.querySelectorAll('.store-option-btn').forEach(b => b.classList.remove('active'));
-    const ebayBtn = storeFilterGrid.querySelector('[data-store="ebay"]');
-    if (ebayBtn) ebayBtn.classList.add('active');
-    
-    // Hide categories and show filtered products
-    hideEbayCategorySelection();
-    
-    // Update main title
-    const mainTitle = document.getElementById('mainTitle');
-    if (mainTitle) {
-        if (category === 'all') {
-            mainTitle.textContent = '🔨 All eBay Products';
-        } else {
-            const categoryNames = {
-                'christmas': '🎄 Christmas Deals',
-                'electronics': '📱 Electronics & Tech',
-                'home-decor': '🏠 Home & Decor',
-                'health-fitness': '💪 Health & Fitness',
-                'digital-diy': '🎨 Digital & DIY'
-            };
-            mainTitle.textContent = categoryNames[category] || '🔨 eBay Products';
-        }
-    }
-    
-    applyFiltersAndRender();
-}
+// EBAY CATEGORY SYSTEM REMOVED - Amazon only
 
 // 5. EVENT LISTENERS
 // Add error handling for DOM elements
@@ -626,11 +450,7 @@ try {
         
         console.log('🏪 Store button clicked:', btn.dataset.store); // Debug log
         
-        // Special handling for eBay - show category selection
-        if (btn.dataset.store === 'ebay') {
-            showEbayCategorySelection();
-            return;
-        }
+        // Amazon only - no special handling needed
         
         console.log('🏪 Before filter change - Current store filter:', currentFilters.store);
         
@@ -641,8 +461,6 @@ try {
         console.log('🏪 After filter change - New store filter:', currentFilters.store);
         currentPage = 1;
         
-        // Hide eBay categories if showing
-        hideEbayCategorySelection();
         applyFiltersAndRender();
     });
 
