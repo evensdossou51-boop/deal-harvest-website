@@ -53,10 +53,23 @@
     avatar.classList.toggle('loading', !!loading);
   }
 
+  // Intent extraction: get the main product keyword from natural speech
+  function extractIntent(raw) {
+    let q = raw.trim().toLowerCase();
+    // Remove common phrases
+    q = q.replace(/^(i\'?m|i am|i want|i need|i\'?d like|can you|could you|please|show me|find me|search for|look for|looking for|show|find|search|look)\s+/i, '');
+    q = q.replace(/^(a|an|some|the)\s+/i, '');
+    q = q.replace(/\s+(please|thanks|thank you|for me)$/i, '');
+    // Remove trailing punctuation
+    q = q.replace(/[\.,!?]+$/g, '');
+    // If nothing left, fallback to raw
+    return q.length > 0 ? q : raw;
+  }
+
   function searchLocalProducts(query){
-    const q = query.toLowerCase();
+    const intent = extractIntent(query);
     const matches = (window.ALL_PRODUCTS || []).filter(p =>
-      p.name && p.name.toLowerCase().includes(q) || (p.description && p.description.toLowerCase().includes(q))
+      p.name && p.name.toLowerCase().includes(intent) || (p.description && p.description.toLowerCase().includes(intent))
     ).slice(0,6); // limit preview
     return matches;
   }
@@ -216,9 +229,10 @@
       stopListening();
       const userQuery = (event.results && event.results[0] && event.results[0][0] && event.results[0][0].transcript) || '';
       if (!userQuery) { speak('Sorry, I did not catch that.'); return; }
-  speak(`Searching DealHarvest for ${userQuery}.`);
-  logEvent('voice_avatar_query', { query_length: userQuery.length });
-  renderLocalResults(userQuery);
+  const intent = extractIntent(userQuery);
+  speak(`Searching DealHarvest for ${intent}.`);
+  logEvent('voice_avatar_query', { query_length: intent.length, raw: userQuery });
+  renderLocalResults(intent);
     };
     recognition.onend = ()=>{ setLoading(false); };
     let failureCount = 0;
