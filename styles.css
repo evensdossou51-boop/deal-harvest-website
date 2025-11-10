@@ -794,6 +794,12 @@ body {
 .ai-result-list { display:flex; flex-direction:column; gap:8px; }
 .ai-mini-product { display:block; width:100%; text-align:left; padding:8px 10px; border:1px solid #e5e7eb; background:#f9fafb; border-radius:8px; cursor:pointer; font-size:13px; }
 .ai-mini-product:hover { background:#eef2ff; border-color:#c7d2fe; }
+.mini-meta { margin-top:4px; display:flex; gap:6px; flex-wrap:wrap; }
+.chip { display:inline-block; background:#e0e7ff; color:#3730a3; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:600; }
+.chip-store { background:#d1fae5; color:#065f46; }
+.chip-category { background:#fde68a; color:#92400e; }
+.voice-highlight .product-card { animation: pulse-border 1.2s ease; }
+@keyframes pulse-border { 0%{ box-shadow:0 0 0 0 rgba(99,102,241,0.6);} 70%{ box-shadow:0 0 0 8px rgba(99,102,241,0); } 100%{ box-shadow:0 0 0 0 rgba(99,102,241,0);} }
 
 /* Consent tooltip */
 .ai-consent-notice {

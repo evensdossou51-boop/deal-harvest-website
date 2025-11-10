@@ -74,7 +74,13 @@
     if (matches.length === 0){
       list.innerHTML = '<div class="ai-empty">No matching products found.</div>';
     } else {
-      list.innerHTML = matches.map(p => `<button type="button" class="ai-mini-product" data-product-id="${p.id}">🛒 ${escapeHtml(p.name.substring(0,50))}</button>`).join('');
+      list.innerHTML = matches.map(p => {
+        const chips = [
+          `<span class=\"chip chip-store\">${escapeHtml(p.store)}</span>`,
+          p.category ? `<span class=\"chip chip-category\">${escapeHtml(p.category)}</span>` : ''
+        ].join(' ');
+        return `<button type=\"button\" class=\"ai-mini-product\" data-product-id=\"${p.id}\">🛒 ${escapeHtml(p.name.substring(0,50))}<div class=\"mini-meta\">${chips}</div></button>`;
+      }).join('');
     }
     const actions = document.createElement('div');
     actions.className = 'ai-actions';
@@ -90,6 +96,7 @@
         if (typeof window.applyFiltersAndRender === 'function'){ window.applyFiltersAndRender(); }
         speak(`Filtering products for ${query}`);
         logEvent('voice_avatar_result_apply', { query_length: query.length });
+        highlightFirstResult(matches);
       } catch(err){ console.warn('Filter apply error', err); }
     });
     const clearBtn = document.createElement('button');
@@ -117,8 +124,34 @@
         const pid = btn.getAttribute('data-product-id');
         const product = (window.ALL_PRODUCTS||[]).find(p=>String(p.id)===pid);
         if (product){ speak(product.name); }
+        // Auto-apply when user taps a product
+        const searchInput = document.querySelector('#searchForm .search-input');
+        if (searchInput){ searchInput.value = query; }
+        if (window.currentFilters){ window.currentFilters.search = query; }
+        if (typeof window.applyFiltersAndRender === 'function'){ window.applyFiltersAndRender(); }
+        highlightFirstResult([product]);
       });
     });
+    // Auto-apply immediately (user can still Clear)
+    const searchInput = document.querySelector('#searchForm .search-input');
+    if (searchInput){ searchInput.value = query; }
+    if (window.currentFilters){ window.currentFilters.search = query; }
+    if (typeof window.applyFiltersAndRender === 'function'){ window.applyFiltersAndRender(); }
+    highlightFirstResult(matches);
+  }
+
+  function highlightFirstResult(list){
+    if (!list || list.length === 0) return;
+    const first = list[0];
+    // Wait a tick for DOM render
+    setTimeout(()=>{
+      const card = document.querySelector(`.product-card .product-name`);
+      // naive scroll to top; could refine to actual matched card
+      if (card){ window.scrollTo({ top: card.getBoundingClientRect().top + window.scrollY - 120, behavior: 'smooth' }); }
+      // temporary highlight effect
+      const grid = document.getElementById('productsGrid');
+      if (grid){ grid.classList.add('voice-highlight'); setTimeout(()=> grid.classList.remove('voice-highlight'), 1500); }
+    }, 150);
   }
 
   // Microphone consent persistence
