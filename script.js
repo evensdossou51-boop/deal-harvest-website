@@ -82,9 +82,9 @@ async function checkForUpdates() {
             
             // Handle both old format (array) and new format (object with metadata)
             if (Array.isArray(data)) {
-                newProducts = data; // Include all stores
+                newProducts = data.filter(p => p.store && p.store.toLowerCase() === 'amazon'); // Amazon only
             } else if (data.products && Array.isArray(data.products)) {
-                newProducts = data.products; // Include all stores
+                newProducts = data.products.filter(p => p.store && p.store.toLowerCase() === 'amazon'); // Amazon only
                 
                 // Log update details for debugging
                 console.log('🔍 Update check - Source:', data.updateSource);
@@ -194,9 +194,9 @@ function manualRefresh() {
         
         // Handle both old format (array) and new format (object with metadata)
         if (Array.isArray(data)) {
-            products = data;
+            products = data.filter(p => p.store && p.store.toLowerCase() === 'amazon'); // Amazon only
         } else if (data.products && Array.isArray(data.products)) {
-            products = data.products;
+            products = data.products.filter(p => p.store && p.store.toLowerCase() === 'amazon'); // Amazon only
             console.log('🔄 Manual refresh - Source:', data.updateSource);
             console.log('🔄 Manual refresh - Time:', data.lastUpdated);
         } else {
@@ -553,9 +553,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Handle both old format (array) and new format (object with metadata)
         if (Array.isArray(data)) {
-            // Old format - direct array
-            ALL_PRODUCTS = data; // Include all stores
-            console.log('📊 Products loaded (old format):', data.length);
+            // Old format - direct array - Filter to Amazon only
+            ALL_PRODUCTS = data.filter(p => p.store && p.store.toLowerCase() === 'amazon');
+            console.log('📊 Amazon products loaded (old format):', ALL_PRODUCTS.length);
             console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
             
             // Cache products with Data Manager
@@ -566,11 +566,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         } else if (data.products && Array.isArray(data.products)) {
-            // New format - object with metadata
-            ALL_PRODUCTS = data.products; // Include all stores
-            console.log('📊 Products loaded from:', data.updateSource || 'unknown source');
+            // New format - object with metadata - Filter to Amazon only
+            ALL_PRODUCTS = data.products.filter(p => p.store && p.store.toLowerCase() === 'amazon');
+            console.log('📊 Amazon products loaded from:', data.updateSource || 'unknown source');
             console.log('📅 Last updated:', data.lastUpdated || 'unknown time');
-            console.log('🔢 Product count:', data.productCount || data.products.length);
+            console.log('🔢 Amazon product count:', ALL_PRODUCTS.length);
             console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
             
             // Cache products with Data Manager
