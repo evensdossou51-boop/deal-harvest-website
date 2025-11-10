@@ -53,37 +53,72 @@
     avatar.classList.toggle('loading', !!loading);
   }
 
-  function buildEbaySearchUrl(query){
-    // Rely on EPN Smart Links to auto-monetize standard eBay links already included in index.html
-    return 'https://www.ebay.com/sch/i.html?_nkw=' + encodeURIComponent(query);
+  function searchLocalProducts(query){
+    const q = query.toLowerCase();
+    const matches = (window.ALL_PRODUCTS || []).filter(p =>
+      p.name && p.name.toLowerCase().includes(q) || (p.description && p.description.toLowerCase().includes(q))
+    ).slice(0,6); // limit preview
+    return matches;
   }
 
-  function renderLink(query){
+  function renderLocalResults(query){
     const safeQ = escapeHtml(query);
+    const matches = searchLocalProducts(query);
     const container = document.createElement('div');
     container.className = 'ai-result-card';
     const title = document.createElement('div');
     title.className = 'ai-result-title';
-    title.textContent = `Search results for "${safeQ}"`;
-    const desc = document.createElement('div');
-    desc.className = 'ai-result-desc';
-    desc.textContent = 'Open in a new tab to view results on eBay';
-    const link = document.createElement('a');
-    link.className = 'ai-result-link';
-    link.href = buildEbaySearchUrl(query);
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-  link.textContent = 'Open eBay results';
-  // Analytics for link click
-  link.addEventListener('click', ()=> logEvent('voice_avatar_result_click', { query_length: query.length }));
-
+    title.textContent = `Results on DealHarvest for "${safeQ}"`;
+    const list = document.createElement('div');
+    list.className = 'ai-result-list';
+    if (matches.length === 0){
+      list.innerHTML = '<div class="ai-empty">No matching products found.</div>';
+    } else {
+      list.innerHTML = matches.map(p => `<button type="button" class="ai-mini-product" data-product-id="${p.id}">🛒 ${escapeHtml(p.name.substring(0,50))}</button>`).join('');
+    }
+    const actions = document.createElement('div');
+    actions.className = 'ai-actions';
+    const applyBtn = document.createElement('button');
+    applyBtn.type = 'button';
+    applyBtn.className = 'ai-btn';
+    applyBtn.textContent = 'Filter Page';
+    applyBtn.addEventListener('click', ()=> {
+      try {
+        const searchInput = document.querySelector('#searchForm .search-input');
+        if (searchInput){ searchInput.value = query; }
+        if (window.currentFilters){ window.currentFilters.search = query; }
+        if (typeof window.applyFiltersAndRender === 'function'){ window.applyFiltersAndRender(); }
+        speak(`Filtering products for ${query}`);
+        logEvent('voice_avatar_result_apply', { query_length: query.length });
+      } catch(err){ console.warn('Filter apply error', err); }
+    });
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'ai-btn secondary';
+    clearBtn.textContent = 'Clear';
+    clearBtn.addEventListener('click', ()=> {
+      const searchInput = document.querySelector('#searchForm .search-input');
+      if (searchInput){ searchInput.value=''; }
+      if (window.currentFilters){ window.currentFilters.search=''; }
+      if (typeof window.applyFiltersAndRender === 'function'){ window.applyFiltersAndRender(); }
+      hideResults();
+    });
+    actions.appendChild(applyBtn);
+    actions.appendChild(clearBtn);
     container.appendChild(title);
-    container.appendChild(desc);
-    container.appendChild(link);
-
-    results.innerHTML = '';
+    container.appendChild(list);
+    container.appendChild(actions);
+    results.innerHTML='';
     results.appendChild(container);
-    results.hidden = false;
+    results.hidden=false;
+    // product button deep link
+    results.querySelectorAll('.ai-mini-product').forEach(btn => {
+      btn.addEventListener('click', ()=> {
+        const pid = btn.getAttribute('data-product-id');
+        const product = (window.ALL_PRODUCTS||[]).find(p=>String(p.id)===pid);
+        if (product){ speak(product.name); }
+      });
+    });
   }
 
   // Microphone consent persistence
@@ -148,9 +183,9 @@
       stopListening();
       const userQuery = (event.results && event.results[0] && event.results[0][0] && event.results[0][0].transcript) || '';
       if (!userQuery) { speak('Sorry, I did not catch that.'); return; }
-      speak(`Let me find the best deals for ${userQuery} on eBay.`);
-      logEvent('voice_avatar_query', { query_length: userQuery.length });
-      renderLink(userQuery);
+  speak(`Searching DealHarvest for ${userQuery}.`);
+  logEvent('voice_avatar_query', { query_length: userQuery.length });
+  renderLocalResults(userQuery);
     };
     recognition.onend = ()=>{ setLoading(false); };
     let failureCount = 0;

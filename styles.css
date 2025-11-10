@@ -791,6 +791,9 @@ body {
 .ai-result-link:hover, .ai-btn:hover { background:#4338ca; }
 .ai-text-input { width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; }
 .ai-actions { text-align:right; }
+.ai-result-list { display:flex; flex-direction:column; gap:8px; }
+.ai-mini-product { display:block; width:100%; text-align:left; padding:8px 10px; border:1px solid #e5e7eb; background:#f9fafb; border-radius:8px; cursor:pointer; font-size:13px; }
+.ai-mini-product:hover { background:#eef2ff; border-color:#c7d2fe; }
 
 /* Consent tooltip */
 .ai-consent-notice {
