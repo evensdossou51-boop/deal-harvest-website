@@ -207,5 +207,104 @@
     "category": "Shoes, Handbags, Wallets, Sunglasses",
     "image": "KidsGirks SNeakers.png",
     "affiliateLink": "https://amzn.to/4otH3Vo"
+  },
+  {
+    "id": 21,
+    "name": "Apple Watch SE",
+    "description": "Apple Watch SE (2nd Gen) [GPS 44mm] Smartwatch with Silver Aluminum Case with Denim Sport Band M/L. Fitness and Sleep Trackers, Crash Detection, Heart Rate Monitor, Retina Display",
+    "originalPrice": 279,
+    "salePrice": 189.99,
+    "store": "amazon",
+    "category": "Wearable Technology",
+    "image": "apple watch.png",
+    "affiliateLink": "https://amzn.to/4qI3w2y"
+  },
+  {
+    "id": 22,
+    "name": "WONDER GARDEN Christmas Wreath with Lights",
+    "description": "WONDER GARDEN Christmas Wreath with Lights, 20 Inch Pre-Lit Christmas Front Door Wreaths with Plastic Balls, Battery Operated Holiday Decoration for Indoor Outdoor Wall Porch Fireplace Decor Xmas",
+    "originalPrice": 29.99,
+    "salePrice": 29.99,
+    "store": "amazon",
+    "category": "Home",
+    "image": "WONDER GARDEN Christmas Wreath.png",
+    "affiliateLink": "https://amzn.to/4nQW4j8"
+  },
+  {
+    "id": 23,
+    "name": "Pre-lit Christmas Wreaths",
+    "description": "Pre-lit Christmas Wreaths for Front Door 24 Inch- Outdoor Xmas Wreath with Lights, Lighted Valentine's Day Wreath with Red Roses,Golden Ball Ornament and Red Bow for Holiday Door Decorations",
+    "originalPrice": 49.99,
+    "salePrice": 32.99,
+    "store": "amazon",
+    "category": "Home",
+    "image": "Pre-lit Christmas Wreaths.png",
+    "affiliateLink": "https://amzn.to/3LwOhth"
+  },
+  {
+    "id": 24,
+    "name": "Beieverluck Fairy Lights",
+    "description": "Beieverluck 10 Pack 33FT 100 LED Fairy Lights Battery Operated Fairy Lights with Remote and Timer Waterproof String Lights Outdoor Indoor for Bedroom Wedding Christmas Decorations, Warm White",
+    "originalPrice": 31.99,
+    "salePrice": 31.99,
+    "store": "amazon",
+    "category": "Home Improvement",
+    "image": "Beieverluck.png",
+    "affiliateLink": "https://amzn.to/3WPCxo7"
+  },
+  {
+    "id": 25,
+    "name": "National Tree Company Mini Christmas Tree",
+    "description": "National Tree Company 4 ft Unlit North Valley Spruce Mini Artificial Christmas Tree, 307 Tips, Includes Stand, Green",
+    "originalPrice": 62.49,
+    "salePrice": 44.49,
+    "store": "amazon",
+    "category": "Home",
+    "image": "National Tree Company.png",
+    "affiliateLink": "https://amzn.to/3JruFGt"
+  },
+  {
+    "id": 26,
+    "name": "Real Touch Christmas Norfolk Pine Garland",
+    "description": "Real Touch Christmas Norfolk Pine Garland - 5ft Artificial Christmas Garland Fake Pine Needles Faux Green Garland for Fireplace,Table,Window,Stairs,Mante,Holiday Indoor Outdoor Xmas Decor(1PCS)",
+    "originalPrice": 36.99,
+    "salePrice": 36.99,
+    "store": "amazon",
+    "category": "Home",
+    "image": "Real Touch Christmas Norfolk Pine Garland.png",
+    "affiliateLink": "https://amzn.to/4nQW4j8"
+  },
+  {
+    "id": 27,
+    "name": "Hourleey Lighted Gift Boxes",
+    "description": "Hourleey Set of 3 Christmas Lighted Gift Boxes, Pre-lit 60 LED Light Up Present Boxes Ornament Outdoor Warm White Tinsel Boxes Decoration for Indoor Christmas Home Yard Lawn Decor",
+    "originalPrice": 39.99,
+    "salePrice": 29.99,
+    "store": "amazon",
+    "category": "Patio, Lawn & Garden",
+    "image": "Hourleey.png",
+    "affiliateLink": "https://amzn.to/3JN3K7R"
+  },
+  {
+    "id": 28,
+    "name": "Sawysine Christmas Coffee Mugs",
+    "description": "Sawysine Christmas Coffee Mugs Set of 6, 12 oz Ceramic Mug Gift Holiday Hot Cocoa for Family Mom Woman Friend Farmhouse (Classic Style)",
+    "originalPrice": 43.99,
+    "salePrice": 36.99,
+    "store": "amazon",
+    "category": "Kitchen & Dining",
+    "image": "Sawysine Christmas Coffee Mugs.png",
+    "affiliateLink": "https://amzn.to/4oqot0o"
+  },
+  {
+    "id": 29,
+    "name": "Ceramic Coffee Mug",
+    "description": "4pcs Cute Ceramic Coffee Mug, 9.4OZ Handmade Porcelain Tea Mugs, Ceramic Cup Sets for Matcha, Dishwasher & Microwave Safe, Christmas Gift(Christmas Tree)",
+    "originalPrice": 32.99,
+    "salePrice": 32.99,
+    "store": "amazon",
+    "category": "Kitchen & Dining",
+    "image": "Ceramic Coffee Mug.png",
+    "affiliateLink": "https://amzn.to/43oxKxH"
   }
 ]
