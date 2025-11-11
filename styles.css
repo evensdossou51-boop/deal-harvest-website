@@ -223,7 +223,7 @@ body.no-glow * { box-shadow: none !important; text-shadow: none !important; }
 }
 
 .products-grid {
-    display: grid;
+    display: none; /* Hidden by default, shown only when viewing category products */
     grid-template-columns: repeat(5, 1fr); 
     gap: 12px;
     margin-bottom: 40px;
@@ -342,7 +342,7 @@ body.no-glow * { box-shadow: none !important; text-shadow: none !important; }
 
 /* --- PAGINATION --- */
 .pagination {
-    display: flex;
+    display: none; /* Hidden by default, shown only when needed */
     justify-content: center;
     align-items: center;
     gap: 20px;

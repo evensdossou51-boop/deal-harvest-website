@@ -586,6 +586,8 @@ function displayCategoryCards() {
 // Show products for a specific category
 function showCategoryProducts(categoryName) {
     const categorySectionsContainer = document.getElementById('categorySections');
+    const productsGridContainer = document.getElementById('productsGrid');
+    const paginationContainer = document.querySelector('.pagination');
     
     if (!categorizedProducts[categoryName]) return;
     
@@ -616,6 +618,11 @@ function showCategoryProducts(categoryName) {
     `;
     
     categorySectionsContainer.innerHTML = categoryHTML;
+    categorySectionsContainer.style.display = 'block';
+    
+    // Hide products grid and pagination
+    productsGridContainer.style.display = 'none';
+    paginationContainer.style.display = 'none';
     
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
