@@ -20,30 +20,31 @@ try {
 
 // Centralized function to fetch products.json with cache-busting
 async function fetchProductsJson() {
-    // Check if we have cached data first
-    if (DataManager?.products) {
-        const cached = DataManager.products.getCachedProducts();
-        if (cached && cached.length > 0) {
-            console.log('📦 Using cached products');
-            return { ok: true, json: async () => cached };
-        }
-    }
-
+    // Always fetch fresh data - no cache
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substring(7);
     const cacheBustUrl = `products.json?v=${timestamp}&r=${randomId}&cb=${Math.floor(Math.random() * 10000)}`;
     
-    if (CacheManager) {
-        return await CacheManager.fetchWithCacheBust('products.json');
-    } else {
-        return await fetch(cacheBustUrl, {
-            cache: 'no-cache',
+    console.log('🔄 Fetching fresh products.json with cache-busting:', cacheBustUrl);
+    
+    try {
+        const response = await fetch(cacheBustUrl, {
+            cache: 'no-store',
             headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
                 'Pragma': 'no-cache',
                 'Expires': '0'
             }
         });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return response;
+    } catch (error) {
+        console.error('❌ Error fetching products:', error);
+        throw error;
     }
 }
 
