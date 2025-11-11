@@ -562,6 +562,13 @@ body.no-glow * { box-shadow: none !important; text-shadow: none !important; }
     transition: transform .25s ease, color .25s ease, stroke .25s ease;
 }
 
+/* Filled icon look: fill and stroke with currentColor for solid appearance */
+.category-icon-svg svg * {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 2.2;
+}
+
 .category-card:hover .category-icon-svg svg {
     transform: scale(1.10);
     color: #232F3E; /* invert to header dark */
