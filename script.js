@@ -533,12 +533,14 @@ let categorizedProducts = {};
 
 // Display category cards (circular with images)
 function displayCategoryCards() {
-    const categorySectionsContainer = document.getElementById('categorySections');
+    const categoryGrid = document.getElementById('categoryGrid');
+    const categoryView = document.getElementById('categoryView');
+    const productView = document.getElementById('productView');
     const productsGridContainer = document.getElementById('productsGrid');
     const paginationContainer = document.querySelector('.pagination');
-    
-    if (!categorySectionsContainer) return;
-    
+
+    if (!categoryGrid) return;
+
     // Group products by category
     categorizedProducts = {};
     ALL_PRODUCTS.forEach(product => {
@@ -548,83 +550,69 @@ function displayCategoryCards() {
         }
         categorizedProducts[category].push(product);
     });
-    
-    // Sort categories by product count (descending)
+
     const sortedCategories = Object.keys(categorizedProducts).sort((a, b) => 
         categorizedProducts[b].length - categorizedProducts[a].length
     );
-    
-    // Build category cards HTML (clean card design with icons)
-    const cardsHTML = `
-        <div class="categories-grid">
-            ${sortedCategories.map(category => {
-                const products = categorizedProducts[category];
-                const imgSrc = CATEGORY_IMAGES[category] || '';
-                const safeCategory = category.replace(/'/g, "\\'");
-                return `
-                    <div class="category-card" onclick="showCategoryProducts('${safeCategory}')">
-                        <div class="category-circle">
-                            ${imgSrc ? `<img class="category-image" src="${imgSrc}" alt="${category}">` : ''}
-                        </div>
-                        <div class="category-label">${category}</div>
-                        <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
-                    </div>
-                `;
-            }).join('')}
-        </div>
-    `;
-    
-    // Display category cards
-    categorySectionsContainer.innerHTML = cardsHTML;
-    categorySectionsContainer.style.display = 'block';
-    
-    // Hide regular products grid and pagination
-    productsGridContainer.style.display = 'none';
-    paginationContainer.style.display = 'none';
+
+    categoryGrid.innerHTML = sortedCategories.map(category => {
+        const products = categorizedProducts[category];
+        const imgSrc = CATEGORY_IMAGES[category] || '';
+        const safeCategory = category.replace(/'/g, "\\'");
+        return `
+            <div class="category-card" data-category="${safeCategory}">
+                <div class="category-circle">
+                    ${imgSrc ? `<img class="category-image" src="${imgSrc}" alt="${category}">` : ''}
+                </div>
+                <div class="category-label">${category}</div>
+                <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
+            </div>
+        `;
+    }).join('');
+
+    // Attach click listeners
+    categoryGrid.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const cat = card.dataset.category;
+            showCategoryProducts(cat);
+        });
+    });
+
+    // Show category view, hide product view and legacy grids
+    categoryView.style.display = 'block';
+    productView.style.display = 'none';
+    if (productsGridContainer) productsGridContainer.style.display = 'none';
+    if (paginationContainer) paginationContainer.style.display = 'none';
 }
 
 // Show products for a specific category
 function showCategoryProducts(categoryName) {
-    const categorySectionsContainer = document.getElementById('categorySections');
+    const productView = document.getElementById('productView');
+    const categoryView = document.getElementById('categoryView');
+    const productCategoryTitle = document.getElementById('productCategoryTitle');
+    const productViewGrid = document.getElementById('productViewGrid');
     const productsGridContainer = document.getElementById('productsGrid');
     const paginationContainer = document.querySelector('.pagination');
-    
+
     if (!categorizedProducts[categoryName]) return;
-    
+
     const products = categorizedProducts[categoryName];
-    const emoji = CATEGORY_EMOJIS[categoryName] || '🛍️';
-    
-    const categoryHTML = `
-        <div class="category-section active">
-            <div class="category-header">
-                <div class="category-header-left">
-                    <div class="category-icon-large">${emoji}</div>
-                    <div class="category-info">
-                        <h2>${categoryName}</h2>
-                        <p class="category-count">${products.length} Deal${products.length !== 1 ? 's' : ''}</p>
-                    </div>
-                </div>
-                <button class="back-to-categories-btn" onclick="displayCategoryCards()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 19l-7-7 7-7"/>
-                    </svg>
-                    Back to Categories
-                </button>
-            </div>
-            <div class="category-products-grid">
-                ${products.map(createProductCard).join('')}
-            </div>
-        </div>
-    `;
-    
-    categorySectionsContainer.innerHTML = categoryHTML;
-    categorySectionsContainer.style.display = 'block';
-    
-    // Hide products grid and pagination
-    productsGridContainer.style.display = 'none';
-    paginationContainer.style.display = 'none';
-    
-    // Scroll to top
+    productCategoryTitle.textContent = categoryName + ' Deals';
+    productViewGrid.innerHTML = products.map(createProductCard).join('');
+
+    categoryView.style.display = 'none';
+    productView.style.display = 'block';
+    if (productsGridContainer) productsGridContainer.style.display = 'none';
+    if (paginationContainer) paginationContainer.style.display = 'none';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showCategoryView() {
+    const productView = document.getElementById('productView');
+    const categoryView = document.getElementById('categoryView');
+    productView.style.display = 'none';
+    categoryView.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -795,8 +783,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentProductsHash = 'fallback_' + Date.now().toString(36);
         }
         
-        // Display category cards instead of all products
-        displayCategoryCards();
+    // Display category cards in new view structure
+    displayCategoryCards();
         updateStatistics();
         
         // Start periodic update checking
@@ -826,6 +814,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const video = document.getElementById('heroVideo');
     if (video) {
         video.play().catch(() => {}); 
+    }
+    // Back button listener (new view structure)
+    const backBtn = document.getElementById('backToCategories');
+    if (backBtn) {
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showCategoryView();
+        });
     }
 });
 
