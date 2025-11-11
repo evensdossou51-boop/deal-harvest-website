@@ -554,7 +554,7 @@ function displayCategoryCards() {
         categorizedProducts[b].length - categorizedProducts[a].length
     );
     
-    // Build category cards HTML (vivid circle + centered image + label)
+    // Build category cards HTML (clean card design with icons)
     const cardsHTML = `
         <div class="categories-grid">
             ${sortedCategories.map(category => {
@@ -564,7 +564,7 @@ function displayCategoryCards() {
                 return `
                     <div class="category-card" onclick="showCategoryProducts('${safeCategory}')">
                         <div class="category-circle">
-                            ${imgSrc ? `<img class=\"category-image\" src=\"${imgSrc}\" alt=\"${category}\">` : ''}
+                            ${imgSrc ? `<img class="category-image" src="${imgSrc}" alt="${category}">` : ''}
                         </div>
                         <div class="category-label">${category}</div>
                         <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
