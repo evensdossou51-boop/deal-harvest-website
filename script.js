@@ -531,6 +531,92 @@ try {
     console.error('Error setting up event listeners:', error);
 }
 
+// CATEGORY EMOJI MAPPING
+const CATEGORY_EMOJIS = {
+    'Wearable Technology': '⌚',
+    'Home': '🏠',
+    'Home Improvement': '🔨',
+    'Kitchen & Dining': '🍽️',
+    'Beauty & Grooming': '💄',
+    'Cell Phones & Accessories': '📱',
+    'Patio, Lawn & Garden': '🌿',
+    'Books & Textbooks': '📚',
+    'Toys & Games': '🎮',
+    'Kids': '👶',
+    'Pet Food & Supplies': '🐾',
+    'Amazon Gift Cards': '🎁',
+    'Health & Household': '💊',
+    'Shoes, Handbags, Wallets, Sunglasses': '👟',
+    'Luggage': '🧳',
+    'Musical Instruments': '🎵',
+    'General': '🛍️'
+};
+
+// Display products grouped by categories
+function displayProductsByCategories() {
+    const categorySectionsContainer = document.getElementById('categorySections');
+    const productsGridContainer = document.getElementById('productsGrid');
+    const paginationContainer = document.querySelector('.pagination');
+    
+    if (!categorySectionsContainer) return;
+    
+    // Group products by category
+    const categorizedProducts = {};
+    ALL_PRODUCTS.forEach(product => {
+        const category = product.category || 'General';
+        if (!categorizedProducts[category]) {
+            categorizedProducts[category] = [];
+        }
+        categorizedProducts[category].push(product);
+    });
+    
+    // Sort categories by product count (descending)
+    const sortedCategories = Object.keys(categorizedProducts).sort((a, b) => 
+        categorizedProducts[b].length - categorizedProducts[a].length
+    );
+    
+    // Build category sections HTML
+    const sectionsHTML = sortedCategories.map(category => {
+        const products = categorizedProducts[category];
+        const emoji = CATEGORY_EMOJIS[category] || '🛍️';
+        
+        return `
+            <div class="category-section">
+                <div class="category-header">
+                    <div class="category-icon-large">${emoji}</div>
+                    <div class="category-info">
+                        <h2>${category}</h2>
+                        <p class="category-count">${products.length} Deal${products.length !== 1 ? 's' : ''}</p>
+                    </div>
+                </div>
+                <div class="category-products-grid">
+                    ${products.map(createProductCard).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Display category sections
+    categorySectionsContainer.innerHTML = sectionsHTML;
+    categorySectionsContainer.style.display = 'block';
+    
+    // Hide regular products grid and pagination
+    productsGridContainer.style.display = 'none';
+    paginationContainer.style.display = 'none';
+}
+
+// Switch back to regular view
+function displayProductsRegular() {
+    const categorySectionsContainer = document.getElementById('categorySections');
+    const productsGridContainer = document.getElementById('productsGrid');
+    
+    if (categorySectionsContainer) {
+        categorySectionsContainer.style.display = 'none';
+    }
+    productsGridContainer.style.display = 'grid';
+    
+    applyFiltersAndRender();
+}
 
 // 6. INITIAL RENDER - FETCHES DATA
 document.addEventListener('DOMContentLoaded', async () => {
@@ -613,7 +699,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentProductsHash = 'fallback_' + Date.now().toString(36);
         }
         
-        applyFiltersAndRender();
+        // Display products by category instead of regular grid
+        displayProductsByCategories();
         updateStatistics();
         
         // Start periodic update checking
