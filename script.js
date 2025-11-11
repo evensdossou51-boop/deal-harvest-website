@@ -482,51 +482,6 @@ try {
         }
     });
 
-    // eBay Category Selection Event Listeners
-    const ebayCategoriesGrid = document.getElementById('ebayCategoriesGrid');
-    const backToStoresBtn = document.getElementById('backToStoresBtn');
-    
-    if (ebayCategoriesGrid) {
-        ebayCategoriesGrid.addEventListener('click', (e) => {
-            const categoryCard = e.target.closest('.ebay-category-card');
-            if (!categoryCard) return;
-            
-            const category = categoryCard.dataset.category;
-            console.log('🏷️ eBay category selected:', category);
-            filterEbayByCategory(category);
-        });
-    }
-    
-    if (backToStoresBtn) {
-        backToStoresBtn.addEventListener('click', () => {
-            console.log('🔙 Back to stores clicked');
-            
-            // Reset filters and show all stores
-            currentFilters.store = 'all';
-            currentFilters.category = '';
-            currentFilters.search = '';
-            currentPage = 1;
-            currentEbayCategory = null;
-            
-            // Update UI
-            const storeFilterGrid = document.getElementById('storeFilterGrid');
-            storeFilterGrid.querySelectorAll('.store-option-btn').forEach(b => b.classList.remove('active'));
-            const allStoresBtn = storeFilterGrid.querySelector('[data-store="all"]');
-            if (allStoresBtn) allStoresBtn.classList.add('active');
-            
-            // Reset search and category filters
-            if (searchInput) searchInput.value = '';
-            if (categoryFilter) categoryFilter.value = '';
-            
-            // Reset main title
-            const mainTitle = document.getElementById('mainTitle');
-            if (mainTitle) mainTitle.textContent = 'Today\'s Featured Deals';
-            
-            hideEbayCategorySelection();
-            applyFiltersAndRender();
-        });
-    }
-
 } catch (error) {
     console.error('Error setting up event listeners:', error);
 }
