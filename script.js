@@ -1114,38 +1114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Grid view controls
-    document.querySelectorAll('.grid-size-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Remove active class from all buttons
-            document.querySelectorAll('.grid-size-btn').forEach(b => b.classList.remove('active'));
-            // Add active to clicked button
-            this.classList.add('active');
-            
-            const columns = this.dataset.columns;
-            const productsGrid = document.getElementById('productsGrid');
-            
-            // Remove all grid classes
-            productsGrid.className = 'products-grid';
-            
-            // Add appropriate class
-            if (columns === 'list') {
-                productsGrid.classList.add('list-view');
-            } else {
-                productsGrid.classList.add(`grid-${columns}-col`);
-            }
-            
-            // Save preference
-            localStorage.setItem('gridViewPreference', columns);
-        });
-    });
-    
-    // Load saved grid preference
-    const savedGridView = localStorage.getItem('gridViewPreference') || '3';
-    const gridBtn = document.querySelector(`.grid-size-btn[data-columns="${savedGridView}"]`);
-    if (gridBtn) {
-        gridBtn.click();
-    }
+    // Grid view controls removed
 });
 
 /**
