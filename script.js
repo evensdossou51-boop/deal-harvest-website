@@ -618,6 +618,71 @@ function displayProductsRegular() {
     applyFiltersAndRender();
 }
 
+// DUPLICATE DETECTION AND REMOVAL
+function removeDuplicateProducts(products) {
+    const seen = {
+        ids: new Set(),
+        names: new Set(),
+        links: new Set()
+    };
+    
+    const duplicates = [];
+    const unique = [];
+    
+    products.forEach((product, index) => {
+        let isDuplicate = false;
+        const duplicateReasons = [];
+        
+        // Check for duplicate ID
+        if (product.id && seen.ids.has(product.id)) {
+            isDuplicate = true;
+            duplicateReasons.push(`ID: ${product.id}`);
+        }
+        
+        // Check for duplicate name (case-insensitive)
+        const normalizedName = product.name?.toLowerCase().trim();
+        if (normalizedName && seen.names.has(normalizedName)) {
+            isDuplicate = true;
+            duplicateReasons.push(`Name: "${product.name}"`);
+        }
+        
+        // Check for duplicate affiliate link
+        const normalizedLink = product.affiliateLink?.toLowerCase().trim();
+        if (normalizedLink && seen.links.has(normalizedLink)) {
+            isDuplicate = true;
+            duplicateReasons.push(`Link: ${product.affiliateLink}`);
+        }
+        
+        if (isDuplicate) {
+            duplicates.push({
+                index: index,
+                product: product,
+                reasons: duplicateReasons
+            });
+            console.warn(`⚠️ Duplicate product found at index ${index}: ${duplicateReasons.join(', ')}`);
+        } else {
+            // Mark as seen
+            if (product.id) seen.ids.add(product.id);
+            if (normalizedName) seen.names.add(normalizedName);
+            if (normalizedLink) seen.links.add(normalizedLink);
+            
+            unique.push(product);
+        }
+    });
+    
+    if (duplicates.length > 0) {
+        console.error(`❌ Found ${duplicates.length} duplicate product(s):`);
+        duplicates.forEach(dup => {
+            console.error(`   - Index ${dup.index}: "${dup.product.name}" (${dup.reasons.join(', ')})`);
+        });
+        console.log(`✅ Kept ${unique.length} unique products`);
+    } else {
+        console.log(`✅ No duplicates found. All ${unique.length} products are unique.`);
+    }
+    
+    return unique;
+}
+
 // 6. INITIAL RENDER - FETCHES DATA
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -642,6 +707,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (Array.isArray(data)) {
             // Old format - direct array - Filter to Amazon only
             ALL_PRODUCTS = data.filter(p => p.store && p.store.toLowerCase() === 'amazon');
+            
+            // Remove duplicates
+            ALL_PRODUCTS = removeDuplicateProducts(ALL_PRODUCTS);
+            
             console.log('📊 Amazon products loaded (old format):', ALL_PRODUCTS.length);
             console.log('🏪 Stores found:', [...new Set(ALL_PRODUCTS.map(p => p.store))]);
             
@@ -655,6 +724,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (data.products && Array.isArray(data.products)) {
             // New format - object with metadata - Filter to Amazon only
             ALL_PRODUCTS = data.products.filter(p => p.store && p.store.toLowerCase() === 'amazon');
+            
+            // Remove duplicates
+            ALL_PRODUCTS = removeDuplicateProducts(ALL_PRODUCTS);
+            
             console.log('📊 Amazon products loaded from:', data.updateSource || 'unknown source');
             console.log('📅 Last updated:', data.lastUpdated || 'unknown time');
             console.log('🔢 Amazon product count:', ALL_PRODUCTS.length);
