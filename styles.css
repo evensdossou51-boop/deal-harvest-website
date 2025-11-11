@@ -513,6 +513,19 @@ body.no-glow * { box-shadow: none !important; text-shadow: none !important; }
     line-height: 1;
 }
 
+.category-icon-svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FF9900; /* Amazon accent */
+}
+
+.category-icon-svg svg {
+    width: 48px;
+    height: 48px;
+    stroke: currentColor;
+}
+
 .category-label {
     font-size: 1rem;
     font-weight: 700;

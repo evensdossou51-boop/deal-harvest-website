@@ -531,6 +531,123 @@ const CATEGORY_IMAGES = {
 // Store categorized products globally
 let categorizedProducts = {};
 
+// Optional SVG icon set for categories (preferred over emoji when available)
+const CATEGORY_SVG_ICONS = {
+    'Cell Phones & Accessories': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="7" y="2" width="10" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+        </svg>
+    `,
+    'Books & Textbooks': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M4 4v15.5"></path>
+            <path d="M20 22V6a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 6.5"></path>
+        </svg>
+    `,
+    'Kitchen & Dining': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 3v8a2 2 0 0 0 2 2h1V3"></path>
+            <path d="M10 3v10"></path>
+            <path d="M14 3v6a2 2 0 0 0 2 2h2"></path>
+            <path d="M16 13v8"></path>
+        </svg>
+    `,
+    'Beauty & Grooming': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 3h4l1 4H9l1-4z"></path>
+            <rect x="9" y="7" width="6" height="13" rx="2"></rect>
+        </svg>
+    `,
+    'Home': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7"></path>
+            <path d="M9 22V12h6v10"></path>
+            <path d="M21 22H3"></path>
+        </svg>
+    `,
+    'Home Improvement': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14.7 6.3a1 1 0 0 1 1.4 0l1.6 1.6a1 1 0 0 1 0 1.4l-9.9 9.9H6v-1.8l8.7-8.7z"></path>
+            <path d="M13 7l4 4"></path>
+        </svg>
+    `,
+    'Patio, Lawn & Garden': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22V12"></path>
+            <path d="M7 17c2-2 5-2 5-7 0 5 3 5 5 7"></path>
+            <path d="M5 10c2 0 4-2 4-4 0 2 2 4 4 4"></path>
+        </svg>
+    `,
+    'Wearable Technology': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="7" y="5" width="10" height="14" rx="3"></rect>
+            <path d="M9 5V3m6 2V3m0 18v-2M9 21v-2"></path>
+        </svg>
+    `,
+    'Toys & Games': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="8" width="18" height="8" rx="2"></rect>
+            <circle cx="8" cy="12" r="1"></circle>
+            <circle cx="16" cy="12" r="1"></circle>
+        </svg>
+    `,
+    'Kids': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="7" r="3"></circle>
+            <path d="M5 21a7 7 0 0 1 14 0"></path>
+        </svg>
+    `,
+    'Pet Food & Supplies': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 21c-4-1-7-3-7-6a5 5 0 0 1 10 0c0 3-3 5-7 6z"></path>
+            <circle cx="8" cy="8" r="1.5"></circle>
+            <circle cx="16" cy="8" r="1.5"></circle>
+        </svg>
+    `,
+    'Amazon Gift Cards': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="M12 5v14"></path>
+            <path d="M7 9h10"></path>
+        </svg>
+    `,
+    'Health & Household': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 21s-6-4.35-6-9a6 6 0 0 1 12 0c0 4.65-6 9-6 9z"></path>
+            <path d="M10 11h4M12 9v4"></path>
+        </svg>
+    `,
+    'Shoes, Handbags, Wallets, Sunglasses': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 7h12l2 6H4l2-6z"></path>
+            <path d="M9 7a3 3 0 0 1 6 0"></path>
+        </svg>
+    `,
+    'Luggage': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="7" y="6" width="10" height="14" rx="2"></rect>
+            <path d="M9 6V4h6v2"></path>
+            <path d="M9 10v6M15 10v6"></path>
+        </svg>
+    `,
+    'Musical Instruments': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 19a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+            <path d="M21 3l-9 9"></path>
+            <path d="M15 3h6v6"></path>
+        </svg>
+    `,
+    'General': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 6h15l-1.5 9H7.5L6 6z"></path>
+            <circle cx="9" cy="20" r="1"></circle>
+            <circle cx="18" cy="20" r="1"></circle>
+        </svg>
+    `
+};
+
 // Display category cards (circular with images)
 function displayCategoryCards() {
     const categoryGrid = document.getElementById('categoryGrid');
@@ -564,12 +681,13 @@ function displayCategoryCards() {
     } else {
         categoryGrid.innerHTML = sortedCategories.map(category => {
             const products = categorizedProducts[category];
+            const svg = CATEGORY_SVG_ICONS[category];
             const icon = CATEGORY_EMOJIS[category] || '🛍️';
             const safeCategory = category.replace(/'/g, "\\'");
             return `
                 <div class="category-card" data-category="${safeCategory}" title="${category}">
                     <div class="category-circle" aria-hidden="true">
-                        <div class="category-icon">${icon}</div>
+                        ${svg ? `<div class="category-icon-svg">${svg}</div>` : `<div class=\"category-icon\">${icon}</div>`}
                     </div>
                     <div class="category-label">${category}</div>
                     <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
