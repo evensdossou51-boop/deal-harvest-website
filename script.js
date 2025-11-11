@@ -536,6 +536,7 @@ function displayCategoryCards() {
     const categoryGrid = document.getElementById('categoryGrid');
     const categoryView = document.getElementById('categoryView');
     const productView = document.getElementById('productView');
+    const categoryLoading = document.getElementById('categoryLoading');
     const productsGridContainer = document.getElementById('productsGrid');
     const paginationContainer = document.querySelector('.pagination');
 
@@ -551,24 +552,31 @@ function displayCategoryCards() {
         categorizedProducts[category].push(product);
     });
 
-    const sortedCategories = Object.keys(categorizedProducts).sort((a, b) => 
+    const sortedCategories = Object.keys(categorizedProducts).sort((a, b) =>
         categorizedProducts[b].length - categorizedProducts[a].length
     );
 
-    categoryGrid.innerHTML = sortedCategories.map(category => {
-        const products = categorizedProducts[category];
-        const imgSrc = CATEGORY_IMAGES[category] || '';
-        const safeCategory = category.replace(/'/g, "\\'");
-        return `
-            <div class="category-card" data-category="${safeCategory}">
-                <div class="category-circle">
-                    ${imgSrc ? `<img class="category-image" src="${imgSrc}" alt="${category}">` : ''}
+    if (sortedCategories.length === 0) {
+        categoryGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #6b7280;">
+                No categories found yet. Please try again later.
+            </div>`;
+    } else {
+        categoryGrid.innerHTML = sortedCategories.map(category => {
+            const products = categorizedProducts[category];
+            const imgSrc = CATEGORY_IMAGES[category] || '';
+            const safeCategory = category.replace(/'/g, "\\'");
+            return `
+                <div class="category-card" data-category="${safeCategory}">
+                    <div class="category-circle">
+                        ${imgSrc ? `<img class="category-image" src="${imgSrc}" alt="${category}">` : ''}
+                    </div>
+                    <div class="category-label">${category}</div>
+                    <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
                 </div>
-                <div class="category-label">${category}</div>
-                <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
+    }
 
     // Attach click listeners
     categoryGrid.querySelectorAll('.category-card').forEach(card => {
@@ -581,6 +589,7 @@ function displayCategoryCards() {
     // Show category view, hide product view and legacy grids
     categoryView.style.display = 'block';
     productView.style.display = 'none';
+    if (categoryLoading) categoryLoading.style.display = 'none';
     if (productsGridContainer) productsGridContainer.style.display = 'none';
     if (paginationContainer) paginationContainer.style.display = 'none';
 }
@@ -696,6 +705,11 @@ function removeDuplicateProducts(products) {
 
 // 6. INITIAL RENDER - FETCHES DATA
 document.addEventListener('DOMContentLoaded', async () => {
+    // Show loading state for categories immediately
+    const categoryLoading = document.getElementById('categoryLoading');
+    const categoryView = document.getElementById('categoryView');
+    if (categoryView) categoryView.style.display = 'block';
+    if (categoryLoading) categoryLoading.style.display = 'block';
     try {
         console.log('🔄 Loading products...');
         
@@ -792,20 +806,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         setInterval(checkForUpdates, interval);
         
     } catch (error) {
-        const errorDetails = `
-            <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
-                <h3>Data Load Error</h3>
-                <p>Could not load product data. Please check your <code>products.json</code> file.</p>
-                <details style="margin-top: 20px; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
-                    <summary style="cursor: pointer; font-weight: bold;">Technical Details</summary>
-                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px; overflow-x: auto;">${error.message}</pre>
-                    <p style="margin-top: 10px;"><strong>Time:</strong> ${new Date().toLocaleString()}</p>
-                    <p><strong>URL:</strong> ${window.location.href}</p>
-                    <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #007cba; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Try Again</button>
-                </details>
-            </div>
-        `;
-        productsGrid.innerHTML = errorDetails;
+        // Render error inside category view so user sees it
+        const categoryGrid = document.getElementById('categoryGrid');
+        if (categoryGrid) {
+            categoryGrid.innerHTML = `
+                <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                    <h3>Data Load Error</h3>
+                    <p>Could not load product data. Please check your <code>products.json</code> file.</p>
+                    <details style="margin-top: 20px; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+                        <summary style="cursor: pointer; font-weight: bold;">Technical Details</summary>
+                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px; overflow-x: auto;">${error.message}</pre>
+                        <p style="margin-top: 10px;"><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                        <p><strong>URL:</strong> ${window.location.href}</p>
+                        <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #007cba; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Try Again</button>
+                    </details>
+                </div>`;
+        }
+        const categoryLoading = document.getElementById('categoryLoading');
+        if (categoryLoading) categoryLoading.style.display = 'none';
         console.error("Error fetching product data:", error);
         console.error("Stack trace:", error.stack);
     }
