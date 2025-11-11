@@ -554,9 +554,22 @@ body.no-glow * { box-shadow: none !important; text-shadow: none !important; }
 }
 
 .category-icon-svg svg {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .25s ease, color .25s ease, stroke .25s ease;
+}
+
+.category-card:hover .category-icon-svg svg {
+    transform: scale(1.10);
+    color: #232F3E; /* invert to header dark */
+    stroke: #232F3E;
+}
+
+@media (max-width: 768px) {
+    .category-icon-svg svg { width: 44px; height: 44px; }
 }
 
 .category-label {
