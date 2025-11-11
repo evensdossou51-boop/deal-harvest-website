@@ -564,12 +564,12 @@ function displayCategoryCards() {
     } else {
         categoryGrid.innerHTML = sortedCategories.map(category => {
             const products = categorizedProducts[category];
-            const imgSrc = CATEGORY_IMAGES[category] || '';
+            const icon = CATEGORY_EMOJIS[category] || '🛍️';
             const safeCategory = category.replace(/'/g, "\\'");
             return `
-                <div class="category-card" data-category="${safeCategory}">
-                    <div class="category-circle">
-                        ${imgSrc ? `<img class="category-image" src="${imgSrc}" alt="${category}">` : ''}
+                <div class="category-card" data-category="${safeCategory}" title="${category}">
+                    <div class="category-circle" aria-hidden="true">
+                        <div class="category-icon">${icon}</div>
                     </div>
                     <div class="category-label">${category}</div>
                     <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
