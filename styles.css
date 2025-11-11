@@ -43,6 +43,39 @@ body.no-glow * { box-shadow: none !important; text-shadow: none !important; }
     min-height: 70px;
 }
 
+/* Welcome banner */
+.welcome-banner {
+    background: #FFF7ED; /* light orange tint */
+    border-bottom: 1px solid #FDE68A;
+}
+
+.welcome-banner-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 20px;
+}
+
+.welcome-text {
+    color: #92400E;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.welcome-dismiss {
+    background: transparent;
+    border: none;
+    color: #92400E;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.welcome-dismiss:hover { background: #FDE68A; }
+
 .header-flex {
     display: flex;
     align-items: center;

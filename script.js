@@ -244,6 +244,11 @@ let currentFilters = {
 // 1. DOM ELEMENTS
 const productsGrid = document.getElementById('productsGrid');
 const searchInput = document.getElementById('searchForm').querySelector('.search-input');
+// New view elements for unified search results
+const categoryViewEl = document.getElementById('categoryView');
+const productViewEl = document.getElementById('productView');
+const productViewGridEl = document.getElementById('productViewGrid');
+const productCategoryTitleEl = document.getElementById('productCategoryTitle');
 const categoryFilter = document.getElementById('categoryFilter');
 const storeFilterGrid = document.getElementById('storeFilterGrid');
 const prevPageBtn = document.getElementById('prevPageBtn');
@@ -433,16 +438,26 @@ function updatePaginationControls(totalPages) {
 // Add error handling for DOM elements
 try {
     searchInput.addEventListener('input', () => {
-        currentFilters.search = searchInput.value;
+        currentFilters.search = searchInput.value.trim();
         currentPage = 1;
-        applyFiltersAndRender();
+        if (currentFilters.search.length > 0) {
+            // Show search results in productView
+            renderSearchResults(currentFilters.search);
+        } else {
+            // Clear search -> show categories again
+            showCategoryView();
+        }
     });
     document.getElementById('searchForm').addEventListener('submit', (e) => e.preventDefault()); // Stop page reload
 
     categoryFilter.addEventListener('change', () => {
         currentFilters.category = categoryFilter.value;
         currentPage = 1;
-        applyFiltersAndRender();
+        if (currentFilters.search && currentFilters.search.length > 0) {
+            renderSearchResults(currentFilters.search);
+        } else {
+            applyFiltersAndRender();
+        }
     });
 
     storeFilterGrid.addEventListener('click', (e) => {
@@ -852,6 +867,52 @@ function showCategoryView() {
     const categoryView = document.getElementById('categoryView');
     productView.style.display = 'none';
     categoryView.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/**
+ * Render unified search results into product view
+ */
+function renderSearchResults(term) {
+    // Filter across all products using existing applyFilters logic baseline
+    const searchVal = term.toLowerCase();
+    const filtered = ALL_PRODUCTS.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchVal) ||
+            (product.description && product.description.toLowerCase().includes(searchVal));
+        const matchesCategory = currentFilters.category === '' || (product.category && product.category.toLowerCase() === currentFilters.category.toLowerCase());
+        const matchesStore = product.store && product.store.toLowerCase() === 'amazon';
+        // Keep advanced filters consistent
+        const matchesPrice = product.salePrice >= advancedFiltersState.minPrice && product.salePrice <= advancedFiltersState.maxPrice;
+        const matchesCondition = advancedFiltersState.condition.length === 0 || (product.condition && advancedFiltersState.condition.some(cond => product.condition.toLowerCase().includes(cond.toLowerCase())));
+        let matchesShipping = advancedFiltersState.shipping.length === 0;
+        if (!matchesShipping && product.shipping) {
+            if (advancedFiltersState.shipping.includes('free') && (product.shipping.toLowerCase().includes('free') || product.shipping === '$0.00')) matchesShipping = true;
+            if (advancedFiltersState.shipping.includes('fast') && product.shipping.toLowerCase().includes('fast')) matchesShipping = true;
+        }
+        let matchesDeal = advancedFiltersState.deal.length === 0;
+        if (!matchesDeal && product.originalPrice) {
+            const discount = ((product.originalPrice - product.salePrice) / product.originalPrice);
+            if (advancedFiltersState.deal.includes('hot') && discount >= 0.3) matchesDeal = true;
+            if (advancedFiltersState.deal.includes('discount') && discount >= 0.3) matchesDeal = true;
+        }
+        return matchesSearch && matchesCategory && matchesStore && matchesPrice && matchesCondition && matchesShipping && matchesDeal;
+    });
+
+    // Update product view
+    if (productCategoryTitleEl) {
+        productCategoryTitleEl.textContent = `Search results for "${term}" (${filtered.length})`;
+    }
+    if (productViewGridEl) {
+        productViewGridEl.innerHTML = filtered.length > 0
+            ? filtered.map(createProductCard).join('')
+            : `<div style="grid-column: 1 / -1; text-align:center; padding:40px; color:#6b7280;">No results found.</div>`;
+    }
+    if (categoryViewEl && productViewEl) {
+        categoryViewEl.style.display = 'none';
+        productViewEl.style.display = 'block';
+    }
+    const paginationContainer = document.querySelector('.pagination');
+    if (paginationContainer) paginationContainer.style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
