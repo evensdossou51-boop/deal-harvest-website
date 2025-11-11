@@ -997,6 +997,7 @@ function resetAdvancedFilters() {
 
 function updateActiveFiltersDisplay() {
     const container = document.getElementById('activeFilters');
+    if (!container) return; // Advanced filters removed
     const list = container.querySelector('.active-filters-list');
     list.innerHTML = '';
     
