@@ -110,20 +110,7 @@ body {
 .filter-select option { color: var(--text-dark); }
 
 
-/* --- HERO VIDEO SECTION --- */
-.hero-video-section {
-    padding: 24px 0;
-    background: var(--background-white);
-}
-
-.hero-video {
-    width: 100%;
-    height: 350px;
-    object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    display: block;
-}
+/* --- HERO VIDEO SECTION REMOVED --- */
 
 /* --- STORE FILTER OPTIONS --- */
 .store-filter-section {
@@ -222,7 +209,7 @@ body {
 }
 
 /* --- MAIN BODY & GRID --- */
-.main { padding: 40px 0 20px; }
+.main { padding: 20px 0 20px; }
 
 .main-title {
     font-size: 2rem;
@@ -1295,6 +1282,7 @@ body {
     background: linear-gradient(to right, var(--primary-purple), var(--secondary-purple));
     outline: none;
     -webkit-appearance: none;
+    appearance: none;
     margin: 10px 0;
 }
 
@@ -1648,16 +1636,7 @@ body {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
-/* Parallax effect for hero video */
-.hero-video-section {
-    position: relative;
-    overflow: hidden;
-}
-
-.hero-video {
-    will-change: transform;
-    transition: transform 0.1s ease-out;
-}
+/* Parallax effect for hero video removed */
 
 /* Smooth transitions for filters */
 .filter-select,
