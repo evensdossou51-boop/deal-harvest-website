@@ -1155,10 +1155,11 @@ document.addEventListener('DOMContentLoaded', () => {
  * UPDATE STATISTICS
  */
 function updateStatistics() {
+    // Stats section removed from DOM; guard exists for future reinstatement
     const totalProductsEl = document.getElementById('totalProductsStat');
-    if (totalProductsEl && ALL_PRODUCTS) {
-        // Animate the number
-        animateNumber(totalProductsEl, 0, ALL_PRODUCTS.length, 1000);
+    if (!totalProductsEl) return; // silently exit if element not present
+    if (ALL_PRODUCTS) {
+        animateNumber(totalProductsEl, 0, ALL_PRODUCTS.length, 800);
     }
 }
 
