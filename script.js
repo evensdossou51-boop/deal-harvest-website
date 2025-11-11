@@ -599,24 +599,20 @@ function displayCategoryCards() {
         categorizedProducts[b].length - categorizedProducts[a].length
     );
     
-    // Build category cards HTML
+    // Build category cards HTML (vivid circle + centered image + label)
     const cardsHTML = `
         <div class="categories-grid">
             ${sortedCategories.map(category => {
                 const products = categorizedProducts[category];
-                const emoji = CATEGORY_EMOJIS[category] || '🛍️';
-                const bgImage = CATEGORY_IMAGES[category] || '';
-                const bgStyle = bgImage ? `background-image: url('${bgImage}');` : '';
-                
+                const imgSrc = CATEGORY_IMAGES[category] || '';
+                const safeCategory = category.replace(/'/g, "\\'");
                 return `
-                    <div class="category-card" onclick="showCategoryProducts('${category.replace(/'/g, "\\'")}')">
-                        <div class="category-card-inner" style="${bgStyle}">
-                            <div class="category-card-content">
-                                <div class="category-emoji">${emoji}</div>
-                                <div class="category-name">${category}</div>
-                                <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
-                            </div>
+                    <div class="category-card" onclick="showCategoryProducts('${safeCategory}')">
+                        <div class="category-circle">
+                            ${imgSrc ? `<img class=\"category-image\" src=\"${imgSrc}\" alt=\"${category}\">` : ''}
                         </div>
+                        <div class="category-label">${category}</div>
+                        <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
                     </div>
                 `;
             }).join('')}
