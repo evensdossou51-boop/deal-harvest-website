@@ -808,13 +808,12 @@ function displayCategoryCards() {
     } else {
         categoryGrid.innerHTML = sortedCategories.map(category => {
             const products = categorizedProducts[category];
-            const svg = CATEGORY_SVG_ICONS[category];
-            const icon = CATEGORY_EMOJIS[category] || '🛍️';
+            const imgSrc = CATEGORY_IMAGES[category] || 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop';
             const safeCategory = category.replace(/'/g, "\\'");
             return `
                 <div class="category-card" data-category="${safeCategory}" title="${category}">
                     <div class="category-circle" aria-hidden="true">
-                        ${svg ? `<div class="category-icon-svg">${svg}</div>` : `<div class=\"category-icon\">${icon}</div>`}
+                        <img class="category-image" src="${imgSrc}" alt="${category}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop'">
                     </div>
                     <div class="category-label">${category}</div>
                     <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
