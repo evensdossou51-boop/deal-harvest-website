@@ -552,8 +552,32 @@ const CATEGORY_EMOJIS = {
     'General': '🛍️'
 };
 
-// Display products grouped by categories
-function displayProductsByCategories() {
+// Category to image mapping
+const CATEGORY_IMAGES = {
+    'Wearable Technology': 'images/apple watch.png',
+    'Home': 'images/WONDER GARDEN Christmas Wreath.png',
+    'Home Improvement': 'images/Beieverluck.png',
+    'Kitchen & Dining': 'images/espresso.png',
+    'Beauty & Grooming': 'images/medicube.png',
+    'Cell Phones & Accessories': 'images/charger block.png',
+    'Patio, Lawn & Garden': 'images/Hourleey.png',
+    'Books & Textbooks': 'images/bible.png',
+    'Toys & Games': 'images/batman toy.png',
+    'Kids': 'images/todler toy.png',
+    'Pet Food & Supplies': 'images/dogblanket.png',
+    'Amazon Gift Cards': 'images/amazongiftcard.png',
+    'Health & Household': 'images/cascade.png',
+    'Shoes, Handbags, Wallets, Sunglasses': 'images/KidsGirks SNeakers.png',
+    'Luggage': 'images/Luggage 3 Piece.png',
+    'Musical Instruments': 'images/wirelessiphone mic.png',
+    'General': 'images/pajamas.png'
+};
+
+// Store categorized products globally
+let categorizedProducts = {};
+
+// Display category cards (circular with images)
+function displayCategoryCards() {
     const categorySectionsContainer = document.getElementById('categorySections');
     const productsGridContainer = document.getElementById('productsGrid');
     const paginationContainer = document.querySelector('.pagination');
@@ -561,7 +585,7 @@ function displayProductsByCategories() {
     if (!categorySectionsContainer) return;
     
     // Group products by category
-    const categorizedProducts = {};
+    categorizedProducts = {};
     ALL_PRODUCTS.forEach(product => {
         const category = product.category || 'General';
         if (!categorizedProducts[category]) {
@@ -575,34 +599,75 @@ function displayProductsByCategories() {
         categorizedProducts[b].length - categorizedProducts[a].length
     );
     
-    // Build category sections HTML
-    const sectionsHTML = sortedCategories.map(category => {
-        const products = categorizedProducts[category];
-        const emoji = CATEGORY_EMOJIS[category] || '🛍️';
-        
-        return `
-            <div class="category-section">
-                <div class="category-header">
-                    <div class="category-icon-large">${emoji}</div>
-                    <div class="category-info">
-                        <h2>${category}</h2>
-                        <p class="category-count">${products.length} Deal${products.length !== 1 ? 's' : ''}</p>
+    // Build category cards HTML
+    const cardsHTML = `
+        <div class="categories-grid">
+            ${sortedCategories.map(category => {
+                const products = categorizedProducts[category];
+                const emoji = CATEGORY_EMOJIS[category] || '🛍️';
+                const bgImage = CATEGORY_IMAGES[category] || '';
+                const bgStyle = bgImage ? `background-image: url('${bgImage}');` : '';
+                
+                return `
+                    <div class="category-card" onclick="showCategoryProducts('${category.replace(/'/g, "\\'")}')">
+                        <div class="category-card-inner" style="${bgStyle}">
+                            <div class="category-card-content">
+                                <div class="category-emoji">${emoji}</div>
+                                <div class="category-name">${category}</div>
+                                <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="category-products-grid">
-                    ${products.map(createProductCard).join('')}
-                </div>
-            </div>
-        `;
-    }).join('');
+                `;
+            }).join('')}
+        </div>
+    `;
     
-    // Display category sections
-    categorySectionsContainer.innerHTML = sectionsHTML;
+    // Display category cards
+    categorySectionsContainer.innerHTML = cardsHTML;
     categorySectionsContainer.style.display = 'block';
     
     // Hide regular products grid and pagination
     productsGridContainer.style.display = 'none';
     paginationContainer.style.display = 'none';
+}
+
+// Show products for a specific category
+function showCategoryProducts(categoryName) {
+    const categorySectionsContainer = document.getElementById('categorySections');
+    
+    if (!categorizedProducts[categoryName]) return;
+    
+    const products = categorizedProducts[categoryName];
+    const emoji = CATEGORY_EMOJIS[categoryName] || '🛍️';
+    
+    const categoryHTML = `
+        <div class="category-section active">
+            <div class="category-header">
+                <div class="category-header-left">
+                    <div class="category-icon-large">${emoji}</div>
+                    <div class="category-info">
+                        <h2>${categoryName}</h2>
+                        <p class="category-count">${products.length} Deal${products.length !== 1 ? 's' : ''}</p>
+                    </div>
+                </div>
+                <button class="back-to-categories-btn" onclick="displayCategoryCards()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back to Categories
+                </button>
+            </div>
+            <div class="category-products-grid">
+                ${products.map(createProductCard).join('')}
+            </div>
+        </div>
+    `;
+    
+    categorySectionsContainer.innerHTML = categoryHTML;
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Switch back to regular view
@@ -772,8 +837,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentProductsHash = 'fallback_' + Date.now().toString(36);
         }
         
-        // Display products by category instead of regular grid
-        displayProductsByCategories();
+        // Display category cards instead of all products
+        displayCategoryCards();
         updateStatistics();
         
         // Start periodic update checking
