@@ -646,6 +646,118 @@ const CATEGORY_SVG_ICONS = {
             <circle cx="18" cy="20" r="1"></circle>
         </svg>
     `
+    , 'Electronics': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect>
+            <path d="M12 17v2"></path>
+            <circle cx="12" cy="12" r="2"></circle>
+        </svg>
+    `
+    , 'Computers': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+            <path d="M8 20h8"></path>
+            <path d="M12 16v4"></path>
+        </svg>
+    `
+    , 'Sports & Outdoors': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="9" r="4"></circle>
+            <path d="M9 13a6 6 0 0 0 6 6"></path>
+            <path d="M17 7a6 6 0 0 0-6 6"></path>
+        </svg>
+    `
+    , 'Video Games': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="8" width="20" height="8" rx="2"></rect>
+            <path d="M6 12h2"></path>
+            <path d="M5 10h4"></path>
+            <circle cx="15" cy="12" r="1"></circle>
+            <circle cx="18" cy="12" r="1"></circle>
+        </svg>
+    `
+    , 'Automotive': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 13h18l-1.5-5h-15z"></path>
+            <circle cx="7.5" cy="16" r="1.5"></circle>
+            <circle cx="16.5" cy="16" r="1.5"></circle>
+        </svg>
+    `
+    , 'Arts, Crafts & Sewing': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3l7 7-7 7-7-7 7-7z"></path>
+            <path d="M12 3v14"></path>
+        </svg>
+    `
+    , 'Beauty & Personal Care': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 3h6l1 4H8l1-4z"></path>
+            <rect x="8" y="7" width="8" height="13" rx="2"></rect>
+        </svg>
+    `
+    , 'Home & Kitchen': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 11l9-8 9 8"></path>
+            <path d="M5 10v10h14V10"></path>
+            <path d="M10 14h4v6h-4z"></path>
+        </svg>
+    `
+    , 'Garden & Outdoor': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22V12"></path>
+            <path d="M7 17c2-2 5-2 5-7 0 5 3 5 5 7"></path>
+            <path d="M5 10c2 0 4-2 4-4 0 2 2 4 4 4"></path>
+        </svg>
+    `
+    , 'Grocery & Gourmet Food': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 7h14l-1.5 9H6.5L5 7z"></path>
+            <circle cx="9" cy="19" r="1"></circle>
+            <circle cx="15" cy="19" r="1"></circle>
+        </svg>
+    `
+    , 'Office Products': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="6" y="3" width="12" height="18" rx="2"></rect>
+            <path d="M10 7h4"></path>
+            <path d="M10 11h4"></path>
+            <path d="M10 15h4"></path>
+        </svg>
+    `
+    , 'Industrial & Scientific': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8.4 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.4a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H10a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09c0 .7.4 1.33 1 1.51a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V10c.7.2 1.33.9 1.51 1.6V12a2 2 0 1 1-4 0v-.09c0-.7-.4-1.33-1-1.51-.53-.18-1.14-.04-1.54.36-.4.4-.54 1.01-.36 1.54.18.6.81 1 1.51 1.09z"></path>
+        </svg>
+    `
+    , 'Movies & TV': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+            <path d="M12 18v3"></path>
+            <path d="M8 21h8"></path>
+        </svg>
+    `
+    , 'Pet Supplies': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M3 12h3"></path>
+            <path d="M18 12h3"></path>
+            <path d="M12 3v3"></path>
+            <path d="M12 18v3"></path>
+        </svg>
+    `
+    , 'Amazon Fashion': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 3h12l2 7H4l2-7z"></path>
+            <path d="M5 10l2 11h10l2-11"></path>
+        </svg>
+    `
+    , 'Baby': `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M5 21a7 7 0 0 1 14 0"></path>
+        </svg>
+    `
 };
 
 // Display category cards (circular with images)
