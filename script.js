@@ -258,24 +258,28 @@ const SEASON_RULES = {
 
 // Map many granular categories to "major" seasonal buckets
 const MAJOR_CATEGORY_MAP = [
-    { name: 'Holiday Decor', match: (c, n) => /home|patio|garden/i.test(c) || /wreath|garland|stocking|ornament|christmas|tree|lights/i.test(n) },
+    { name: 'Holiday Decor', match: (c, n) => /patio|garden/i.test(c) || /wreath|garland|stocking|ornament|christmas tree|lights|bow|ribbon|candle|reindeer|bells/i.test(n) },
+    { name: 'Home', match: (c, n) => c.toLowerCase() === 'home' || /mirror|curtain|planter|artificial tree|decor|statue/i.test(n) },
     { name: 'Tech & Wearables', match: (c, n) => /cell phones|electronics|computers|wearable/i.test(c) || /watch|charger|headphone|earbud|laptop|tablet|smart/i.test(n) },
-    { name: 'Kitchen & Hosting', match: (c, n) => /kitchen|dining|home & kitchen/i.test(c) || /mug|espresso|coffee|cook|bake|garlic|knife|pan/i.test(n) },
-    { name: 'Toys & Family', match: (c, n) => /toys|kids|books/i.test(c) || /lego|toy|game|play|puzzle|family/i.test(n) },
+    { name: 'Kitchen & Hosting', match: (c, n) => /kitchen|dining|home & kitchen/i.test(c) || /mug|espresso|coffee|cook|bake|dutch oven|casserole|pot|dish/i.test(n) },
+    { name: 'Toys & Family', match: (c, n) => /toys|kids|books/i.test(c) || /lego|toy|game|play|puzzle|family|train set/i.test(n) },
     { name: 'Beauty & Self-Care', match: (c, n) => /beauty|personal care/i.test(c) || /shampoo|toner|skincare|hair|makeup|perfume/i.test(n) },
     { name: 'Home Essentials', match: (c, n) => /health|household|home improvement/i.test(c) || /detergent|pods|toilet|plunger|blanket|storage/i.test(n) },
     { name: 'Fashion & Travel', match: (c, n) => /shoes|fashion|luggage/i.test(c) || /sneaker|boots|handbag|wallet|luggage|suitcase|pajama/i.test(n) },
+    { name: 'Arts & Crafts', match: (c, n) => /arts|crafts|sewing/i.test(c) || /paint|beads|craft/i.test(n) },
     { name: 'Gifts & Gadgets', match: (c, n) => /amazon gift cards|general|musical instruments/i.test(c) || /gift|gadget|mic|gift card/i.test(n) }
 ];
 
 const MAJOR_CATEGORY_IMAGES = {
     'Holiday Decor': 'images/Pre-lit Christmas Wreaths.png',
+    'Home': 'images/Arched Full Length Mirror with Solid Wood Frame.png',
     'Tech & Wearables': 'images/apple watch.png',
     'Kitchen & Hosting': 'images/Sawysine Christmas Coffee Mugs.png',
     'Toys & Family': 'images/batman toy.png',
     'Beauty & Self-Care': 'images/medicube.png',
     'Home Essentials': 'images/cascade.png',
     'Fashion & Travel': 'images/Luggage 3 Piece.png',
+    'Arts & Crafts': 'images/Acrylic Paint.png',
     'Gifts & Gadgets': 'images/amazongiftcard.png'
 };
 
