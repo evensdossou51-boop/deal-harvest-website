@@ -241,6 +241,44 @@ let currentFilters = {
     store: 'amazon' // Amazon only
 };
 
+// Seasonal focus state (default to Black Friday during November)
+let currentSeason = 'blackfriday'; // 'blackfriday' | 'christmas'
+
+// Season keyword heuristics and thresholds
+const SEASON_RULES = {
+    blackfriday: {
+        keywords: ['black friday', 'doorbuster', 'bf deal', 'mega sale', 'flash deal', 'limited time', '% off', 'hot deal'],
+        minDiscountPct: 20
+    },
+    christmas: {
+        keywords: ['christmas', 'xmas', 'holiday', 'wreath', 'garland', 'stocking', 'tree', 'lights', 'ornament', 'santa', 'cocoa', 'mug', 'pajama', 'gift'],
+        minDiscountPct: 0
+    }
+};
+
+// Map many granular categories to "major" seasonal buckets
+const MAJOR_CATEGORY_MAP = [
+    { name: 'Holiday Decor', match: (c, n) => /home|patio|garden/i.test(c) || /wreath|garland|stocking|ornament|christmas|tree|lights/i.test(n) },
+    { name: 'Tech & Wearables', match: (c, n) => /cell phones|electronics|computers|wearable/i.test(c) || /watch|charger|headphone|earbud|laptop|tablet|smart/i.test(n) },
+    { name: 'Kitchen & Hosting', match: (c, n) => /kitchen|dining|home & kitchen/i.test(c) || /mug|espresso|coffee|cook|bake|garlic|knife|pan/i.test(n) },
+    { name: 'Toys & Family', match: (c, n) => /toys|kids|books/i.test(c) || /lego|toy|game|play|puzzle|family/i.test(n) },
+    { name: 'Beauty & Self-Care', match: (c, n) => /beauty|personal care/i.test(c) || /shampoo|toner|skincare|hair|makeup|perfume/i.test(n) },
+    { name: 'Home Essentials', match: (c, n) => /health|household|home improvement/i.test(c) || /detergent|pods|toilet|plunger|blanket|storage/i.test(n) },
+    { name: 'Fashion & Travel', match: (c, n) => /shoes|fashion|luggage/i.test(c) || /sneaker|boots|handbag|wallet|luggage|suitcase|pajama/i.test(n) },
+    { name: 'Gifts & Gadgets', match: (c, n) => /amazon gift cards|general|musical instruments/i.test(c) || /gift|gadget|mic|gift card/i.test(n) }
+];
+
+const MAJOR_CATEGORY_IMAGES = {
+    'Holiday Decor': 'images/Pre-lit Christmas Wreaths.png',
+    'Tech & Wearables': 'images/apple watch.png',
+    'Kitchen & Hosting': 'images/Sawysine Christmas Coffee Mugs.png',
+    'Toys & Family': 'images/batman toy.png',
+    'Beauty & Self-Care': 'images/medicube.png',
+    'Home Essentials': 'images/cascade.png',
+    'Fashion & Travel': 'images/Luggage 3 Piece.png',
+    'Gifts & Gadgets': 'images/amazongiftcard.png'
+};
+
 // 1. DOM ELEMENTS
 const productsGrid = document.getElementById('productsGrid');
 const searchInput = document.getElementById('searchForm').querySelector('.search-input');
@@ -786,34 +824,35 @@ function displayCategoryCards() {
 
     if (!categoryGrid) return;
 
-    // Group products by category
+    // Build seasonal product set first
+    const seasonalProducts = filterProductsForSeason(ALL_PRODUCTS, currentSeason);
+
+    // Group into major seasonal categories
     categorizedProducts = {};
-    ALL_PRODUCTS.forEach(product => {
-        const category = product.category || 'General';
-        if (!categorizedProducts[category]) {
-            categorizedProducts[category] = [];
-        }
-        categorizedProducts[category].push(product);
+    seasonalProducts.forEach(p => {
+        const major = mapToMajorCategory(p);
+        if (!categorizedProducts[major]) categorizedProducts[major] = [];
+        categorizedProducts[major].push(p);
     });
 
-    const sortedCategories = Object.keys(categorizedProducts).sort((a, b) =>
-        categorizedProducts[b].length - categorizedProducts[a].length
-    );
+    const sortedCategories = Object.keys(categorizedProducts)
+        .sort((a, b) => categorizedProducts[b].length - categorizedProducts[a].length);
 
     if (sortedCategories.length === 0) {
         categoryGrid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #6b7280;">
-                No categories found yet. Please try again later.
+                No seasonal categories found yet. Try switching seasons or check back soon.
             </div>`;
     } else {
         categoryGrid.innerHTML = sortedCategories.map(category => {
             const products = categorizedProducts[category];
-            const imgSrc = CATEGORY_IMAGES[category] || 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop';
+            const fallback = 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop';
+            const imgSrc = MAJOR_CATEGORY_IMAGES[category] || fallback;
             const safeCategory = category.replace(/'/g, "\\'");
             return `
                 <div class="category-card" data-category="${safeCategory}" title="${category}">
                     <div class="category-circle" aria-hidden="true">
-                        <img class="category-image" src="${imgSrc}" alt="${category}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop'">
+                        <img class="category-image" src="${imgSrc}" alt="${category}" loading="lazy" onerror="this.src='${fallback}'">
                     </div>
                     <div class="category-label">${category}</div>
                     <div class="category-item-count">${products.length} item${products.length !== 1 ? 's' : ''}</div>
@@ -1131,6 +1170,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             showCategoryView();
         });
     }
+
+    // Seasonal chips listeners
+    const seasonChips = document.getElementById('seasonChips');
+    if (seasonChips) {
+        seasonChips.addEventListener('click', (e) => {
+            const btn = e.target.closest('.season-chip');
+            if (!btn) return;
+            const season = btn.dataset.season;
+            if (!season || season === currentSeason) return;
+            currentSeason = season;
+            // Update active states & a11y
+            seasonChips.querySelectorAll('.season-chip').forEach(b => {
+                b.classList.toggle('active', b === btn);
+                b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+            });
+            // Rebuild seasonal categories
+            displayCategoryCards();
+            // Ensure category view visible
+            showCategoryView();
+        });
+    }
 });
 
 /**
@@ -1408,4 +1468,43 @@ function animateNumber(element, start, end, duration) {
             clearInterval(timer);
         }
     }, stepTime);
+}
+
+// ---------- Seasonal helpers ----------
+function mapToMajorCategory(product) {
+    const c = (product.category || '').toLowerCase();
+    const n = `${product.name || ''} ${product.description || ''}`.toLowerCase();
+    const found = MAJOR_CATEGORY_MAP.find(m => m.match(c, n));
+    return found ? found.name : 'Gifts & Gadgets';
+}
+
+function productDiscountPct(p) {
+    if (!p || !p.originalPrice || !p.salePrice || p.originalPrice <= 0) return 0;
+    return Math.round((1 - (p.salePrice / p.originalPrice)) * 100);
+}
+
+function matchesSeason(product, seasonKey) {
+    const rules = SEASON_RULES[seasonKey];
+    if (!rules) return true;
+    const text = `${product.name || ''} ${product.description || ''}`.toLowerCase();
+    const hasKeyword = rules.keywords.some(k => text.includes(k));
+    const pct = productDiscountPct(product);
+    if (seasonKey === 'blackfriday') {
+        // Treat strong discounts as Black Friday content even without keywords
+        return hasKeyword || pct >= rules.minDiscountPct;
+    }
+    // Christmas relies mostly on keywords/themes
+    return hasKeyword || /christmas|holiday/i.test(text);
+}
+
+function filterProductsForSeason(products, seasonKey) {
+    const filtered = products.filter(p => p.store && p.store.toLowerCase() === 'amazon')
+        .filter(p => matchesSeason(p, seasonKey));
+    // Rank by discount desc, then by name
+    return filtered.sort((a, b) => {
+        const da = productDiscountPct(a);
+        const db = productDiscountPct(b);
+        if (db !== da) return db - da;
+        return (a.name || '').localeCompare(b.name || '');
+    });
 }
