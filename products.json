@@ -537,5 +537,16 @@
     "category": "Arts, Crafts & Sewing",
     "image": "Acrylic Paint.png",
     "affiliateLink": "https://amzn.to/4r0e11A"
+  },
+  {
+    "id": 51,
+    "name": "90g Glass Bugle Beads",
+    "description": "90g Glass Bugle Beads 7x2mm, 2000 Pieces, Gold Yellow",
+    "originalPrice": 6.99,
+    "salePrice": 6.99,
+    "store": "amazon",
+    "category": "Arts, Crafts & Sewing",
+    "image": "Glass Bugle.png",
+    "affiliateLink": "https://amzn.to/4p5v4NM"
   }
 ]
