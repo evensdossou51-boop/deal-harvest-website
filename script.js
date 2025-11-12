@@ -258,8 +258,13 @@ const SEASON_RULES = {
 
 // Map many granular categories to "major" seasonal buckets
 const MAJOR_CATEGORY_MAP = [
-    { name: 'Holiday Decor', match: (c, n) => /patio|garden/i.test(c) || /wreath|garland|stocking|ornament|christmas tree|lights|bow|ribbon|candle|reindeer|bells/i.test(n) },
-    { name: 'Home', match: (c, n) => c.toLowerCase() === 'home' || /mirror|curtain|planter|artificial tree|decor|statue/i.test(n) },
+    { name: 'Home', match: (c, n) => {
+        // Match exact "Home" category first (case-insensitive)
+        if (c.toLowerCase() === 'home') return true;
+        // Also match home-related keywords
+        return /mirror|curtain|planter|artificial tree|statue|bells/i.test(n);
+    }},
+    { name: 'Holiday Decor', match: (c, n) => /patio|garden/i.test(c) || /wreath|garland|stocking|ornament|christmas tree|lights|bow|ribbon|candle|reindeer/i.test(n) },
     { name: 'Tech & Wearables', match: (c, n) => /cell phones|electronics|computers|wearable/i.test(c) || /watch|charger|headphone|earbud|laptop|tablet|smart/i.test(n) },
     { name: 'Kitchen & Hosting', match: (c, n) => /kitchen|dining|home & kitchen/i.test(c) || /mug|espresso|coffee|cook|bake|dutch oven|casserole|pot|dish/i.test(n) },
     { name: 'Toys & Family', match: (c, n) => /toys|kids|books/i.test(c) || /lego|toy|game|play|puzzle|family|train set/i.test(n) },
